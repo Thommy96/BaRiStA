@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from extract_duration import get_route, get_coordinates
+from geopy.geocoders import Nominatim
 import time
 import random
 
@@ -12,7 +13,7 @@ class Scraper():
     def __init__(self):
         self.driver = self.create_driver()
         self.root = None
-        self.data_dict = {'name': [], 'rating': [], 'num_reviews': [], 'manner': [], 'description': [], 'address': [], 
+        self.data_dict = {'name': [], 'rating': [], 'num_reviews': [], 'manner': [], 'description': [], 'address': [], 'coordinate': [], 
                         'opening_hours': [], 'website': [], 'phone_number': [], 'reviews': [], 'price': [], 'category': [], 'table_size': [], 'parking_lot': []}
 
     def create_driver(self, headless=True):
@@ -50,6 +51,7 @@ class Scraper():
         category = self.get_category()
         table_size = self.get_table_size()
         parking_lot = self.get_parking_lot()
+        coordinate = self.get_coordinate_pair()
 
         if not name in self.data_dict['name']:
             self.data_dict['name'].append(name)
@@ -58,6 +60,7 @@ class Scraper():
             self.data_dict['manner'].append(manner)
             self.data_dict['description'].append(description)
             self.data_dict['address'].append(address)
+            self.data_dict['coordinate'].append(coordinate)
             self.data_dict['opening_hours'].append(opening_hours)
             self.data_dict['website'].append(website)
             self.data_dict['phone_number'].append(phone_number)
@@ -169,6 +172,13 @@ class Scraper():
             category = None
         return category
     
+    def get_coordinate_pair(self):
+        #long, lat = extract_duration.get_coordinates(str(self.get_address()))
+        #print('address:', self.get_address())
+        locator = Nominatim(user_agent = "myGeocoder")
+        location = locator.geocode(self.get_address())
+        return (location.latitude, location.longitude)
+
     ### Add fake data (table size, parking lot)
     
     def get_table_size(self):
