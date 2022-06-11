@@ -41,7 +41,7 @@ class Scraper():
         manner = self.get_manner()
         description = self.get_description()
         address = self.get_address()
-        opening_hours = self.get_opening_hours()
+        opening_hours = self.get_opening_hours()[0]
         website = self.get_website()
         phone_number = self.get_phone_number()
         reviews = self.get_reviews()
@@ -119,9 +119,14 @@ class Scraper():
                 time = time.strip()
                 hour_list.append(time.split(', '))
             #opening_hours = '\n'.join(opening_hours)
+            #opening_day = len(hour_list)
         except:
             hour_list = None
-        return hour_list
+        if hour_list is not None:
+            open_days = len(hour_list)
+        else:
+            open_days = 0
+        return hour_list, open_days
 
     def get_website(self):
         try:
@@ -163,16 +168,22 @@ class Scraper():
             category = None
         return category
     
-    ### Add fake data (table size, parking lot, minimal cost?)
+    ### Add fake data (table size, parking lot)
     
     def get_table_size(self):
-        random_table_size = []
-        # random options of table sizes
-        for i in range(0, random.randint(3,12)):
-            table_size = random.randint(1,10)
-            if table_size not in random_table_size:
-                random_table_size.append(table_size)
-        return random_table_size
+        if self.get_opening_hours()[1] != 0:
+            #print('number of opening days:', self.get_opening_hours()[1])
+            each_restaurant = []
+            for i in range(0, self.get_opening_hours()[1]):
+                random_table_size = []
+                for i in range(0, random.randint(3,12)):
+                    table_size = random.randint(1,10)
+                    if table_size not in random_table_size:
+                        random_table_size.append((table_size, random.randint(1,3)))
+                each_restaurant.append(random_table_size)
+            return each_restaurant
+        else:
+            return 'not given'
 
     def get_parking_lot(self):
         label = random.randint(0,1)
