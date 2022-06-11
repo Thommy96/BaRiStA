@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import time
+import random
 
 IMPLICIT_WAIT = 5
 
@@ -11,7 +12,7 @@ class Scraper():
         self.driver = self.create_driver()
         self.root = None
         self.data_dict = {'name': [], 'rating': [], 'num_reviews': [], 'manner': [], 'description': [], 'address': [], 
-                        'opening_hours': [], 'website': [], 'phone_number': [], 'reviews': [], 'price': [], 'category': []}
+                        'opening_hours': [], 'website': [], 'phone_number': [], 'reviews': [], 'price': [], 'category': [], 'table_size': [], 'parking_lot': []}
 
     def create_driver(self, headless=True):
         chrome_options = Options()
@@ -46,6 +47,8 @@ class Scraper():
         reviews = self.get_reviews()
         price = self.get_price()
         category = self.get_category()
+        table_size = self.get_table_size()
+        parking_lot = self.get_parking_lot()
 
         if not name in self.data_dict['name']:
             self.data_dict['name'].append(name)
@@ -60,6 +63,8 @@ class Scraper():
             self.data_dict['reviews'].append(reviews)
             self.data_dict['price'].append(price)
             self.data_dict['category'].append(category)
+            self.data_dict['table_size'].append(table_size)
+            self.data_dict['parking_lot'].append(parking_lot)
 
     def get_name(self):
         try:
@@ -86,7 +91,7 @@ class Scraper():
         try:
             manner = self.root.find_all('div', {'class': 'LTs0Rc'})
             manner = [e['aria-label'].strip() for e in manner]
-            manner = '\n'.join(manner)
+            #manner = '\n'.join(manner)
         except:
             manner = None
         return manner
@@ -107,12 +112,16 @@ class Scraper():
 
     def get_opening_hours(self):
         try:
+            hour_list = []
             opening_hours = self.root.find('div', {'class': 't39EBf GUrTXd'})['aria-label'].strip().split(';')
             opening_hours = [e.split('.')[0] for e in opening_hours]
-            opening_hours = '\n'.join(opening_hours)
+            for time in opening_hours:
+                time = time.strip()
+                hour_list.append(time.split(', '))
+            #opening_hours = '\n'.join(opening_hours)
         except:
-            opening_hours = None
-        return opening_hours
+            hour_list = None
+        return hour_list
 
     def get_website(self):
         try:
@@ -134,7 +143,7 @@ class Scraper():
             reviews = []
             for review in reviews_tmp:
                 reviews.append(review.text.split('reviewers')[0].strip())
-            reviews = '\n'.join(reviews)
+            #reviews = '\n'.join(reviews)
         except:
             reviews = None
         return reviews
@@ -153,3 +162,20 @@ class Scraper():
         except:
             category = None
         return category
+    
+    ### Add fake data (table size, parking lot, minimal cost?)
+    
+    def get_table_size(self):
+        random_table_size = []
+        # random options of table sizes
+        for i in range(0, random.randint(3,12)):
+            table_size = random.randint(1,10)
+            if table_size not in random_table_size:
+                random_table_size.append(table_size)
+        return random_table_size
+
+    def get_parking_lot(self):
+        label = random.randint(0,1)
+        return label
+
+    
