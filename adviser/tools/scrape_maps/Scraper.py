@@ -173,11 +173,15 @@ class Scraper():
         return category
     
     def get_coordinate_pair(self):
-        #long, lat = extract_duration.get_coordinates(str(self.get_address()))
-        #print('address:', self.get_address())
-        locator = Nominatim(user_agent = "myGeocoder")
-        location = locator.geocode(self.get_address())
-        return (location.latitude, location.longitude)
+        try:
+            #lon, lat = extract_duration.get_coordinates(str(self.get_address()))
+            #print('address:', self.get_address())
+            locator = Nominatim(user_agent = "myGeocoder")
+            location = locator.geocode(self.get_address())
+            coordinate_pair = (location.latitude, location.longitude)
+        except:
+            coordinate_pair = None
+        return coordinate_pair
 
     ### Add fake data (table size, parking lot)
     
