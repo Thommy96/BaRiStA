@@ -1,6 +1,12 @@
 import requests
 import folium
 import polyline
+from geopy.geocoders import Nominatim
+
+def get_coordinates(address):
+    locator = Nominatim(user_agent="myGeocoder")
+    location = locator.geocode(address)
+    return (location.latitude, location.longitude)
 
 def get_route(start_lon, start_lat, destination_lon, destination_lat):
     
