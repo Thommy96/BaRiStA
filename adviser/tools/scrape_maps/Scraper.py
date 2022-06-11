@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-from extract_duration import get_route
+from extract_duration import get_route, get_coordinates
 import time
 import random
 
