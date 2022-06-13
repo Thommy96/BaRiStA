@@ -6,6 +6,7 @@ from extract_duration import get_route, get_coordinates
 from geopy.geocoders import Nominatim
 import time
 import random
+import json
 
 IMPLICIT_WAIT = 5
 
@@ -96,6 +97,7 @@ class Scraper():
             manner = self.root.find_all('div', {'class': 'LTs0Rc'})
             manner = [e['aria-label'].strip() for e in manner]
             #manner = '\n'.join(manner)
+            manner = json.dumps(manner)
         except:
             manner = None
         return manner
@@ -116,14 +118,15 @@ class Scraper():
 
     def get_opening_hours(self):
         try:
-            hour_list = []
+            hour_list = {}
             opening_hours = self.root.find('div', {'class': 't39EBf GUrTXd'})['aria-label'].strip().split(';')
             opening_hours = [e.split('.')[0] for e in opening_hours]
             for time in opening_hours:
-                time = time.strip()
-                hour_list.append(time.split(', '))
+                time = time.strip().split(', ')
+                hour_list[time[0]] = time[1]
             #opening_hours = '\n'.join(opening_hours)
             #opening_day = len(hour_list)
+            hour_list = json.dumps(hour_list)
         except:
             hour_list = None
         if hour_list is not None:
@@ -151,8 +154,9 @@ class Scraper():
             reviews_tmp = self.root.find_all('div', {'class': 'tBizfc fontBodyMedium'})
             reviews = []
             for review in reviews_tmp:
-                reviews.append(review.text.split('reviewers')[0].strip())
+                reviews.append(review.text.split('reviewers')[0].strip().strip('\"'))
             #reviews = '\n'.join(reviews)
+            reviews = json.dumps(reviews)
         except:
             reviews = None
         return reviews
@@ -179,6 +183,7 @@ class Scraper():
             locator = Nominatim(user_agent = "myGeocoder")
             location = locator.geocode(self.get_address())
             coordinate_pair = (location.latitude, location.longitude)
+            coordinate_pair = json.dumps(coordinate_pair)
         except:
             coordinate_pair = None
         return coordinate_pair
@@ -196,9 +201,10 @@ class Scraper():
                     if table_size not in random_table_size:
                         random_table_size.append((table_size, random.randint(1,3)))
                 each_restaurant.append(random_table_size)
+            each_restaurant = json.dumps(each_restaurant)
             return each_restaurant
         else:
-            return 'not given'
+            return None
 
     def get_parking_lot(self):
         label = random.randint(0,1)
