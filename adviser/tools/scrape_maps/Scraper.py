@@ -75,21 +75,21 @@ class Scraper():
         try:
             name = self.root.find('h1').span.text.strip()
         except:
-            name = None
+            name = 'None'
         return name
     
     def get_rating(self):
         try:
             rating = self.root.find('div', {'role': 'button'}).span.text.strip()
         except:
-            rating = None
+            rating = 'None'
         return rating
     
     def get_num_reviews(self):
         try:
             num_ratings = self.root.find('button', {'class': 'DkEaL'}).text.strip().split('\xa0')[0].split(' ')[0]
         except:
-            num_ratings = None
+            num_ratings = 'None'
         return num_ratings
 
     def get_manner(self):
@@ -99,21 +99,21 @@ class Scraper():
             #manner = '\n'.join(manner)
             manner = json.dumps(manner)
         except:
-            manner = None
+            manner = 'None'
         return manner
     
     def get_description(self):
         try:
             description = self.root.find('div', {'class': 'WeS02d'}).span.text.strip()
         except:
-            description = None
+            description = 'None'
         return description
 
     def get_address(self):
         try:
             address = self.root.find('button', {'data-item-id': 'address'}).text.strip()
         except:
-            address = None
+            address = 'None'
         return address
 
     def get_opening_hours(self):
@@ -128,8 +128,8 @@ class Scraper():
             #opening_day = len(hour_list)
             hour_list = json.dumps(hour_list)
         except:
-            hour_list = None
-        if hour_list is not None:
+            hour_list = 'None'
+        if not hour_list == 'None':
             open_days = len(hour_list)
         else:
             open_days = 0
@@ -139,14 +139,14 @@ class Scraper():
         try:
             website = self.root.find('button', {'data-item-id': 'authority'}).text.strip()
         except:
-            website = None
+            website = 'None'
         return website
 
     def get_phone_number(self):
         try:
             phone_number = self.root.find('button', {'data-tooltip': 'Copy phone number'}).text.strip()
         except:
-            phone_number = None
+            phone_number = 'None'
         return phone_number
 
     def get_reviews(self):
@@ -158,7 +158,7 @@ class Scraper():
             #reviews = '\n'.join(reviews)
             reviews = json.dumps(reviews)
         except:
-            reviews = None
+            reviews = 'None'
         return reviews
 
     def get_price(self):
@@ -166,14 +166,14 @@ class Scraper():
             price = self.root.find('span', {'jsan': '0.aria-label'})['aria-label'].strip()
             price = price.split(':')[1].strip()
         except:
-            price = None
+            price = 'None'
         return price
     
     def get_category(self):
         try:
             category = self.root.find('button', {'jsaction': 'pane.rating.category'}).text.strip()
         except:
-            category = None
+            category = 'None'
         return category
     
     def get_coordinate_pair(self):
@@ -185,7 +185,7 @@ class Scraper():
             coordinate_pair = (location.latitude, location.longitude)
             coordinate_pair = json.dumps(coordinate_pair)
         except:
-            coordinate_pair = None
+            coordinate_pair = 'None'
         return coordinate_pair
 
     ### Add fake data (table size, parking lot)
@@ -204,10 +204,10 @@ class Scraper():
             each_restaurant = json.dumps(each_restaurant)
             return each_restaurant
         else:
-            return None
+            return 'None'
 
     def get_parking_lot(self):
         label = random.randint(0,1)
-        return label
+        return str(label)
 
     
