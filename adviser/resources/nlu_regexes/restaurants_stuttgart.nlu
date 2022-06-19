@@ -1,0 +1,59 @@
+# user informable slots (name, rating, category, opening_hours, phone_number, website, address, price)
+
+rule inform(name)
+    "{name}"
+    "{IT()} {name}"
+    "{WANT()} {name}"
+    "{INFORM()} {name}"
+    "{TELL()} {name}"
+
+rule inform(rating)
+    "{rating}"
+    "{ROUGH()} {rating}"
+    "{HIGHER()} {rating}"
+    "{INFORM()} {rating}"
+    "{LOOKING()} {rating}"
+
+rule inform(category)
+    "{category}"
+    "{LOOKING()} {category}"
+    "{INFORM()} {category}"
+    "(\\ |^){synonyms("category", category)}(\\ (please|and))*"
+
+rule inform(opening_hours)
+    "{opening_hours}"
+    "{INFORM()} {opening_hours}"
+    "{LOOKING()} {opening_hours}"
+    "{TELL()} {opening_hours}"
+
+# requestable
+rule request(name)
+    pass
+
+# synonyms
+function synonyms(slot, value)
+    "{value}"
+    pass
+
+function slot_synonyms(slot)
+    "{IMPOSSIBLEREGEX()}"
+
+    if slot = "rating"
+        "rating(s)?"
+        "point(s)?"
+        "(review)? score(s)?"
+    if slot = "category"
+        "categories"
+        "type(s)?"
+        "kind(s)?"
+    if slot = "opening_hours"
+        "opening day(s)?"
+        "opening hour(s)?"
+
+function IT(): "(it\\'*s*|it\\ have|is\\ it\\'*s*|is\\ (the|their))(\\ for)*(.*)"
+function INFORM(): "(.*|^|\\ ){WANT()}"
+function WANT(): "(what\\ about|looking\\ for|would\\ like\\ to|want|have|need|know|like)(\\ a(n)?)*(.*)"
+function TELL(): "(.*)((can\\ you)?(tell|provide|give)\\ me)(.*)"
+function LOOKING(): "((I\\ am\\ )?(looking\\ for|finding\\ |find\\ me))(.*)"
+function ROUGH(): "(.*|^|\\ )(around\\ |about\\ |roughly\\ |nearly\\ |approximately\\ )(.*)"
+function HIGHER(): "(.*|^|\\ )(higher\\ than\\ |larger\\ than\\ |no\\ less\\ than\\ )(.*)"
