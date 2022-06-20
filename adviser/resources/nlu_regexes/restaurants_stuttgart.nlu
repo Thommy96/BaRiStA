@@ -1,4 +1,16 @@
-# user informable slots (name, rating, category, opening_hours, phone_number, website, address, price)
+# general rules
+
+rule hello(): "(\\b|^|\\ )(hi|hello|howdy|hey)\\b"
+rule bye(): "(\\b|^|\\ )(bye(-)?(bye)?|good(-)?bye|that'?s?\\ (is\\ )*all)(\\s|$|\\ |\\.)"
+rule deny(): "((\\b|^|\\ )(n(o)?|wrong|incorrect|error|nope)|(not\\ (true|correct|right)))(\\s)?$"
+rule affirm(): "((yes|yeah|(\\b|^)ok\\b|(\\b|^)OK|okay|sure|^y$|(\\b|^)yep(\\b|$)|(that('?s| is) )?(?<!not\\ )(?<!no\\ )(right|correct|confirm)))(\\s)?$"
+rule thanks(): "(?=.*(^(\\ )*)(((great|good|awesome|nice|cool)\\ )?((that((')?s|\\ (is|was))\\ (very\\ )?helpful)\\ )?(thank|thank(s|\\ you)(\\ (very|so)\\ much)?)(\\ (that((')?s|\\ (is|was))\\ (very\\ )?helpful))?|((great|good|awesome|nice|cool)\\ )?(that((')?s|\\ (is|was))\\ (very\\ )?helpful)|(great|good|awesome|nice|cool))((\\ )*))(?=^(?:(?!bye).)*$).*$"
+rule repeat(): "(\\b|^|\\ )(repeat((\\ that )|(\\ it))?)|(say((\\ that )|(\\ it))\\ again)|(again)"
+rule reqalts(): "(\\b|^|\\ )((something|anything)\\ else)|(different(\\ one)*)|(another\\ one)|(alternatives*)|(other options*)|((don'*t|do not) (want|like)\\ (that|this)(\\ one)*)"
+rule ack(): "{IMPOSSIBLEREGEX()}"
+rule bad(): "{IMPOSSIBLEREGEX()}"
+
+# user informable slots (name, rating, category, price)
 
 rule inform(name)
     "{name}"
@@ -20,20 +32,72 @@ rule inform(category)
     "{INFORM()} {category}"
     "(\\ |^){synonyms("category", category)}(\\ (please|and))*"
 
-rule inform(opening_hours)
-    "{opening_hours}"
-    "{INFORM()} {opening_hours}"
-    "{LOOKING()} {opening_hours}"
-    "{TELL()} {opening_hours}"
+rule inform(price)
+    "{INFORM()} {synonyms("price", price)}"
+    "{LOOKING()} {synonyms("price", price)}"
+    "{synonyms("price", price)}{WBG()}"
+    "(\\ |^){synonyms("price", price)}(\\ (please|and))*"
 
-# requestable
-rule request(name)
-    pass
+rule negativeinform(price)
+    "{INFORM_DONTWANT()} {synonyms("price", price)}"
+    "{INFORM_DONTCARE()} {synonyms("price", price)}"
+
+
+# requestables (name, rating, category, opening_hours, phone_number, website, address, price)
+
+rule request(opening_hours)
+    "{TELL()} {slot_synonyms("opening_hours")}"
+    "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("opening_hours")}"
+    "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("opening_hours")}"
+    "{WANT()}.*{slot_synonyms("opening_hours")}"
+
+rule request(phone_number)
+    "{TELL()} {slot_synonyms("phone_number")}"
+    "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("phone_number")}"
+    "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("phone_number")}"
+    "{WANT()}.*{slot_synonyms("phone_number")}"
+
+rule request(website)
+    "{TELL()} {slot_synonyms("website")}"
+    "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("website")}"
+    "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("website")}"
+    "{WANT()}.*{slot_synonyms("website")}"
+
+rule request(address)
+    "{TELL()} {slot_synonyms("address")}"
+    "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("address")}"
+    "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("address")}"
+    "{WANT()}.*{slot_synonyms("address")}"
+
+rule request(price)
+    "{TELL()} {slot_synonyms("price")}"
+    "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("price")}"
+    "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("price")}"
+    "{WANT()}.*{slot_synonyms("price")}"
 
 # synonyms
 function synonyms(slot, value)
     "{value}"
-    pass
+    
+    add_if slot = "price"
+        if value = "expensive"
+        "high(-|\s)?(price(d)?|cost)"
+            "costly"
+            "pricey"
+            "overpriced"
+            "exorbitant"
+        if value = "moderate"
+            "average"
+            "modest"
+            "medium"
+            "decent"
+            "tolerable"
+            "fair"
+            "affordable"
+        if value = "inexpensive"
+            "cheap"
+            "low(-|\s)?(price(d)?|cost)"
+
 
 function slot_synonyms(slot)
     "{IMPOSSIBLEREGEX()}"
@@ -43,17 +107,47 @@ function slot_synonyms(slot)
         "point(s)?"
         "(review)? score(s)?"
     if slot = "category"
+        "category"
         "categories"
         "type(s)?"
         "kind(s)?"
     if slot = "opening_hours"
         "opening day(s)?"
         "opening hour(s)?"
+    if slot = "phone_number"
+        "(tele)?phone\s?(number(s?))?"
+        "number"
+    if slot = "website"
+        "(web|internet)\s?(site|page)"
+        "homepage"
+    if slot = "address"
+        "address"
+        "location"
+        "street name"
+    if slot = "price"
+        "cost"
+        "price( range)?"
 
-function IT(): "(it\\'*s*|it\\ have|is\\ it\\'*s*|is\\ (the|their))(\\ for)*(.*)"
+
+# inform functions
 function INFORM(): "(.*|^|\\ ){WANT()}"
-function WANT(): "(what\\ about|looking\\ for|would\\ like\\ to|want|have|need|know|like)(\\ a(n)?)*(.*)"
-function TELL(): "(.*)((can\\ you)?(tell|provide|give)\\ me)(.*)"
 function LOOKING(): "((I\\ am\\ )?(looking\\ for|finding\\ |find\\ me))(.*)"
+function INFORM_DONTWANT(): "(((i\\ )*(don\\'*t\\ want))|it\\ (shouldn\\'*t|should\\ not)\\ (have|be))+"
+function INFORM_DONTCARE(): "{DONTCARE()} ((what|which|about)(\\ (it\\'*s*|the))*)+"
+
+# request functions
+function REQUEST(): "(\\\\b|^|\\ )(?<!{DONTCARE()})({WHAT()}\\ {IT()}|{CYTM()}|{CIG()})"
+function TELL(): "(.*)((can\\ you)?(tell|provide|give)\\ me)(.*)"
+function CYTM(): "(can\\ you\\ tell\\ me\\ (the|it\\'*s|their))"
+function CIG(): "(can\\ I\\ get\\ (the|it\\'*s|their))"
+
+# general functions
+function WANT(): "(what\\ about|looking\\ for|would\\ like\\ to|want|have|need|know|like)(\\ a(n)?)*(.*)"
+function IT(): "(it\\'*s*|it\\ have|is\\ it\\'*s*|is\\ (the|their))(\\ for)*(.*)"
 function ROUGH(): "(.*|^|\\ )(around\\ |about\\ |roughly\\ |nearly\\ |approximately\\ )(.*)"
 function HIGHER(): "(.*|^|\\ )(higher\\ than\\ |larger\\ than\\ |no\\ less\\ than\\ )(.*)"
+function DONTCARE(): "(i\\ dont\\ care)"
+function WHAT(): "(what(\\')?(s)?|which|does|where)(\\ (its|the))*"
+function DONTCAREWHAT(): "(i\\ dont\\ care\\ what\\ )"
+function NEGATE(): "((i\\ )*(don\\'?t|do\\ not|does\\ not|does\\'?nt)\\ (care|mind|matter)(\\ (about|what))*(\\ (the|it\\'?s*))*)"
+function IMPOSSIBLEREGEX(): "^\b$"
