@@ -15,7 +15,8 @@ class Scraper():
         self.driver = self.create_driver()
         self.root = None
         self.data_dict = {'name': [], 'rating': [], 'num_reviews': [], 'manner': [], 'description': [], 'address': [], 'coordinate': [], 
-                        'opening_hours': [], 'website': [], 'phone_number': [], 'reviews': [], 'price': [], 'category': [], 'table_size': [], 'parking_lot': [], 'start_location': []}
+                        'opening_hours': [], 'website': [], 'phone_number': [], 'reviews': [], 'price': [], 'category': [], 'table_size': [], 
+                          'parking_lot': [], 'start_location': []}
 
     def create_driver(self, headless=True):
         chrome_options = Options()
