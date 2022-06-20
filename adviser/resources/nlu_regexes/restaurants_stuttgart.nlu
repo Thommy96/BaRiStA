@@ -96,6 +96,7 @@ function synonyms(slot, value)
         if value = "inexpensive"
             "cheap"
             "low(-|\s)?(price(d)?|cost)"
+
     add_if slot = "category"
         if value = "African restaurant"
             "(A|a)frican"
@@ -391,30 +392,6 @@ function synonyms(slot, value)
             "V(V|v)ietnam restaurant"
             "(V|v)ietnamese food"
             "(V|v)ietnam food"
-
-# synonyms
-function synonyms(slot, value)
-    "{value}"
-    
-    add_if slot = "price"
-        if value = "expensive"
-        "high(-|\s)?(price(d)?|cost)"
-            "costly"
-            "pricey"
-            "overpriced"
-            "exorbitant"
-        if value = "moderate"
-            "average"
-            "modest"
-            "medium"
-            "decent"
-            "tolerable"
-            "fair"
-            "affordable"
-        if value = "inexpensive"
-            "cheap"
-            "low(-|\s)?(price(d)?|cost)"
-
 
 function slot_synonyms(slot)
     "{IMPOSSIBLEREGEX()}"
