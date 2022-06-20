@@ -45,6 +45,11 @@ rule negativeinform(price)
 
 # requestables (name, rating, category, opening_hours, phone_number, website, address, price)
 
+rule request(name)
+    "{REQUEST()} {slot_synonyms("name")}"
+    "{TELL()} {slot_synonyms("name")}"
+    "{LOOK()} {slot_synonyms("name")}
+    
 rule request(opening_hours)
     "{TELL()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("opening_hours")}"
