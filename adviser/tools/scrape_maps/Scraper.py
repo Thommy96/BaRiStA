@@ -15,7 +15,7 @@ class Scraper():
         self.driver = self.create_driver()
         self.root = None
         self.data_dict = {'name': [], 'rating': [], 'num_reviews': [], 'manner': [], 'description': [], 'address': [], 'coordinate': [], 
-                        'opening_hours': [], 'website': [], 'phone_number': [], 'reviews': [], 'price': [], 'category': [], 'table_size': [], 'parking_lot': []}
+                        'opening_hours': [], 'website': [], 'phone_number': [], 'reviews': [], 'price': [], 'category': [], 'table_size': [], 'parking_lot': [], 'start_location': []}
 
     def create_driver(self, headless=True):
         chrome_options = Options()
@@ -53,6 +53,7 @@ class Scraper():
         table_size = self.get_table_size()
         parking_lot = self.get_parking_lot()
         coordinate = self.get_coordinate_pair()
+        start_location = self.get_start_location()
 
         if not name in self.data_dict['name']:
             self.data_dict['name'].append(name)
@@ -70,6 +71,7 @@ class Scraper():
             self.data_dict['category'].append(category)
             self.data_dict['table_size'].append(table_size)
             self.data_dict['parking_lot'].append(parking_lot)
+            self.data_dict['start_location'].append(start_location)
 
     def get_name(self):
         try:
@@ -210,4 +212,6 @@ class Scraper():
         label = random.randint(0,1)
         return str(label)
 
-    
+    def get_start_location(self):
+        start_list = ['Uni', 'Schwabstraße', 'Hauptbahnhof']
+        return random.choice(start_list)
