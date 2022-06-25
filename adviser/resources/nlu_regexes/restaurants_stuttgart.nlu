@@ -49,8 +49,33 @@ rule request(name)
     "{REQUEST()} {slot_synonyms("name")}"
     "{TELL()} {slot_synonyms("name")}"
     "{LOOK()} {slot_synonyms("name")}
+    "{TELL()} {slot_synonyms("name")}"
+    "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("name")}"
+    "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("name")}"
+    "{WANT()}.*{slot_synonyms("name")}"
+    
+rule request(rating)
+    "{REQUEST()} {slot_synonyms("rating")}"
+    "{TELL()} {slot_synonyms("rating")}"
+    "{LOOK()} {slot_synonyms("rating")}
+    "{TELL()} {slot_synonyms("rating")}"
+    "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("rating")}"
+    "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("rating")}"
+    "{WANT()}.*{slot_synonyms("rating")}"
+    
+rule request(category)
+    "{REQUEST()} {slot_synonyms("category")}"
+    "{TELL()} {slot_synonyms("category")}"
+    "{LOOK()} {slot_synonyms("category")}
+    "{TELL()} {slot_synonyms("category")}"
+    "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("category")}"
+    "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("category")}"
+    "{WANT()}.*{slot_synonyms("category")}"
     
 rule request(opening_hours)
+    "{REQUEST()} {slot_synonyms("opening_hours")}"
+    "{TELL()} {slot_synonyms("opening_hours")}"
+    "{LOOK()} {slot_synonyms("opening_hours")}
     "{TELL()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("opening_hours")}"
@@ -296,24 +321,24 @@ function slot_synonyms(slot)
         "price( range)?"
 
 # inform functions
-function INFORM(): "(.*|^|\\ ){WANT()}"
-function LOOKING(): "((I\\ am\\ )?(looking\\ for|finding\\ |find\\ me))(.*)"
-function INFORM_DONTWANT(): "(((i\\ )*(don\\'*t\\ want))|it\\ (shouldn\\'*t|should\\ not)\\ (have|be))+"
-function INFORM_DONTCARE(): "{DONTCARE()} ((what|which|about)(\\ (it\\'*s*|the))*)+"
+function INFORM(): "(.*|^|\s){WANT()}"
+function LOOKING(): "((I\sam\s)?(looking\sfor|finding\s|find\sme))(.*)"
+function INFORM_DONTWANT(): "((((I|i)\s)*(don(')?t\swant))|(I|i)t\s(shouldn(')?t|should\snot|doesn(')?t)\s(have|be))+"
+function INFORM_DONTCARE(): "{DONTCARE()} ((what|which|about)(\s(it'*s*|the))*)+"
 
 # request functions
-function REQUEST(): "(\\\\b|^|\\ )(?<!{DONTCARE()})({WHAT()}\\ {IT()}|{CYTM()}|{CIG()})"
-function TELL(): "(.*)((can\\ you)?(tell|provide|give)\\ me)(.*)"
-function CYTM(): "(can\\ you\\ tell\\ me\\ (the|it\\'*s|their))"
-function CIG(): "(can\\ I\\ get\\ (the|it\\'*s|their))"
+function REQUEST(): "(\b|^|\s)(?<!{DONTCARE()})({WHAT()}\s{IT()}|{CYTM()}|{CIG()})"
+function TELL(): "(.*)((can\syou)?(tell|provide|give)\sme)(.*)"
+function CYTM(): "(can\syou\stell\sme\s(the|it'*s|their))"
+function CIG(): "(can\sI\sget\s(the|it'*s|their))"
 
 # general functions
-function WANT(): "(what\\ about|looking\\ for|would\\ like\\ to|want|have|need|know|like)(\\ a(n)?)*(.*)"
-function IT(): "(it\\'*s*|it\\ have|is\\ it\\'*s*|is\\ (the|their))(\\ for)*(.*)"
-function ROUGH(): "(.*|^|\\ )(around\\ |about\\ |roughly\\ |nearly\\ |approximately\\ )(.*)"
-function HIGHER(): "(.*|^|\\ )(higher\\ than\\ |larger\\ than\\ |no\\ less\\ than\\ )(.*)"
-function DONTCARE(): "(i\\ dont\\ care)"
-function WHAT(): "(what(\\')?(s)?|which|does|where)(\\ (its|the))*"
-function DONTCAREWHAT(): "(i\\ dont\\ care\\ what\\ )"
-function NEGATE(): "((i\\ )*(don\\'?t|do\\ not|does\\ not|does\\'?nt)\\ (care|mind|matter)(\\ (about|what))*(\\ (the|it\\'?s*))*)"
+function WANT(): "(what\sabout|looking\sfor|would\slike\sto|want|have|need|know|like)(\sa(n)?)*(.*)"
+function IT(): "(it'*s*|it\shave|is\sit'*s*|is\s(the|their))(\sfor)*(.*)"
+function ROUGH(): "(.*|^|\s)(around\s|about\s|roughly\s|nearly\s|approximately\s)(.*)"
+function HIGHER(): "(.*|^|\s)(higher\sthan\s|larger\sthan\s|no\sless\sthan\s)(.*)"
+function DONTCARE(): "(((I|i)\s)?(D|d)ont\scare)"
+function WHAT(): "((W|w)hat(')?(s)?|(W|w)hich|(D|d)oes|(W|w)here)(\s(its|the))*"
+function DONTCAREWHAT(): "(((I|i)\s)?dont\scare\swhat\s)"
+function NEGATE(): "(((I|i)\s)*(don'?t|do\snot|does\snot|does'?nt)\s(care|mind|matter)(\s(about|what))*(\s(the|it'?s*))*)"
 function IMPOSSIBLEREGEX(): "^\b$"
