@@ -214,5 +214,5 @@ class Scraper():
         return str(label)
 
     def get_start_location(self):
-        start_list = ['Uni', 'Schwabstraße', 'Hauptbahnhof']
+        start_list = ['Uni', 'Schwabstrasse', 'Hauptbahnhof']
         return random.choice(start_list)
