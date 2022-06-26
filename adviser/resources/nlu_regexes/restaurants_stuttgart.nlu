@@ -9,15 +9,16 @@ rule repeat(): "(\b|^|\s)(repeat((\sthat\s?)|(\sit))?)|(say((\sthat\s?)|(\sit))?
 rule reqalts(): "(\b|^|\s)((something|anything)\selse)|(different(\sone)*)|(another(\sone)?)|(alternatives*)|(other\soptions*)|((don'*t|do\snot)\s(want|like)\s(that|this)(\sone)*)"
 rule ack(): "{IMPOSSIBLEREGEX()}"
 rule bad(): "{IMPOSSIBLEREGEX()}"
+rule confirm(): "{IMPOSSIBLEREGEX()}"
+rule selectdomain(): "{IMPOSSIBLEREGEX()}"
 
 # user informable slots (name, rating, category, price)
 
 rule inform(name)
     "{name}"
     "{IT()} {name}"
-    "{WANT()} {name}"
     "{INFORM()} {name}"
-    "{TELL()} {name}"
+    "{LOOKING()} {name}"
 
 rule inform(rating)
     "{rating}"
@@ -48,7 +49,7 @@ rule negativeinform(price)
 rule request(name)
     "{REQUEST()} {slot_synonyms("name")}"
     "{TELL()} {slot_synonyms("name")}"
-    "{LOOK()} {slot_synonyms("name")}
+    "{LOOKING()} {slot_synonyms("name")}"
     "{TELL()} {slot_synonyms("name")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("name")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("name")}"
@@ -57,7 +58,7 @@ rule request(name)
 rule request(rating)
     "{REQUEST()} {slot_synonyms("rating")}"
     "{TELL()} {slot_synonyms("rating")}"
-    "{LOOK()} {slot_synonyms("rating")}
+    "{LOOKING()} {slot_synonyms("rating")}"
     "{TELL()} {slot_synonyms("rating")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("rating")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("rating")}"
@@ -66,7 +67,7 @@ rule request(rating)
 rule request(category)
     "{REQUEST()} {slot_synonyms("category")}"
     "{TELL()} {slot_synonyms("category")}"
-    "{LOOK()} {slot_synonyms("category")}
+    "{LOOKING()} {slot_synonyms("category")}"
     "{TELL()} {slot_synonyms("category")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("category")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("category")}"
@@ -75,7 +76,7 @@ rule request(category)
 rule request(opening_hours)
     "{REQUEST()} {slot_synonyms("opening_hours")}"
     "{TELL()} {slot_synonyms("opening_hours")}"
-    "{LOOK()} {slot_synonyms("opening_hours")}
+    "{LOOKING()} {slot_synonyms("opening_hours")}"
     "{TELL()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("opening_hours")}"
@@ -170,7 +171,7 @@ function synonyms(slot, value)
             "(A|a)frica(n)?(\s)?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
         if value = "Asian restaurant"
             "(A|a)sia(n)?(\s)?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
-        if value = "Bar" or "Bar & grill"
+        if value = "Bar (& grill)?"
             "(B|b)ar"
             "(B|b)eer"
             "(G|g)rill"
@@ -198,7 +199,7 @@ function synonyms(slot, value)
             "(C|c)ocktail"
             "(B|b)ar"
         if value = "East African restaurant"
-            "((E|e)ast(\s)?)?(A|a)frica(n)?(\s)?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?
+            "((E|e)ast(\s)?)?(A|a)frica(n)?(\s)?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
         if value = "Eritrean restaurant"
             "(E|e)ritrean(\s)?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
         if value = "French restaurant"
@@ -207,11 +208,11 @@ function synonyms(slot, value)
         if value = "Gastropub"
             "gastropub"
             "(B|b)istro"
-            "(P|p)ub
+            "(P|p)ub"
         if value = "Gay bar"
             "(B|b)ar"
             "(G|g)ay(\s)?(B|b)ar"
-        if "Georgian restaurant"
+        if value = "Georgian restaurant"
             "(G|g)eorgian(\s)?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
         if value = "German restaurant"
             "(G|g)erman(y)?(\s)?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
@@ -342,3 +343,4 @@ function WHAT(): "((W|w)hat(')?(s)?|(W|w)hich|(D|d)oes|(W|w)here)(\s(its|the))*"
 function DONTCAREWHAT(): "(((I|i)\s)?dont\scare\swhat\s)"
 function NEGATE(): "(((I|i)\s)*(don'?t|do\snot|does\snot|does'?nt)\s(care|mind|matter)(\s(about|what))*(\s(the|it'?s*))*)"
 function IMPOSSIBLEREGEX(): "^\b$"
+function WBG(): "(\\ ((would|seems\\ to)\\ be\\ (good|nice)($|[^\\?]$)|seems\\ (good|nice)($|[^\\?]$)))"
