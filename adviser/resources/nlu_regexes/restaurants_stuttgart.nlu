@@ -303,9 +303,7 @@ function synonyms(slot, value)
 function slot_synonyms(slot)
     "{IMPOSSIBLEREGEX()}"
     if slot = "name"
-        "(R|r)ating(s)?"
-        "(P|p)oint(s)?"
-        "((R|r)eview)?(-|\s)?(S|s)core(s)?"
+        "((R|r)estaurant)?(N|n)ame(s)?"
     if slot = "rating"
         "(R|r)ating(s)?"
         "(P|p)oint(s)?"
