@@ -55,6 +55,7 @@ rule request(name)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("name")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("name")}"
     "{WANT()}.*{slot_synonyms("name")}"
+    "{WHAT()}.*{slot_synonyms("name")}"
     
 rule request(rating)
     "{REQUEST()} {slot_synonyms("rating")}"
@@ -64,6 +65,7 @@ rule request(rating)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("rating")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("rating")}"
     "{WANT()}.*{slot_synonyms("rating")}"
+    "{WHAT()}.*{slot_synonyms("rating")}"
     
 rule request(category)
     "{REQUEST()} {slot_synonyms("category")}"
@@ -73,6 +75,7 @@ rule request(category)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("category")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("category")}"
     "{WANT()}.*{slot_synonyms("category")}"
+    "{WHAT()}.*{slot_synonyms("category")}"
     
 rule request(opening_hours)
     "{REQUEST()} {slot_synonyms("opening_hours")}"
@@ -82,30 +85,35 @@ rule request(opening_hours)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("opening_hours")}"
     "{WANT()}.*{slot_synonyms("opening_hours")}"
+    "{WHAT()}.*{slot_synonyms("opening_hours")}"
 
 rule request(phone_number)
     "{TELL()} {slot_synonyms("phone_number")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("phone_number")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("phone_number")}"
     "{WANT()}.*{slot_synonyms("phone_number")}"
+    "{WHAT()}.*{slot_synonyms("phone_number")}"
 
 rule request(website)
     "{TELL()} {slot_synonyms("website")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("website")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("website")}"
     "{WANT()}.*{slot_synonyms("website")}"
+    "{WHAT()}.*{slot_synonyms("website")}"
 
 rule request(address)
     "{TELL()} {slot_synonyms("address")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("address")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("address")}"
     "{WANT()}.*{slot_synonyms("address")}"
+    "{WHAT()}.*{slot_synonyms("address")}"
 
 rule request(price)
     "{TELL()} {slot_synonyms("price")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("price")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("price")}"
     "{WANT()}.*{slot_synonyms("price")}"
+    "{WHAT()}.*{slot_synonyms("price")}"
 
 # synonyms
 function synonyms(slot, value)
@@ -320,7 +328,7 @@ function slot_synonyms(slot)
         "street name"
     if slot = "price"
         "cost"
-        "price( range)?"
+        "price(\srange)?"
 
 # inform functions
 function INFORM(): "(.*|^|\s){WANT()}"
