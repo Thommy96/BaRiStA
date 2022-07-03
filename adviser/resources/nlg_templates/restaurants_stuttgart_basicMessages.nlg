@@ -1,0 +1,72 @@
+# ---------------GENERAL TEMPLATES-------------------------
+template welcomemsg(): "Welcome to the Restaurants in Stuttgart chat bot. How may I help you?"
+template welcomemsg(help): "Sorry, I cannot understand you. Please tell me again what you are looking for."
+template welcomemsg(more) : "Can I help you with anything else?"
+template bad() : "Sorry I am a bit confused; please tell me again what you are looking for."
+template repeat() : "Could you please repeat that?"
+template closingmsg() : "Thank you, goodbye."
+
+#--------------System Requests---------------#
+# system requestables are: category, opening_hours, price, rating
+
+template request(category): "What kind of restaurant or bar are you looking for?"
+#template request(opening_hours): "Should it have open at a specific time?"
+template request(price): "What should their price range be?"
+template request(rating): "What should their rating be?"
+
+# --------- Helper Functions -------- #
+
+function genitive(name)
+	"{genitive_s(name)}"
+
+#----------System Recommendation/Inform---------------#
+# name, rating, category, opening_hours, phone_number, website, address, price
+
+function info(slot, value, name)
+    if slot = "rating": "{name} has a rating of {value}"
+    if slot = "category": "{name} is a {value}"
+    if slot = "opening_hours": "{genitive(name)} opening hours are {value}"
+    if slot = "phone_number": "{genitive(name)} phone number is {value}"
+    if slot = "website": "{genitive(name)} website is {value}"
+    if slot = "address": "{genitive(name)} address is {value}"
+    if slot = "price": "{name} has a {value} price"
+
+template inform(name)
+    "There is a restaurant/bar named {name}. What do you want to know about it?"
+
+    if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
+
+template inform(name, *slots)
+	"{for_entry(slots, "info", ", ", " and ", name)}."
+
+    special_case name = "none"
+		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
+
+template inform_byname(name)
+	"There is a restaurant/bar named {name}. What do you want to know about it?"
+
+	if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
+
+template inform_byname(name, *slots)
+	"{for_entry(slots, "info", ", ", " and ", name)}."
+	
+	special_case name = "none"
+		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
+
+#------------System Confirm--------------#
+
+template confirm(): "Please tell me more about the restaurant/bar you are looking for."
+
+template confirm(name, *slots)
+	if name = "none"
+		"Let me confirm, you are looking for a restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}, right?"
+
+# ------------System RequestMore--------#
+
+template reqmore(): "Can I help you with anything else?"
+
+template select(*slot)
+	"Sorry, are you looking for a restaurant/bar {for_entry(slot, "info_or_dontcare_list", "", "")}?"
+
+function info_or_dontcare_list(slot, value_list)
+	"{for(value_list, "info_or_dontcare", ", ", " or ", slot)}"
