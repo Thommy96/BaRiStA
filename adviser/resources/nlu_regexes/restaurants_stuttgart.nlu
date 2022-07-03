@@ -21,16 +21,16 @@ rule inform(name)
     "{LOOKING()} {name}"
 
 rule inform(rating)
-    "{rating}"
-    "{ROUGH()} {rating}"
-    "{HIGHER()} {rating}"
-    "{INFORM()} {rating}"
-    "{LOOKING()} {rating}"
+    "{synonyms("rating", rating)}"
+    "{ROUGH()} {synonyms("rating", rating)}"
+    "{HIGHER()} {synonyms("rating", rating)}"
+    "{INFORM()} {synonyms("rating", rating)}"
+    "{LOOKING()} {synonyms("rating", rating)}"
 
 rule inform(category)
-    "{category}"
-    "{LOOKING()} {category}"
-    "{INFORM()} {category}"
+    "{synonyms("category", category)}"
+    "{LOOKING()} {synonyms("category", category)}"
+    "{INFORM()} {synonyms("category", category)}"
     "(\\ |^){synonyms("category", category)}(\\ (please|and))*"
 
 rule inform(price)
