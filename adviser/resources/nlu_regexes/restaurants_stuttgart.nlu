@@ -19,28 +19,28 @@ rule inform(name)
     "{INFORM()} {synonyms("name", name)}"
     "{LOOKING()} {synonyms("name", name)}"
     "{synonyms("name", name)}{WBG()}"
-    "(\\ |^){synonyms("name", name)}(\\ (please|and))*"
+    "(\s|^){synonyms("name", name)}(\s(please|and))*"
 
 rule inform(rating)
     "{synonyms("rating", rating)}"
     "{INFORM()} {synonyms("rating", rating)}"
     "{LOOKING()} {synonyms("rating", rating)}"
     "{synonyms("rating", rating)}{WBG()}"
-    "(\\ |^){synonyms("rating", rating)}(\\ (please|and))*"
+    "(\s|^){synonyms("rating", rating)}(\s(please|and))*"
 
 rule inform(category)
     "{synonyms("category", category)}"
     "{INFORM()} {synonyms("category", category)}"
     "{LOOKING()} {synonyms("category", category)}"
     "{synonyms("category", category)}{WBG()}"
-    "(\\ |^){synonyms("category", category)}(\\ (please|and))*"
+    "(\s|^){synonyms("category", category)}(\s(please|and))*"
 
 rule inform(price)
     "{synonyms("price", price)}"
     "{INFORM()} {synonyms("price", price)}"
     "{LOOKING()} {synonyms("price", price)}"
     "{synonyms("price", price)}{WBG()}"
-    "(\\ |^){synonyms("price", price)}(\\ (please|and))*"
+    "(\s|^){synonyms("price", price)}(\s(please|and))*"
 
 rule negativeinform(price)
     "{INFORM_DONTWANT()} {synonyms("price", price)}"
@@ -343,4 +343,4 @@ function WHAT(): "((W|w)hat(')?(s)?|(W|w)hich|(D|d)oes|(W|w)here)(\s(its|the))*"
 function DONTCAREWHAT(): "(((I|i)\s)dont\scare\swhat\s)"
 function NEGATE(): "(((I|i)\s)*(don'?t|do\snot|does\snot|does'?nt)\s(care|mind|matter)(\s(about|what))*(\s(the|it'?s*))*)"
 function IMPOSSIBLEREGEX(): "^\b$"
-function WBG(): "(\s((would|seems\sto)\sbe\s(good|nice)($|[^\\?]$)|seems\s(good|nice)($|[^\\?]$)))"
+function WBG(): "\s?((((would|seems\sto)\sbe)|sound(s)?)\s(good|nice|great)($|[^\?]$)|seems\s(good|nice|great)($|[^\?]$))"
