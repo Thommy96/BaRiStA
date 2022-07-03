@@ -28,10 +28,10 @@ rule inform(rating)
     "{LOOKING()} {synonyms("rating", rating)}"
 
 rule inform(category)
-    "^{synonyms("category", category)}"
-    "{LOOKING()} ^{synonyms("category", category)}"
-    "{INFORM()} ^{synonyms("category", category)}"
-    "^(\\ |^){synonyms("category", category)}(\\ (please|and))*"
+    "{synonyms("category", category)}"
+    "{LOOKING()} {synonyms("category", category)}"
+    "{INFORM()} {synonyms("category", category)}"
+    "(\\ |^){synonyms("category", category)}(\\ (please|and))*"
 
 rule inform(price)
     "{synonyms("price", price)}"
@@ -323,7 +323,7 @@ function slot_synonyms(slot)
         "price( range)?"
 
 # inform functions
-function INFORM(): "(.*|^|\s){WANT()}"
+function INFORM(): "(^|\s){WANT()}"
 function LOOKING(): "((I\sam\s)?(looking\sfor|finding\s|find\sme))(.*)"
 function INFORM_DONTWANT(): "((((I|i)\s)*(don(')?t\swant))|(I|i)t\s(shouldn(')?t|should\snot|doesn(')?t)\s(have|be))+"
 function INFORM_DONTCARE(): "{DONTCARE()} ((what|which|about)(\s(it'*s*|the))*)+"
