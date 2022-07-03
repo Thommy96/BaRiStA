@@ -15,22 +15,24 @@ rule selectdomain(): "{IMPOSSIBLEREGEX()}"
 # user informable slots (name, rating, category, price)
 
 rule inform(name)
-    "{name}"
-    "{IT()} {name}"
-    "{INFORM()} {name}"
-    "{LOOKING()} {name}"
+    "{synonyms("name", name)}"
+    "{INFORM()} {synonyms("name", name)}"
+    "{LOOKING()} {synonyms("name", name)}"
+    "{synonyms("name", name)}{WBG()}"
+    "(\\ |^){synonyms("name", name)}(\\ (please|and))*"
 
 rule inform(rating)
-    "{rating}"
-    "{ROUGH()} {rating}"
-    "{HIGHER()} {rating}"
-    "{INFORM()} {rating}"
-    "{LOOKING()} {rating}"
+    "{synonyms("rating", rating)}"
+    "{INFORM()} {synonyms("rating", rating)}"
+    "{LOOKING()} {synonyms("rating", rating)}"
+    "{synonyms("rating", rating)}{WBG()}"
+    "(\\ |^){synonyms("rating", rating)}(\\ (please|and))*"
 
 rule inform(category)
-    "{category}"
-    "{LOOKING()} {category}"
-    "{INFORM()} {category}"
+    "{synonyms("category", category)}"
+    "{INFORM()} {synonyms("category", category)}"
+    "{LOOKING()} {synonyms("category", category)}"
+    "{synonyms("category", category)}{WBG()}"
     "(\\ |^){synonyms("category", category)}(\\ (please|and))*"
 
 rule inform(price)
@@ -49,43 +51,33 @@ rule negativeinform(price)
 
 rule request(name)
     "{REQUEST()} {slot_synonyms("name")}"
-    "{TELL()} {slot_synonyms("name")}"
-    "{LOOKING()} {slot_synonyms("name")}"
-    "{TELL()} {slot_synonyms("name")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("name")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("name")}"
     "{WANT()}.*{slot_synonyms("name")}"
-    "{WHAT()}.*{slot_synonyms("name")}"
+    "(the )?{slot_synonyms("name")}"
     
 rule request(rating)
     "{REQUEST()} {slot_synonyms("rating")}"
-    "{TELL()} {slot_synonyms("rating")}"
-    "{LOOKING()} {slot_synonyms("rating")}"
-    "{TELL()} {slot_synonyms("rating")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("rating")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("rating")}"
     "{WANT()}.*{slot_synonyms("rating")}"
-    "{WHAT()}.*{slot_synonyms("rating")}"
+    "(the )?{slot_synonyms("rating")}"
     
 rule request(category)
     "{REQUEST()} {slot_synonyms("category")}"
-    "{TELL()} {slot_synonyms("category")}"
-    "{LOOKING()} {slot_synonyms("category")}"
-    "{TELL()} {slot_synonyms("category")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("category")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("category")}"
     "{WANT()}.*{slot_synonyms("category")}"
-    "{WHAT()}.*{slot_synonyms("category")}"
+    "(the )?{slot_synonyms("category")}"
     
 rule request(opening_hours)
     "{REQUEST()} {slot_synonyms("opening_hours")}"
-    "{TELL()} {slot_synonyms("opening_hours")}"
-    "{LOOKING()} {slot_synonyms("opening_hours")}"
-    "{TELL()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("opening_hours")}"
     "{WANT()}.*{slot_synonyms("opening_hours")}"
-    "{WHAT()}.*{slot_synonyms("opening_hours")}"
+    "(the )?{slot_synonyms("opening_hours")}"
+    "((W|w)hen|(W|w)hat\s(time|day))\s(does|is)\s(it|((the)?(\s)?restaurant))\sopen(ed)?(\?)?"
+    "(I|i)s\s((the\srestaurant)|it)\sopen(ed|s)?\s?(today|now|then|on\s.*)?"
 
 rule request(phone_number)
     "{TELL()} {slot_synonyms("phone_number")}"
@@ -303,7 +295,8 @@ function synonyms(slot, value)
 function slot_synonyms(slot)
     "{IMPOSSIBLEREGEX()}"
     if slot = "name"
-        "((R|r)estaurant)?(N|n)ame(s)?"
+        "((R|r)estaurant)?(\s)?(N|n)ame(\s)?"
+        "(N|n)ame(\s)?of(\s)?((the(\s)?(R|r)estaurant)|it)"
     if slot = "rating"
         "(R|r)ating(s)?"
         "(P|p)oint(s)?"
@@ -313,7 +306,7 @@ function slot_synonyms(slot)
         "(T|t)ype(s)?"
         "(K|k)ind(s)?"
     if slot = "opening_hours"
-        "(O|o)pening(-|\s)?((D|d)ay(s)?|(H|h)our(s)?)"
+        "(O|o)pening(-|\s)?((H|hour)|(D|d)ay|(T|t)ime)(s)?"
     if slot = "phone_number"
         "(tele)?phone\s?(number(s?))?"
         "number"
