@@ -124,9 +124,23 @@ def load_qa_domain():
     qa_nlg = MultiNLG(domain=domain)
     return domain, [qa_nlu, qa_policy, qa_nlg]
 
+# test restaurant domain
+def load_restaurant_domain(backchannel: bool = False):
+    from utils.domain.jsonlookupdomain import JSONLookupDomain
+    from services.nlu.nlu import HandcraftedNLU
+    from services.nlg.nlg import HandcraftedNLG
+    from services.policy import HandcraftedPolicy
+    domain = JSONLookupDomain('restaurants_stuttgart', display_name="restaurants_stuttgart")
+    restaurant_nlu = HandcraftedNLU(domain=domain)
+    restaurant_bst = HandcraftedBST(domain=domain)
+    restaurant_policy = HandcraftedPolicy(domain=domain)
+    restaurant_nlg = load_nlg(backchannel=backchannel, domain=domain)
+    return domain, [restaurant_nlu, restaurant_bst, restaurant_policy, restaurant_nlg]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='ADVISER 2.0 Dialog System')
-    parser.add_argument('domains', nargs='+', choices=['lecturers', 'weather', 'mensa', 'qa'],
+    parser.add_argument('domains', nargs='+', choices=['lecturers', 'weather', 'mensa', 'qa', 'restaurants_stuttgart'],
                         help="Chat domain(s). For multidomain type as list: domain1 domain2 .. \n",
                         default="ImsLecturers")
     parser.add_argument('-g', '--gui', action='store_true', help="Start Webui server")
@@ -190,6 +204,12 @@ if __name__ == "__main__":
         qa_domain, qa_services = load_qa_domain()
         domains.append(qa_domain)
         services.extend(qa_services)
+        
+    # add restaurants
+    if 'restaurants_stuttgart' in args.domains:
+        rs_domain, rs_services = load_restaurant_domain(backchannel=args.bc)
+        domains.append(rs_domain)
+        services.extend(rs_services)
 
     # load HCI interfaces
     if args.gui:
