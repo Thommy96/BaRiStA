@@ -28,10 +28,10 @@ rule inform(rating)
     "{LOOKING()} {synonyms("rating", rating)}"
 
 rule inform(category)
-    "{synonyms("category", category)}"
-    "{LOOKING()} {synonyms("category", category)}"
-    "{INFORM()} {synonyms("category", category)}"
-    "(\\ |^){synonyms("category", category)}(\\ (please|and))*"
+    "^{synonyms("category", category)}"
+    "{LOOKING()} ^{synonyms("category", category)}"
+    "{INFORM()} ^{synonyms("category", category)}"
+    "^(\\ |^){synonyms("category", category)}(\\ (please|and))*"
 
 rule inform(price)
     "{synonyms("price", price)}"
