@@ -136,11 +136,23 @@ def load_restaurant_domain(backchannel: bool = False):
     restaurant_policy = HandcraftedPolicy(domain=domain)
     restaurant_nlg = load_nlg(backchannel=backchannel, domain=domain)
     return domain, [restaurant_nlu, restaurant_bst, restaurant_policy, restaurant_nlg]
+# test restaurant domain basic
+def load_restaurant_basic_domain(backchannel: bool = False):
+    from utils.domain.jsonlookupdomain import JSONLookupDomain
+    from services.nlu.nlu import HandcraftedNLU
+    from services.nlg.nlg import HandcraftedNLG
+    from services.policy import HandcraftedPolicy
+    domain = JSONLookupDomain('restaurants_stuttgart_basic', display_name="restaurants_stuttgart_basic")
+    restaurant_nlu = HandcraftedNLU(domain=domain)
+    restaurant_bst = HandcraftedBST(domain=domain)
+    restaurant_policy = HandcraftedPolicy(domain=domain)
+    restaurant_nlg = load_nlg(backchannel=backchannel, domain=domain)
+    return domain, [restaurant_nlu, restaurant_bst, restaurant_policy, restaurant_nlg]
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='ADVISER 2.0 Dialog System')
-    parser.add_argument('domains', nargs='+', choices=['lecturers', 'weather', 'mensa', 'qa', 'restaurants_stuttgart'],
+    parser.add_argument('domains', nargs='+', choices=['lecturers', 'weather', 'mensa', 'qa', 'restaurants_stuttgart', 'restaurants_stuttgart_basic'],
                         help="Chat domain(s). For multidomain type as list: domain1 domain2 .. \n",
                         default="ImsLecturers")
     parser.add_argument('-g', '--gui', action='store_true', help="Start Webui server")
@@ -162,7 +174,7 @@ if __name__ == "__main__":
     if args.bc and not args.asr:
         parser.error("--bc: Backchannel requires ASR (--asr) option")
 
-    num_dialogs = 100
+    num_dialogs = 1
     domains = []
     services = []
 
@@ -208,6 +220,11 @@ if __name__ == "__main__":
     # add restaurants
     if 'restaurants_stuttgart' in args.domains:
         rs_domain, rs_services = load_restaurant_domain(backchannel=args.bc)
+        domains.append(rs_domain)
+        services.extend(rs_services)
+    # add restaurants basic
+    if 'restaurants_stuttgart_basic' in args.domains:
+        rs_domain, rs_services = load_restaurant_basic_domain(backchannel=args.bc)
         domains.append(rs_domain)
         services.extend(rs_services)
 
