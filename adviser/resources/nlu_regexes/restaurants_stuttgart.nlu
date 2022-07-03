@@ -29,8 +29,8 @@ rule inform(rating)
 
 rule inform(category)
     "^{synonyms("category", category)}"
-    "{LOOKING()} {synonyms("category", category)}"
-    #"{INFORM()} {synonyms("category", category)}"
+    "{LOOKING()} {EXCLUDE_BAR()}{EXCLUDE_RESTAURANT()}{synonyms("category", category)}"
+    "{INFORM()} {EXCLUDE_BAR()}{EXCLUDE_RESTAURANT()}{synonyms("category", category)}"
     "^( |^){synonyms("category", category)}( (please|and))*"
     
 rule inform(opening_hours)
@@ -118,13 +118,14 @@ rule request(price)
 function synonyms(slot, value)
     "{value}"
     add_if slot = "price"
-        if value = "expensive"
+        if value = "Expensive"
             "high(-| )?(price(d)?|cost)"
             "costly"
             "pricey"
             "overpriced"
             "exorbitant"
-        if value = "moderate"
+            "expensive"
+        if value = "Moderate"
             "average"
             "modest"
             "medium"
@@ -132,9 +133,11 @@ function synonyms(slot, value)
             "tolerable"
             "fair"
             "affordable"
-        if value = "inexpensive"
+            "moderate"
+        if value = "Inexpensive"
             "cheap"
             "low(-| )?(price(d)?|cost)"
+            "inexpensive"
             
     add_if slot = "rating"
         if value = "3,8"
@@ -234,7 +237,7 @@ function synonyms(slot, value)
             "(R|r)estaurant"
         if value = "German restaurant"
             "(G|g)erman(y)?( )?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
-            "(D|d)eutsch(e)?( )?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
+            "(D|d)eutsch(es)?( )?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
             "(R|r)estaurant"
         if value = "Greek restaurant"
             "(G|g)reek( )?((R|r)estaurant|(F|f)ood|(T|t)ype|(C|c)uisine)?"
@@ -390,3 +393,7 @@ function DONTCAREWHAT(): "(((I|i) )dont\scare\swhat )"
 function NEGATE(): "(((I|i) )*(don'?t|do\snot|does\snot|does'?nt) (care|mind|matter)( (about|what))*( (the|it'?s*))*)"
 function IMPOSSIBLEREGEX(): "^\b$"
 function WBG(): "( ((would|seems\sto)\sbe (good|nice)($|[^\\?]$)|seems (good|nice)($|[^\\?]$)))"
+
+#exclude functions
+function EXCLUDE_BAR(): "(?<!(G|g)ay )(?<!(C|c)ocktail )(?<!(H|h)ookah )(?<!(S|s)hisha )(?<!(S|s)moke )(?<!(S|s)port )(?<!(S|s)ports )"
+function EXCLUDE_RESTAURANT(): "(?<!(S|s)panish )(?<!(V|v)ietnamese )(?<!(V|v)egetarian )(?<!(V|v)eggie )(?<!(V|v)egan )(?<!(T|t)urkish )(?<!(T|t)urkey )(?<!(T|t)hailand )(?<!(T|t)hai )(?<!(T|t)ake(O|o)ut )(?<!(T|t)ake (O|o)ut )(?<!(S|s)wabian )(?<!(S|s)ushi )(?<!(S|s)teak )(?<!(P|p)ortuguese )(?<!(P|p)ortugal )(?<!(P|p)izza )(?<!(P|p)ersian )(?<!(I|i)ran(ian) )(?<!(O|o)rganic )(?<!(N|n)atural )(?<!(B|b)iological )(?<!(P|p)esticide (f|F)ree )(?<!(A|a)dditive (f|F)ree )(?<!(A|a)merican )(?<!(N|n)ew (A|a)merican )(?<!(M|m)iddle (E|e)astern )(?<!(M|m)exican )(?<!(M|m)exico )(?<!(M|m)eat )(?<!(M|m)eat (D|d)ish )(?<!(K|k)orean )(?<!(K|k)orea )(?<!(J|j)apanese )(?<!(J|j)apan )(?<!(I|i)talian )(?<!(I|i)talia )(?<!(I|i)ndian )(?<!(I|i)ndia )(?<!(H|h)amburger )(?<!(F|f)astfood )(?<!(F|f)ast (F|f)ood )(?<!(G|g)reek )(?<!(G|g)reece )(?<!(M|m)editerranean )(?<!(G|g)erman )(?<!(D|d)eutsches )(?<!(G|g)eorgian )(?<!(F|f)rench )(?<!(F|f)rance )(?<!(E|e)ritrean )(?<!(E|e)ast (A|a)frican )(?<!(C|c)hinese )(?<!(C|c)hina )(?<!(T|t)aiwan )(?<!(B|b)urrito )(?<!(B|b)arbecue )(?<!(BBQ|bbq) )(?<!(A|a)sian )(?<!(A|a)sia )(?<!(A|a)frican )(?<!(A|a)frica )"
