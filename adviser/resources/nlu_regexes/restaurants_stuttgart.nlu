@@ -32,6 +32,13 @@ rule inform(category)
     "{LOOKING()} ^{synonyms("category", category)}"
     "{INFORM()} ^{synonyms("category", category)}"
     "^(\\ |^){synonyms("category", category)}(\\ (please|and))*"
+    
+rule inform(opening_hours)
+    "{synonyms("opening_hours", opening_hours)}"
+    "{INFORM()} {synonyms("opening_hours", opening_hours)}"
+    "{LOOKING()} {synonyms("opening_hours", opening_hours)}"
+    "{synonyms("opening_hours", opening_hours)}{WBG()}"
+    "(\\ |^){synonyms("opening_hours", opening_hours)}(\\ (please|and))*"
 
 rule inform(price)
     "{synonyms("price", price)}"
