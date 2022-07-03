@@ -15,10 +15,10 @@ rule selectdomain(): "{IMPOSSIBLEREGEX()}"
 # user informable slots (name, rating, category, price)
 
 rule inform(name)
-    "{name}"
-    "{IT()} {name}"
-    "{INFORM()} {name}"
-    "{LOOKING()} {name}"
+    "{synonyms("name", name)}"
+    "{LOOKING()} {synonyms("name", name)}"
+    "{INFORM()} {synonyms("name", name)}"
+    "(\\ |^){synonyms("name", name)}(\\ (please|and))*"
 
 rule inform(rating)
     "{synonyms("rating", rating)}"
