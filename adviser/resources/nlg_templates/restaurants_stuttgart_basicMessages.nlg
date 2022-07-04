@@ -14,6 +14,9 @@ template request(category): "What kind of restaurant or bar are you looking for?
 template request(price): "What should their price range be?"
 template request(rating): "What should their rating be?"
 
+#template compute_distance(start_location): "where are you going from?"
+template request(start_location): "where are you going from?"
+
 # --------- Helper Functions -------- #
 
 function genitive(name)
@@ -30,6 +33,7 @@ function info(slot, value, name)
     if slot = "website": "{genitive(name)} website is {value}"
     if slot = "address": "{genitive(name)} address is {value}"
     if slot = "price": "{name} has a {value} price"
+    if slot = "start_location": "Ok! The distance from your place {value} to the {name} is...(incomplete) "
 
 template inform(name)
     "There is a restaurant/bar named {name}. What do you want to know about it?"
@@ -52,6 +56,9 @@ template inform_byname(name, *slots)
 	
 	special_case name = "none"
 		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
+		
+template compute_distance(start_location)
+    "The distance between your place {start_location} and the restaurant is ..."
 
 #------------System Confirm--------------#
 
