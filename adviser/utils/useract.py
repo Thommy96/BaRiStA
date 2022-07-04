@@ -39,6 +39,7 @@ class UserActionType(Enum):
     Confirm = 'confirm'
     SelectDomain = 'selectdomain'
     Repeat = 'repeat'
+    #added
     AskDistance = 'ask_distance'
 
 
