@@ -50,7 +50,10 @@ rule inform(price)
 rule negativeinform(price)
     "{INFORM_DONTWANT()} {synonyms("price", price)}"
     "{INFORM_DONTCARE()} {synonyms("price", price)}"
-
+    
+rule inform(start_location)
+    "{synonyms("start_location", start_location)}"
+    "I am (at|going from) {synonyms("start_location", start_location)}"
 
 # requestables (name, rating, category, opening_hours, phone_number, website, address, price)
 
@@ -114,6 +117,11 @@ rule request(price)
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("price")}"
     "{WANT()}.*{slot_synonyms("price")}"
 
+# try out new act
+rule ask_distance(start_location)
+    "The distance between {synonyms("start_location", start_location)} and the restaurant"
+    "How far between {synonyms("start_location", start_location)} and the restaurant"
+
 # synonyms
 function synonyms(slot, value)
     "{value}"
@@ -138,6 +146,19 @@ function synonyms(slot, value)
             "cheap"
             "low(-| )?(price(d)?|cost)"
             "inexpensive"
+            
+    add_if slot = "start_location"
+        if value = "Uni"
+            "(U|u)niversity"
+            "(U|u)ni"
+            "(S|s)chool"
+        if value = "Schwabstrasse"
+            "(S|s)chwabstrasse"
+            "(S|s)chwab"
+        if value = "Hauptbahnhof"
+            "HBF"
+            "(H|h)bf"
+            "(M|m)ain station"
             
     add_if slot = "rating"
         if value = "3,8"
@@ -369,6 +390,8 @@ function slot_synonyms(slot)
     if slot = "price"
         "cost"
         "price( range)?"
+    if slot = "start_location"
+        "start(ing)? (point|location|place|spot|location)"
 
 # inform functions
 function INFORM(): "(.*|^| ){WANT()}"
