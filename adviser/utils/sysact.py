@@ -36,6 +36,8 @@ class SysActionType(Enum):
     Bad = 'bad'
     Bye = 'closingmsg'
     ConfirmRequest = 'confreq'
+    #added
+    ComputeDistance = 'compute_distance'
 
 
 class SysAct(object):
