@@ -129,11 +129,18 @@ class HandcraftedPolicy(Service):
             sys_act.type = SysActionType.RequestMore
             
         ### Testing new acts ####
+
         elif UserActionType.AskDistance in beliefstate["user_acts"]:
             sys_act = SysAct()
-            sys_act.type = SysActionType.ComputeDistance
-            slot = self._get_open_slot(beliefstate)
-            sys_act.add_value(slot)
+            sys_act.type = SysActionType.AskStartPoint
+            #slot = self._get_open_slot(beliefstate)
+            #sys_act.add_value(slot)
+
+        # If user only says hello, guide user for more information
+        elif UserActionType.Hello in beliefstate["user_acts"] or UserActionType.SelectDomain in beliefstate["user_acts"]:
+            sys_act = SysAct()
+            sys_act.type = SysActionType.GuideUser
+
         ### Testing new acts ####
         
         # If user only says hello, request a random slot to move dialog along
