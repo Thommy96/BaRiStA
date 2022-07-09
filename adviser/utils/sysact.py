@@ -37,7 +37,8 @@ class SysActionType(Enum):
     Bye = 'closingmsg'
     ConfirmRequest = 'confreq'
     #added
-    ComputeDistance = 'compute_distance'
+    GuideUser = 'guide_user'
+    AskStartPoint = 'ask_start_point'
 
 
 class SysAct(object):
