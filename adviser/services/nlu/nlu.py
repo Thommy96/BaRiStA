@@ -270,6 +270,12 @@ class HandcraftedNLU(Service):
         self._match_request(user_utterance)
         # Find Informs
         self._match_inform(user_utterance)
+        
+        # Added user act without slots
+        ask_distance_regex = "((C|c)an you help me with the distance)|((T|t)ell me (the )?distance)"
+        if self._check(re.search(ask_distance_regex, user_utterance, re.I)):
+            self.user_acts.append(UserAct(act_type=UserActionType.AskDistance))
+
 
     def _match_request(self, user_utterance: str):
         """
