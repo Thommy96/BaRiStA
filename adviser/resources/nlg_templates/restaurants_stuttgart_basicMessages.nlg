@@ -5,6 +5,8 @@ template welcomemsg(more) : "Can I help you with anything else?"
 template bad() : "Sorry I am a bit confused; please tell me again what you are looking for."
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
+template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the reservation? :-)"
+
 
 #--------------System Requests---------------#
 # system requestables are: category, opening_hours, price, rating
@@ -14,8 +16,9 @@ template request(category): "What kind of restaurant or bar are you looking for?
 template request(price): "What should their price range be?"
 template request(rating): "What should their rating be?"
 
-#template compute_distance(start_location): "where are you going from?"
-template request(start_location): "where are you going from?"
+template request(start_location): "ok, just a second!"
+template ask_start_point() : "Ok, sure! Please tell me your starting location"
+
 
 # --------- Helper Functions -------- #
 
