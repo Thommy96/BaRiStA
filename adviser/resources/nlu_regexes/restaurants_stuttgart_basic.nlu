@@ -21,7 +21,7 @@ rule inform(name)
     "^( |^){synonyms("name", name)}( (please|and))*"
 
 rule inform(rating)
-    "{synonyms("rating", rating)}"
+    "^{synonyms("rating", rating)}"
     #"{ROUGH()} {synonyms("rating", rating)}"
     #"{HIGHER()} {synonyms("rating", rating)}"
     "{INFORM()} {synonyms("rating", rating)}"
@@ -34,14 +34,14 @@ rule inform(category)
     "^( |^){synonyms("category", category)}( (please|and))*"
     
 rule inform(opening_hours)
-    "{synonyms("opening_hours", opening_hours)}"
+    "^{synonyms("opening_hours", opening_hours)}"
     "{INFORM()} {synonyms("opening_hours", opening_hours)}"
     "{LOOKING()} {synonyms("opening_hours", opening_hours)}"
     "{synonyms("opening_hours", opening_hours)}{WBG()}"
     "( |^){synonyms("opening_hours", opening_hours)}( (please|and))*"
 
 rule inform(price)
-    "{synonyms("price", price)}"
+    "^{synonyms("price", price)}"
     "{INFORM()} {synonyms("price", price)}"
     "{LOOKING()} {synonyms("price", price)}"
     "{synonyms("price", price)}{WBG()}"
@@ -52,7 +52,7 @@ rule negativeinform(price)
     "{INFORM_DONTCARE()} {synonyms("price", price)}"
     
 rule inform(start_location)
-    "{synonyms("start_location", start_location)}"
+    "^{synonyms("start_location", start_location)}"
     "I am (at|going from) {synonyms("start_location", start_location)}"
 
 # requestables (name, rating, category, opening_hours, phone_number, website, address, price)
@@ -156,6 +156,7 @@ function synonyms(slot, value)
             "(S|s)chwabstrasse"
             "(S|s)chwab"
         if value = "Hauptbahnhof"
+            "Hauptbahnhof"
             "HBF"
             "(H|h)bf"
             "(M|m)ain station"
@@ -435,9 +436,8 @@ function synonyms(slot, value)
 function slot_synonyms(slot)
     "{IMPOSSIBLEREGEX()}"
     if slot = "name"
-        "(R|r)ating(s)?"
-        "(P|p)oint(s)?"
-        "((R|r)eview)?(-| )?(S|s)core(s)?"
+        "name"
+        "(restaurant|bar) name"
     if slot = "rating"
         "(R|r)ating(s)?"
         "(P|p)oint(s)?"
