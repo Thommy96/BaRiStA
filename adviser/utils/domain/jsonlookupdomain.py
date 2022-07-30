@@ -129,10 +129,22 @@ class JSONLookupDomain(Domain):
                                   set(self.get_system_requestable_slots()) |
                                   set(requested_slots))
         query = "SELECT {} FROM {}".format(select_clause, self.get_domain_name())
-        constraints = {slot: value.replace("'", "''") for slot, value in constraints.items()
-                       if value is not None and str(value).lower() != 'dontcare'}
+        try:
+            constraints = {slot: value.replace("'", "''") for slot, value in constraints.items()
+                        if value is not None and str(value).lower() != 'dontcare'}
+        except AttributeError:
+            constraints = {slot: [value.replace("'", "''") for value in values if value is not None and str(value).lower() != 'dontcare'] for slot, values in constraints.items()}
         if constraints:
-            query += ' WHERE ' + ' AND '.join("{}='{}' COLLATE NOCASE".format(key, str(val))
+            if all(isinstance(v, list) for v in constraints.values()):
+                for i, (key, vals) in enumerate(constraints.items()):
+                    if i == 0:
+                        query += ' WHERE ('
+                    if i > 0:
+                        query += ') AND ('
+                    query += ' OR '.join("{}='{}' COLLATE NOCASE".format(key, str(val)) for val in vals)
+                query += ')'
+            else:
+                query += ' WHERE ' + ' AND '.join("{}='{}' COLLATE NOCASE".format(key, str(val))
                                               for key, val in constraints.items())
         return self.query_db(query)
 

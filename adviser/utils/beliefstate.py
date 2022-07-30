@@ -217,7 +217,7 @@ class BeliefState:
 
         # check how many db entities match the current constraints
         candidates = self.get_most_probable_inf_beliefs(consider_NONE=True, threshold=0.7,
-                                                        max_results=1)
+                                                        max_results=100)
         constraints = self._remove_dontcare_slots(candidates)
         db_matches = self.domain.find_entities(constraints, self.domain.get_informable_slots())
         num_matches = len(db_matches)
