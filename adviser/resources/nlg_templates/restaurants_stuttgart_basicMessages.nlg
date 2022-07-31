@@ -29,13 +29,13 @@ function genitive(name)
 # name, rating, category, opening_hours, phone_number, website, address, price
 
 function info(slot, value, name)
-    if slot = "rating": "{name} has a rating of {value}"
-    if slot = "category": "{name} is a {value}"
+    if slot = "rating": "has a rating of {value}"
+    if slot = "category": "is a {value}"
     if slot = "opening_hours": "{genitive(name)} opening hours are {value}"
     if slot = "phone_number": "{genitive(name)} phone number is {value}"
     if slot = "website": "{genitive(name)} website is {value}"
     if slot = "address": "{genitive(name)} address is {value}"
-    if slot = "price": "{name} has a {value} price"
+    if slot = "price": "has a {value} price"
     if slot = "start_location": "Ok! The distance from your place {value} to the {name} is...(incomplete) "
 
 template inform(name)
@@ -44,7 +44,7 @@ template inform(name)
     if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
 
 template inform(name, *slots)
-	"{for_entry(slots, "info", ", ", " and ", name)}."
+	"{name} {for_entry(slots, "info", ", ", " and ", name)}."
 
     special_case name = "none"
 		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
@@ -55,7 +55,7 @@ template inform_byname(name)
 	if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
 
 template inform_byname(name, *slots)
-	"{for_entry(slots, "info", ", ", " and ", name)}."
+	"{name} {for_entry(slots, "info", ", ", " and ", name)}."
 	
 	special_case name = "none"
 		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
@@ -73,7 +73,7 @@ template inform_alternatives(name, *slots)
 	"The restaurant/bar {name} also {for_entry(slots, "info", ", it ", " and it ", name)}."
 	
 	special_case name = "none"
-		"There is no other restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
+		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
 
 #------------System Confirm--------------#
 
