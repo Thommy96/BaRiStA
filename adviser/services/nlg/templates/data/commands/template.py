@@ -115,7 +115,28 @@ class Template(Command):
         slot_value_pairs = []
         for slot in slot_dict:
             value = self._flatten_value_list(slot_dict[slot])
-            slot_value_pairs.append((slot, value))
+            # if there are multiple values
+            if isinstance(value, list):
+                if len(value) == 1:
+                    slot_value_pairs.append((slot, value[0]))
+                else:
+                    # if there is an instance search for corresponding value in database
+                    if variables.variable_dict['name'] != 'none':
+                        domain = variables.global_memory.domain
+                        query = f"SELECT {slot} FROM {domain.get_domain_name()} WHERE name='{variables.variable_dict['name']}' COLLATE NOCASE"
+                        val = domain.query_db(query)[0][slot]
+                        slot_value_pairs.append((slot, val))
+                    else:
+                        # if there is no instance print all possible requested values
+                        val = value[0]
+                        for i, v in enumerate(value[1:]):
+                            if i < len(value)-2:
+                                val += f', {v}'
+                            else:
+                                val += f' or {v}'
+                        slot_value_pairs.append((slot, val))
+            else:
+                slot_value_pairs.append((slot, value))
         variables.add_variable(Variable(self.free_parameter, slot_value_pairs))
 
         return variables
