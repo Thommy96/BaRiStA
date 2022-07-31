@@ -114,7 +114,7 @@ class BeliefState:
 
     def get_most_probable_slot_beliefs(self, slot: str, consider_NONE: bool = True,
                                        threshold: float = 0.7,
-                                       max_results: int = 1, turn_idx: int = -1):
+                                       max_results: int = 1000, turn_idx: int = -1):
         """ Extract the most probable value for each system requestable slot
 
         If the most probable value for a slot does not exceed the threshold,
@@ -149,7 +149,7 @@ class BeliefState:
         return candidates
 
     def get_most_probable_inf_beliefs(self, consider_NONE: bool = True, threshold: float = 0.7,
-                                      max_results: int = 1, turn_idx: int = -1):
+                                      max_results: int = 1000, turn_idx: int = -1):
         """ Extract the most probable value for each system requestable slot
 
         If the most probable value for a slot does not exceed the threshold,
@@ -217,7 +217,7 @@ class BeliefState:
 
         # check how many db entities match the current constraints
         candidates = self.get_most_probable_inf_beliefs(consider_NONE=True, threshold=0.7,
-                                                        max_results=100)
+                                                        max_results=1000)
         constraints = self._remove_dontcare_slots(candidates)
         db_matches = self.domain.find_entities(constraints, self.domain.get_informable_slots())
         num_matches = len(db_matches)

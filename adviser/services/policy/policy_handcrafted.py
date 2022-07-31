@@ -269,7 +269,10 @@ class HandcraftedPolicy(Service):
         for slot in informs:
             if slot not in dontcare:
                 for value in informs[slot]:
-                    slots[slot] = value
+                    # save values as lists to be able to handle multiple values
+                    if slot not in slots:
+                        slots[slot] = []
+                    slots[slot].append(value)
         return slots, dontcare
 
     def _get_open_slot(self, beliefstate: BeliefState):

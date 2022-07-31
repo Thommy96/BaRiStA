@@ -137,9 +137,11 @@ class JSONLookupDomain(Domain):
         if constraints:
             if all(isinstance(v, list) for v in constraints.values()):
                 for i, (key, vals) in enumerate(constraints.items()):
-                    if i == 0:
+                    if len(vals) == 0:
+                        continue
+                    if not 'WHERE' in query:
                         query += ' WHERE ('
-                    if i > 0:
+                    else:
                         query += ') AND ('
                     query += ' OR '.join("{}='{}' COLLATE NOCASE".format(key, str(val)) for val in vals)
                 query += ')'
