@@ -18,6 +18,7 @@
 ###############################################################################
 
 from collections import defaultdict
+import json
 from typing import List, Dict
 
 from services.service import PublishSubscribe
@@ -485,7 +486,12 @@ class HandcraftedPolicy(Service):
 
             # add slots + values (where available) to the sys_act
             for k in keys:
-                res = result[k] if result[k] else 'not available'
+                res = result[k] if result[k] and result[k]!='None' else 'not available'
+                # prettify output format for opening hours
+                if k == 'opening_hours' and res != 'not available':
+                    opening_hours = json.loads(res)
+                    res = '\n'
+                    res += "\n".join("{}: {}".format(k, v) for k, v in opening_hours.items())
                 sys_act.add_value(k, res)
             # Name might not be a constraint in request queries, so add it
             if self.domain_key not in keys:
