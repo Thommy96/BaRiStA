@@ -32,13 +32,6 @@ rule inform(category)
     "{LOOKING()} {EXCLUDE_BAR()}{EXCLUDE_RESTAURANT()}{synonyms("category", category)}"
     "{INFORM()} {EXCLUDE_BAR()}{EXCLUDE_RESTAURANT()}{synonyms("category", category)}"
     "^( |^){synonyms("category", category)}( (please|and))*"
-    
-rule inform(opening_hours)
-    "^{synonyms("opening_hours", opening_hours)}"
-    "{INFORM()} {synonyms("opening_hours", opening_hours)}"
-    "{LOOKING()} {synonyms("opening_hours", opening_hours)}"
-    "{synonyms("opening_hours", opening_hours)}{WBG()}"
-    "( |^){synonyms("opening_hours", opening_hours)}( (please|and))*"
 
 rule inform(price)
     "^{synonyms("price", price)}"
@@ -162,7 +155,7 @@ function synonyms(slot, value)
             "(M|m)ain station"
             
     add_if slot = "rating"
-        if value = "3,8"
+        if value = "3.8"
             "3(.|,|')?8"
             "{ROUGH()}(?<![0-9].)4(.|,|')?0"
             "{HIGHER()}(?<![0-9].)3(.|,|')?0"

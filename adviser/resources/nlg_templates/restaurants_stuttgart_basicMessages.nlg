@@ -9,14 +9,13 @@ template guide_user() : "Hi! Are you looking for a restaurant? or do you need he
 
 
 #--------------System Requests---------------#
-# system requestables are: category, opening_hours, price, rating
+# system requestables are: category, price, rating, start_location
 
 template request(category): "What kind of restaurant or bar are you looking for?"
-template request(opening_hours): "Should it have open at a specific time?"
 template request(price): "What should their price range be?"
 template request(rating): "What should their rating be?"
 
-template request(start_location): "ok, just a second!"
+template request(start_location): "What is your starting location?"
 template ask_start_point() : "Ok, sure! Please tell me your starting location"
 
 
@@ -36,7 +35,7 @@ function info(slot, value, name)
     if slot = "website": "{genitive(name)} website is {value}"
     if slot = "address": "{genitive(name)} address is {value}"
     if slot = "price": "has a {value} price"
-    if slot = "start_location": "Ok! The distance from your place {value} to the {name} is...(incomplete) "
+    if slot = "start_location": "the distance from your place {value} to {name} is...(incomplete) "
 
 template inform(name)
     "There is a restaurant/bar named {name}. What do you want to know about it?"
@@ -70,7 +69,7 @@ template inform_alternatives(name)
 		"I'm sorry, I couldn't find another restaurant/bar."
 
 template inform_alternatives(name, *slots)
-	"The restaurant/bar {name} also {for_entry(slots, "info", ", it ", " and it ", name)}."
+	"The restaurant/bar {name} also {for_entry(slots, "info", ", it ", " and ", name)}."
 	
 	special_case name = "none"
 		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
