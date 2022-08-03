@@ -53,12 +53,34 @@ def _create_inform_json(domain: JSONLookupDomain, template: RegexFile):
             inform_regex_json[slot][value] = template.create_regex(inform_act)
     return inform_regex_json
 
+# added
+def _create_inform_start_json(domain: JSONLookupDomain, template: RegexFile):
+    inform_start_regex_json = {}
+    for slot in domain.get_informable_start_slots():
+        inform_start_regex_json[slot] = {}
+        for value in domain.get_possible_start_values(slot):
+            inform_act = UserAct(act_type=UserActionType.InformStartLocation, slot=slot, value=value)
+            inform_start_regex_json[slot][value] = template.create_regex(inform_act)
+    return inform_start_regex_json
+
+def _create_inform_destination_json(domain: JSONLookupDomain, template: RegexFile):
+    inform_destination_regex_json = {}
+    for slot in domain.get_informable_destination_slots():
+        inform_destination_regex_json[slot] = {}
+        for value in domain.get_possible_destination_values(slot):
+            inform_act = UserAct(act_type=UserActionType.InformDestination, slot=slot, value=value)
+            inform_destination_regex_json[slot][value] = template.create_regex(inform_act)
+    return inform_destination_regex_json
+## added
 
 def create_json_from_template(domain: JSONLookupDomain, template_filename: str):
     template = RegexFile(template_filename, domain)
     domain_name = domain.get_domain_name()
     _write_dict_to_file(_create_request_json(domain, template), f'{domain_name}RequestRules.json')
     _write_dict_to_file(_create_inform_json(domain, template), f'{domain_name}InformRules.json')
+    ## added
+    _write_dict_to_file(_create_inform_start_json(domain, template), f'{domain_name}InformStartRules.json')
+    _write_dict_to_file(_create_inform_destination_json(domain, template), f'{domain_name}InformDestinationRules.json')
 
 
 if __name__ == '__main__':
