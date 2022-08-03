@@ -131,11 +131,21 @@ class HandcraftedPolicy(Service):
             
         ### Testing new acts ####
 
-        elif UserActionType.AskDistance in beliefstate["user_acts"]:
+        elif UserActionType.AskDistance in beliefstate["user_acts"] or UserActionType.AskDuration in beliefstate["user_acts"]:
             sys_act = SysAct()
             sys_act.type = SysActionType.AskStartPoint
             #slot = self._get_open_slot(beliefstate)
             #sys_act.add_value(slot)
+
+        elif UserActionType.InformDestination in beliefstate["user_acts"] and UserActionType.InformStartLocation not in beliefstate["user_acts"]:
+            sys_act = SysAct()
+            sys_act.type = SysActionType.AskStartPoint
+        elif UserActionType.InformStartLocation in beliefstate["user_acts"] and UserActionType.InformDestination not in beliefstate["user_acts"]:
+            sys_act = SysAct()
+            sys_act.type = SysActionType.AskDestination
+        elif UserActionType.InformStartLocation in beliefstate["user_acts"] and UserActionType.InformDestination in beliefstate["user_acts"]:
+            sys_act = SysAct()
+            sys_act.type = SysActionType.TellDistanceDuration
 
         # If user only says hello, guide user for more information
         elif UserActionType.Hello in beliefstate["user_acts"] or UserActionType.SelectDomain in beliefstate["user_acts"]:
