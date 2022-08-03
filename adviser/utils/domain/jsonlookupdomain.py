@@ -202,6 +202,20 @@ class JSONLookupDomain(Domain):
         """ Returns a list of all informable slots. """
         return self.ontology_json['informable'].keys()
 
+    ## added
+    # start location
+    def get_informable_start_slots(self) -> List[str]:
+        return self.ontology_json['informable_start'].keys()
+    def get_possible_start_values(self, slot: str) -> List[str]:
+        return self.ontology_json['informable_start'][slot]
+
+    # destination
+    def get_informable_destination_slots(self) -> List[str]:
+        return self.ontology_json['informable_destination'].keys()
+    def get_possible_destination_values(self, slot: str) -> List[str]:
+        return self.ontology_json['informable_destination'][slot]
+    ## added
+
     def get_possible_values(self, slot: str) -> List[str]:
         """ Returns all possible values for an informable slot
 
