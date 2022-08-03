@@ -5,7 +5,7 @@ template welcomemsg(more) : "Can I help you with anything else?"
 template bad() : "Sorry I am a bit confused; please tell me again what you are looking for."
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
-template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the reservation? :-)"
+template guide_user() : "Hi! Are you looking for a restaurant? or do you use our distance and review service? :-)"
 
 
 #--------------System Requests---------------#
@@ -15,7 +15,9 @@ template request(category): "What kind of restaurant or bar are you looking for?
 template request(price): "What should their price range be?"
 template request(rating): "What should their rating be?"
 
-template request(start_location): "What is your starting location?"
+template request_distance(start_location): "What is your starting location?"
+template request_distance(name): "Please tell me the name of the restaurant you are heading to?"
+
 template ask_start_point() : "Ok, sure! Please tell me your starting location"
 
 
