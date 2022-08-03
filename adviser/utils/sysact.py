@@ -36,9 +36,12 @@ class SysActionType(Enum):
     Bad = 'bad'
     Bye = 'closingmsg'
     ConfirmRequest = 'confreq'
+
     #added
     GuideUser = 'guide_user'
     AskStartPoint = 'ask_start_point'
+    AskDestination = 'ask_destination'
+    TellDistanceDuration = 'tell_distance_duration'
 
 
 class SysAct(object):
