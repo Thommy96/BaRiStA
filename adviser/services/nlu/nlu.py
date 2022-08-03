@@ -93,6 +93,10 @@ class HandcraftedNLU(Service):
         self.USER_INFORMABLE = domain.get_informable_slots()
         self.USER_REQUESTABLE = domain.get_requestable_slots()
 
+        ## added
+        self.USER_INFORMABLE_START = domain.get_informable_start_slots()
+        self.USER_INFORMABLE_DESTINATION = domain.get_informable_destination_slots()
+
         # Getting the relative path where regexes are stored
         self.base_folder = os.path.join(get_root_dir(), 'resources', 'nlu_regexes')
 
@@ -118,6 +122,10 @@ class HandcraftedNLU(Service):
         self.user_acts = []
         self.slots_informed = set()
         self.slots_requested = set()
+        ## added
+        self.slots_informed_start = set()
+        self.slots_informed_destination = set()
+
         self.req_everything = False
 
     @PublishSubscribe(sub_topics=["user_utterance"], pub_topics=["user_acts"])
@@ -270,11 +278,17 @@ class HandcraftedNLU(Service):
         self._match_request(user_utterance)
         # Find Informs
         self._match_inform(user_utterance)
+        ## added
+        self._match_inform_start(user_utterance)
+        self._match_inform_destination(user_utterance)
         
         # Added user act without slots
         ask_distance_regex = "((C|c)an you help me with the distance)|((T|t)ell me (the )?distance)"
         if self._check(re.search(ask_distance_regex, user_utterance, re.I)):
             self.user_acts.append(UserAct(act_type=UserActionType.AskDistance))
+        ask_duration_regex = "((C|c)an you help me with the duration)|((T|t)ell me (the )?duration)|(H|h)ow long does it take.*"
+        if self._check(re.search(ask_duration_regex, user_utterance, re.I)):
+            self.user_acts.append(UserAct(act_type=UserActionType.AskDuration))
 
 
     def _match_request(self, user_utterance: str):
@@ -332,7 +346,34 @@ class HandcraftedNLU(Service):
                                 self._add_request(user_utterance, req_slot)
                     # Adding user inform act
                     self._add_inform(user_utterance, slot, value)
+
+    ## added --- ##
+    def _match_inform_start(self, user_utterance: str):
+        for slot in self.USER_INFORMABLE_START:
+            for value in self.inform_start_regex[slot]:
+                if self._check(re.search(self.inform_start_regex[slot][value], user_utterance, re.I)):
+                    self._add_inform_start(user_utterance, slot, value)
+
+    def _match_inform_destination(self, user_utterance: str):
+        for slot in self.USER_INFORMABLE_DESTINATION:
+            for value in self.inform_destination_regex[slot]:
+                if self._check(re.search(self.inform_destination_regex[slot][value], user_utterance, re.I)):
+                    self._add_inform_destination(user_utterance, slot, value)
+    
+    def _add_inform_start(self, user_utterance: str, slot: str, value: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.InformStartLocation,
+                           slot=slot, value=value)
+        self.user_acts.append(user_act)
+        self.slots_informed_start.add(slot)
+
+    def _add_inform_destination(self, user_utterance: str, slot: str, value: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.InformDestination,
+                           slot=slot, value=value)
+        self.user_acts.append(user_act)
+        self.slots_informed_destination.add(slot)
+    ## added --- ##
         
+
     def _add_inform(self, user_utterance: str, slot: str, value: str):
         """
         Creates the user request act and adds it to the user act list
@@ -467,6 +508,12 @@ class HandcraftedNLU(Service):
                                                 + 'RequestRules.json'))
             self.inform_regex = json.load(open(self.base_folder + '/' + self.domain_name
                                                + 'InformRules.json'))
+            # added
+            self.inform_start_regex = json.load(open(self.base_folder + '/' + self.domain_name
+                                               + 'InformStartRules.json'))
+            self.inform_destination_regex = json.load(open(self.base_folder + '/' + self.domain_name
+                                               + 'InformDestinationRules.json'))
+
         elif self.language == Language.GERMAN:
             # TODO: Change this once
             # Loading regular expression from JSON files
