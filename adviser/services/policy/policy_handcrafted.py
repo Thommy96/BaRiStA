@@ -142,6 +142,21 @@ class HandcraftedPolicy(Service):
             sys_act = SysAct()
             sys_act.type = SysActionType.GuideUser
 
+        elif UserActionType.GiveRating in beliefstate["user_acts"]:
+            # if the user wants to give a rating
+            sys_act = SysAct()
+            # check if a restaurant/bar is in the beliefstate
+            if self.domain.get_primary_key() in beliefstate['informs']:
+                sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
+                sys_act.add_value(slot='ratings_givable', value=beliefstate['given_rating'])
+                sys_act.type = SysActionType.ConfirmGiveRating
+                # modify rating value in the database
+                self._modfiy_db(beliefstate)
+            else:
+                # ask for which restaurant/bar the user wants to give a rating
+                sys_act.type = SysActionType.Request
+                sys_act.add_value(slot='name')
+
         ### Testing new acts ####
         
         # If user only says hello, request a random slot to move dialog along
@@ -196,6 +211,18 @@ class HandcraftedPolicy(Service):
                 act_types_lst.remove(UserActionType.Hello)
             else:
                 break
+
+    def _modfiy_db(self, beliefstate: BeliefState):
+        """Use the domain to update the database for the specified restaurant/bar and slot
+
+        Args:
+            beliefstate (BeliefState): BeliefState object; contains all given user constraints to date
+        """
+        # modify the rating
+        if beliefstate['given_rating']:
+            given_rating = float(beliefstate['given_rating'])
+            self.domain.enter_rating(given_rating, self._get_name(beliefstate))
+
 
     def _query_db(self, beliefstate: BeliefState):
         """Based on the constraints specified, uses the domain to generate the appropriate type
