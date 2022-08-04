@@ -186,6 +186,34 @@ class JSONLookupDomain(Domain):
         cursor.execute(query_str)
         res = cursor.fetchall()
         return res
+    
+    def modify_db(self, modify_str: str):
+        """Function for mofiying a sqlite3 db
+
+        Args:
+            modify_str (str): sqlite3 update style string
+        """
+        if "db" not in self.__dict__:
+            root_dir = self._get_root_dir()
+            sqllite_db_file = self.sqllite_db_file or os.path.join(
+                'resources', 'databases', self.name + '.db')
+            self.db = self._load_db_to_memory(root_dir + '/' + sqllite_db_file)
+        cursor = self.db.cursor()
+        cursor.execute(modify_str)
+
+    def enter_rating(self, given_rating: float, name: str):
+        """Compute the nwe rating given the current rating and the given rating and update the db
+
+        Args:
+            given_rating (float): rating given by the user
+            name (str): name of the restaurant/bar
+        """
+        current_rating = float(self.query_db(f'SELECT rating FROM {self.get_domain_name()} WHERE name="{name}"')[0]['rating'])
+        # TODO include number of ratings
+        new_rating = (current_rating + given_rating) / 2
+        new_rating = str(round(new_rating, 1))
+        modify_str = f'UPDATE {self.get_domain_name()} SET rating="{new_rating}" WHERE name="{name}"'
+        self.modify_db(modify_str)
 
     def get_display_name(self):
         return self.display_name
@@ -213,6 +241,14 @@ class JSONLookupDomain(Domain):
             the specified slot.
          """
         return self.ontology_json['informable'][slot]
+    
+    def get_givable_ratings(self) -> List[str]:
+        """Returns all possible values for giving ratings
+
+        Returns:
+            List[str]: givable ratings
+        """
+        return self.ontology_json['ratings_givable']
 
     def get_primary_key(self):
         """ Returns the name of a column in the associated database which can be used to uniquely
