@@ -39,6 +39,7 @@ class SysActionType(Enum):
     #added
     GuideUser = 'guide_user'
     AskStartPoint = 'ask_start_point'
+    ConfirmGiveRating = 'confirm_giverating'
 
 
 class SysAct(object):
