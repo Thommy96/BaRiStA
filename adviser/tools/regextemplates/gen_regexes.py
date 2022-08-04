@@ -53,12 +53,21 @@ def _create_inform_json(domain: JSONLookupDomain, template: RegexFile):
             inform_regex_json[slot][value] = template.create_regex(inform_act)
     return inform_regex_json
 
+def _create_giverating_json(domain: JSONLookupDomain, template: RegexFile):
+    giverating_regex_json = {}
+    giverating_regex_json['ratings_givable'] = {}
+    for value in domain.get_givable_ratings():
+        giverating_act = UserAct(act_type=UserActionType.GiveRating, slot='ratings_givable', value=value)
+        giverating_regex_json['ratings_givable'][value] = template.create_regex(giverating_act)
+    return giverating_regex_json
+
 
 def create_json_from_template(domain: JSONLookupDomain, template_filename: str):
     template = RegexFile(template_filename, domain)
     domain_name = domain.get_domain_name()
     _write_dict_to_file(_create_request_json(domain, template), f'{domain_name}RequestRules.json')
     _write_dict_to_file(_create_inform_json(domain, template), f'{domain_name}InformRules.json')
+    _write_dict_to_file(_create_giverating_json(domain, template), f'{domain_name}GiveratingRules.json')
 
 
 if __name__ == '__main__':

@@ -270,6 +270,7 @@ class HandcraftedNLU(Service):
         self._match_request(user_utterance)
         # Find Informs
         self._match_inform(user_utterance)
+        self._match_giverating(user_utterance)
         
         # Added user act without slots
         ask_distance_regex = "((C|c)an you help me with the distance)|((T|t)ell me (the )?distance)"
@@ -350,6 +351,15 @@ class HandcraftedNLU(Service):
         self.user_acts.append(user_act)
         # Storing user informed slots in this turn
         self.slots_informed.add(slot)
+
+    def _match_giverating(self, user_utterance: str):
+        for value in self.giverating_regex['ratings_givable']:
+            if self._check(re.search(self.giverating_regex['ratings_givable'][value], user_utterance, re.I)):
+                self._add_giverating(user_utterance, value)
+
+    def _add_giverating(self, user_utterance: str, value: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.GiveRating, value=value)
+        self.user_acts.append(user_act)
 
     @staticmethod
     def _exact_match(phrases: List[str], user_utterance: str) -> bool:
@@ -467,6 +477,8 @@ class HandcraftedNLU(Service):
                                                 + 'RequestRules.json'))
             self.inform_regex = json.load(open(self.base_folder + '/' + self.domain_name
                                                + 'InformRules.json'))
+            self.giverating_regex = json.load(open(self.base_folder + '/' + self.domain_name
+                                               + 'GiveratingRules.json'))
         elif self.language == Language.GERMAN:
             # TODO: Change this once
             # Loading regular expression from JSON files
