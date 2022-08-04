@@ -41,6 +41,7 @@ class UserActionType(Enum):
     Repeat = 'repeat'
     #added
     AskDistance = 'ask_distance'
+    GiveRating = 'giverating'
 
 
 class UserAct(object):
