@@ -115,6 +115,9 @@ rule ask_distance(start_location)
     "The distance between {synonyms("start_location", start_location)} and the restaurant"
     "How far between {synonyms("start_location", start_location)} and the restaurant"
 
+rule giverating(ratings_givable)
+    "(.* |^)(give|rate|assign) (rating|score) of {ratings_givable}"
+
 # synonyms
 function synonyms(slot, value)
     "{value}"
