@@ -14,6 +14,7 @@ template guide_user() : "Hi! Are you looking for a restaurant? or do you need he
 template request(category): "What kind of restaurant or bar are you looking for?"
 template request(price): "What should their price range be?"
 template request(rating): "What should their rating be?"
+template request(name): "Please first tell me the name of the restaurant/bar."
 
 template request(start_location): "What is your starting location?"
 template ask_start_point() : "Ok, sure! Please tell me your starting location"
@@ -81,6 +82,9 @@ template confirm(): "Please tell me more about the restaurant/bar you are lookin
 template confirm(name, *slots)
 	if name = "none"
 		"Let me confirm, you are looking for a restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}, right?"
+
+template confirm_giverating(name, ratings_givable)
+	"Let me confirm: you have given the restaurant/bar {name} a rating of {ratings_givable}."
 
 # ------------System RequestMore--------#
 
