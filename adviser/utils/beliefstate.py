@@ -107,6 +107,8 @@ class BeliefState:
         belief_state = {"user_acts": set(),
                         "informs": {},
                         "requests": {},
+                        "informs_start": {},
+                        "informs_destination": {},
                         "num_matches": 0,
                         "discriminable": True}
 
