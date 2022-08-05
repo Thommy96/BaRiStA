@@ -55,6 +55,8 @@ class HandcraftedBST(Service):
         self.bs.start_new_turn()
         if user_acts:
             self._reset_informs(user_acts)
+            self._reset_informs_start(user_acts)
+            self._reset_informs_destination(user_acts)
             self._reset_requests()
             self.bs["user_acts"] = self._get_all_usr_action_types(user_acts)
 
@@ -87,6 +89,20 @@ class HandcraftedBST(Service):
         for slot in [s for s in self.bs['informs']]:
             if slot in slots:
                 del self.bs['informs'][slot]
+
+    ## added
+    def _reset_informs_start(self, acts: List[UserAct]):
+        slots = {act.slot for act in acts if act.type == UserActionType.InformStartLocation}
+        for slot in [s for s in self.bs['informs_start']]:
+            if slot in slots:
+                del self.bs['informs_start'][slot]
+    def _reset_informs_destination(self, acts: List[UserAct]):
+        slots = {act.slot for act in acts if act.type == UserActionType.InformDestination}
+        for slot in [s for s in self.bs['informs_destination']]:
+            if slot in slots:
+                del self.bs['informs_destination'][slot]
+    
+
 
     def _reset_requests(self):
         """
@@ -124,11 +140,21 @@ class HandcraftedBST(Service):
                 and UserActionType.Inform in self.bs["user_acts"]:
             del self.bs['informs'][self.domain.get_primary_key()]
 
+        ## added
+        if self.domain.get_primary_key() in self.bs['informs_start'] \
+                and UserActionType.InformStartLocation in self.bs["user_acts"]:
+            del self.bs['informs_start'][self.domain.get_primary_key()]
+        if self.domain.get_primary_key() in self.bs['informs_destination'] \
+                and UserActionType.InformDestination in self.bs["user_acts"]:
+            del self.bs['informs_destination'][self.domain.get_primary_key()]
+
         # We choose to interpret switching as wanting to start a new dialog and do not support
         # resuming an old dialog
         elif UserActionType.SelectDomain in self.bs["user_acts"]:
             self.bs["informs"] = {}
             self.bs["requests"] = {}
+            self.bs["informs_start"] = {}
+            self.bs["informs_destination"] = {}
 
         # Handle user acts
         for act in user_acts:
@@ -149,3 +175,16 @@ class HandcraftedBST(Service):
                 # This way it is clear that the user is no longer asking about that one item
                 if self.domain.get_primary_key() in self.bs['informs']:
                     del self.bs['informs'][self.domain.get_primary_key()]
+
+            ## added
+            elif act.type == UserActionType.InformStartLocation:
+                if act.slot in self.bs["informs_start"]:
+                    self.bs['informs_start'][act.slot][act.value] = act.score
+                else:
+                    self.bs['informs_start'][act.slot] = {act.value: act.score}
+            elif act.type == UserActionType.InformDestination:
+                if act.slot in self.bs["informs_destination"]:
+                    self.bs['informs_destination'][act.slot][act.value] = act.score
+                else:
+                    self.bs['informs_destination'][act.slot] = {act.value: act.score}
+
