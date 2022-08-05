@@ -152,7 +152,7 @@ class HandcraftedNLU(Service):
 
         # slots_requested & slots_informed store slots requested and informed in this turn
         # they are used later for later disambiguation
-        self.slots_requested, self.slots_informed = set(), set()
+        self.slots_requested, self.slots_informed, self.slots_informed_start, self.slots_informed_destination = set(), set(), set(), set()
         if user_utterance is not None:
             user_utterance = user_utterance.strip()
             self._match_general_act(user_utterance)
@@ -283,10 +283,10 @@ class HandcraftedNLU(Service):
         self._match_inform_destination(user_utterance)
         
         # Added user act without slots
-        ask_distance_regex = "((C|c)an you help me with the distance)|((T|t)ell me (the )?distance)"
+        ask_distance_regex = "((C|c)an you help me with the distance)|((T|t)ell me (the )?distance)|(H|h)ow far.*|.*(distance).*"
         if self._check(re.search(ask_distance_regex, user_utterance, re.I)):
             self.user_acts.append(UserAct(act_type=UserActionType.AskDistance))
-        ask_duration_regex = "((C|c)an you help me with the duration)|((T|t)ell me (the )?duration)|(H|h)ow long does it take.*"
+        ask_duration_regex = "((C|c)an you help me with the duration)|((T|t)ell me (the )?duration)|(H|h)ow long does it take.*|.*(duration).*"
         if self._check(re.search(ask_duration_regex, user_utterance, re.I)):
             self.user_acts.append(UserAct(act_type=UserActionType.AskDuration))
 
