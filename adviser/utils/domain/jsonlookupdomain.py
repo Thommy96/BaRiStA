@@ -83,6 +83,7 @@ class JSONLookupDomain(Domain):
         for col_idx, col in enumerate(cursor.description):
             # iterate over all columns, get corresponding db value from row
             row_dict[col[0]] = row[col_idx]
+        print(row_dict)
         return row_dict
 
     def _load_db_to_memory(self, db_file_path : str):
