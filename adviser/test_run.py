@@ -16,6 +16,6 @@ while user_input.strip().lower() not in ('', 'exit', 'bye', 'goodbye'):
     user_acts = nlu.extract_user_acts(user_input)['user_acts']
     update_bst = bst.update_bst(user_acts)
     user_act_bst = bst._handle_user_acts(user_acts)
-    print('\n'.join([repr(user_act) for user_act in user_acts]))
+    #print('\n'.join([repr(user_act) for user_act in user_acts]))
     print('updated bst:', update_bst, 'handle user act:', user_act_bst)
     user_input = input('>>> ')
