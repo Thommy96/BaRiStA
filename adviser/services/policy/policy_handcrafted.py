@@ -145,8 +145,8 @@ class HandcraftedPolicy(Service):
         elif UserActionType.GiveRating in beliefstate["user_acts"]:
             # if the user wants to give a rating
             sys_act = SysAct()
-            # check if a restaurant/bar is in the beliefstate
-            if self.domain.get_primary_key() in beliefstate['informs']:
+            # check if a restaurant/bar is in the beliefstate or has been suggested to the user
+            if self._get_name(beliefstate):
                 sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
                 sys_act.add_value(slot='ratings_givable', value=beliefstate['given_rating'])
                 sys_act.type = SysActionType.ConfirmGiveRating
