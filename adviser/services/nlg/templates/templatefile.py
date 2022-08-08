@@ -78,6 +78,7 @@ class TemplateFile:
             if template.intent not in template_dict:
                 template_dict[template.intent] = []
             template_dict[template.intent].append(template)
+        print("templatefile -- template_dict: ", template_dict)
         return template_dict
     
     def _add_functions_to_global_memory(self, functions: List[Function]):
@@ -97,7 +98,10 @@ class TemplateFile:
             str -- the message returned by the template
         """
         slots = self._create_memory_from_sys_act(sys_act)
+        print("templatefile.py sys_act:", sys_act.type.value)
+        #print("templatefile self._templates:", self._templates[sys_act.type.value])
         for template in self._templates[sys_act.type.value]:
+            print("applicable:", template.is_applicable(slots), " // template:", template, " // slots:", slots)
             if template.is_applicable(slots):
                 return template.apply(slots)
         raise BaseException('No template was found for the given system act.')
