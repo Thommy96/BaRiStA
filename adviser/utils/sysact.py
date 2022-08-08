@@ -42,6 +42,7 @@ class SysActionType(Enum):
     AskStartPoint = 'ask_start_point'
     AskDestination = 'ask_destination'
     TellDistanceDuration = 'tell_distance_duration'
+    InformDistanceDuration = 'inform_distance_duration'
 
 
 class SysAct(object):
