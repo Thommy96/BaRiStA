@@ -83,7 +83,6 @@ class JSONLookupDomain(Domain):
         for col_idx, col in enumerate(cursor.description):
             # iterate over all columns, get corresponding db value from row
             row_dict[col[0]] = row[col_idx]
-        print(row_dict)
         return row_dict
 
     def _load_db_to_memory(self, db_file_path : str):
@@ -204,17 +203,21 @@ class JSONLookupDomain(Domain):
         return self.ontology_json['informable'].keys()
 
     ## added
-    # start location
+    # INFORM start location
     def get_informable_start_slots(self) -> List[str]:
         return self.ontology_json['informable_start'].keys()
     def get_possible_start_values(self, slot: str) -> List[str]:
         return self.ontology_json['informable_start'][slot]
 
-    # destination
+    # INFORM destination
     def get_informable_destination_slots(self) -> List[str]:
         return self.ontology_json['informable_destination'].keys()
     def get_possible_destination_values(self, slot: str) -> List[str]:
         return self.ontology_json['informable_destination'][slot]
+
+    # SYS_REQUEST
+    def get_system_requestable_distance_slots(self) -> List[str]:
+        return self.ontology_json['system_distance_requestable']
     ## added
 
     def get_possible_values(self, slot: str) -> List[str]:
