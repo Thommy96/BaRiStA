@@ -6,7 +6,7 @@ template bad() : "Sorry I am a bit confused; please tell me again what you are l
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
 template guide_user() : "Hi! Are you looking for a restaurant? or do you use our distance and review service? :-)"
-template tell_distance_duration(): "The distance is ...(incomplete)"
+template tell_distance_duration(): "The distance is ..., and it will take ...(incomplete)"
 
 #--------------System Requests---------------#
 # system requestables are: category, price, rating, start_location
@@ -15,11 +15,11 @@ template request(category): "What kind of restaurant or bar are you looking for?
 template request(price): "What should their price range be?"
 template request(rating): "What should their rating be?"
 
-#template request_distance(start_location): "Ok, sure! Please tell me your starting location"
-#template request_distance(name): "Please tell me the name of the restaurant you are heading to?"
+#template ask_start_point(start_location): "Ok, sure! Please tell me your starting location"
+#template ask_destination(name): "Can I have the name of the restaurant you are heading to?"
 
-template ask_start_point() : "Ok, sure! Please tell me your starting location"
-template ask_destination(): "Please tell me the name of the restaurant you are heading to?"
+template ask_start_point() : "Ok, sure! Please tell me your current location."
+template ask_destination(): "Can I have the name of the restaurant you are heading to?"
 
 # --------- Helper Functions -------- #
 
@@ -37,7 +37,8 @@ function info(slot, value, name)
     if slot = "website": "{genitive(name)} website is {value}"
     if slot = "address": "{genitive(name)} address is {value}"
     if slot = "price": "has a {value} price"
-    if slot = "start_location": "the distance from your place {value} to {name} is...(incomplete) "
+    #if slot = "start_location": "the distance from your place {value} to {name} is...(incomplete) "
+	#if slot = "name": "the distance from your place to {name} is...(incomplete) "
 
 template inform(name)
     "There is a restaurant/bar named {name}. What do you want to know about it?"
@@ -60,9 +61,6 @@ template inform_byname(name, *slots)
 	
 	special_case name = "none"
 		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
-		
-template compute_distance(start_location)
-    "The distance between your place {start_location} and the restaurant is ..."
 
 template inform_alternatives(name)
 	"There is another restaurant/bar {name}. What do you want to know about it?"
@@ -75,6 +73,10 @@ template inform_alternatives(name, *slots)
 	
 	special_case name = "none"
 		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
+
+#template inform_distance_duration(name, start_locationv)
+#    "The distance between {start_location} and {name} is ..."
+
 
 #------------System Confirm--------------#
 
