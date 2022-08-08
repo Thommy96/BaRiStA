@@ -134,18 +134,22 @@ class HandcraftedPolicy(Service):
         elif UserActionType.AskDistance in beliefstate["user_acts"] or UserActionType.AskDuration in beliefstate["user_acts"]:
             sys_act = SysAct()
             sys_act.type = SysActionType.AskStartPoint
-            #slot = self._get_open_slot(beliefstate)
+            #slot = self._get_distance_slot(beliefstate)
             #sys_act.add_value(slot)
-
-        elif UserActionType.InformDestination in beliefstate["user_acts"] and UserActionType.InformStartLocation not in beliefstate["user_acts"]:
+            #print('(policy.py): self._get_distance_slot', self._get_distance_slot(beliefstate))
+        elif beliefstate["informs_destination"] != {} and beliefstate["informs_start"] == {}:
             sys_act = SysAct()
             sys_act.type = SysActionType.AskStartPoint
-        elif UserActionType.InformStartLocation in beliefstate["user_acts"] and UserActionType.InformDestination not in beliefstate["user_acts"]:
+            #slot = self._get_distance_slot(beliefstate)
+            #sys_act.add_value(slot)
+            #print('(policy.py): self._get_distance_slot', self._get_distance_slot(beliefstate))
+        elif beliefstate["informs_destination"] == {} and beliefstate["informs_start"] != {}:
             sys_act = SysAct()
             sys_act.type = SysActionType.AskDestination
-        elif UserActionType.InformStartLocation in beliefstate["user_acts"] and UserActionType.InformDestination in beliefstate["user_acts"]:
+        elif beliefstate["informs_destination"] != {} and beliefstate["informs_start"] != {}:
             sys_act = SysAct()
             sys_act.type = SysActionType.TellDistanceDuration
+            #print('(policy.py): self._get_distance_slot', self._get_distance_slot(beliefstate))
 
         # If user only says hello, guide user for more information
         elif UserActionType.Hello in beliefstate["user_acts"] or UserActionType.SelectDomain in beliefstate["user_acts"]:
@@ -304,6 +308,14 @@ class HandcraftedPolicy(Service):
             if slot not in filled_slots:
                 return slot
         return None
+    
+    ## added
+    def _get_distance_slot(self, beliefstate: BeliefState):
+        #filled_slots, _ = self._get_constraints(beliefstate)
+        requestable_distance_slots = self.domain.get_system_requestable_distance_slots()
+        for slot in requestable_distance_slots:
+            return slot
+        #return None
 
     def _next_action(self, beliefstate: BeliefState):
         """Determines the next system action based on the current belief state and
