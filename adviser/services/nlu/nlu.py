@@ -30,6 +30,15 @@ from utils.common import Language
 from utils.domain.jsonlookupdomain import JSONLookupDomain
 from utils.logger import DiasysLogger
 from utils.sysact import SysAct, SysActionType
+import json
+import os
+
+from tools.scrape_maps.extract_duration import get_coordinates, get_route
+#from resources.databases.match_address import name_address_pair
+
+address_data_dir = '/Users/yangching18/uni_stuttgart/4_semester/DialogueSystem/adviser-TBC/adviser/resources/databases/'
+with open(os.path.join(address_data_dir, "name_address_pair.json")) as f:
+    address_data = json.load(f)
 
 
 def get_root_dir():
@@ -350,27 +359,43 @@ class HandcraftedNLU(Service):
     ## added --- ##
     def _match_inform_start(self, user_utterance: str):
         for slot in self.USER_INFORMABLE_START:
+            #print("(nlu.py) slot:", slot)
             for value in self.inform_start_regex[slot]:
+                #print("(nlu.py) value:", value)
                 if self._check(re.search(self.inform_start_regex[slot][value], user_utterance, re.I)):
-                    self._add_inform_start(user_utterance, slot, value)
+                    #print(self._check(re.search(self.inform_start_regex[slot][value], user_utterance, re.I)), value)
+                    if value == "Uni":
+                        start_address = "Pfaffenwaldring, 70569 Stuttgart"
+                    elif value == "Schwabstrasse":
+                        start_address = "Rotebühlstrasse, 70197 Stuttgart"
+                    elif value == "Hauptbahnhof":
+                        start_address = "Arnulf-Klett-Platz 2, 70173 Stuttgart"
+                    self._add_inform_start(user_utterance, slot, value, start_address)
+                    print("(nlu.py) address:", start_address)
 
     def _match_inform_destination(self, user_utterance: str):
         for slot in self.USER_INFORMABLE_DESTINATION:
             for value in self.inform_destination_regex[slot]:
                 if self._check(re.search(self.inform_destination_regex[slot][value], user_utterance, re.I)):
-                    self._add_inform_destination(user_utterance, slot, value)
+                    destination_address = address_data[value]
+                    self._add_inform_destination(user_utterance, slot, value, destination_address)
+                    print("(nlu.py) destination:", destination_address)
     
-    def _add_inform_start(self, user_utterance: str, slot: str, value: str):
+    def _add_inform_start(self, user_utterance: str, slot: str, value: str, start_address: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.InformStartLocation,
                            slot=slot, value=value)
         self.user_acts.append(user_act)
+        #print("start, self.user_acts:", self.user_acts)
         self.slots_informed_start.add(slot)
+        print("start self.slots_informed_start:", self.slots_informed_start)
 
-    def _add_inform_destination(self, user_utterance: str, slot: str, value: str):
+    def _add_inform_destination(self, user_utterance: str, slot: str, value: str, destination_address: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.InformDestination,
                            slot=slot, value=value)
         self.user_acts.append(user_act)
+        #print("destination self.user_acts:", self.user_acts)
         self.slots_informed_destination.add(slot)
+        print("destination self.slots_informed_destination:", self.slots_informed_destination)
     ## added --- ##
         
 
