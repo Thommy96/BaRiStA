@@ -5,14 +5,22 @@ template welcomemsg(more) : "Can I help you with anything else?"
 template bad() : "Sorry I am a bit confused; please tell me again what you are looking for."
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
+template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the reservation? :-)"
+
 
 #--------------System Requests---------------#
-# system requestables are: category, opening_hours, price, rating
+# system requestables are: category, price, rating, start_location, num_reviews, parking_lot
 
 template request(category): "What kind of restaurant or bar are you looking for?"
-#template request(opening_hours): "Should it have open at a specific time?"
 template request(price): "What should their price range be?"
 template request(rating): "What should their rating be?"
+template request(name): "Please first tell me the name of the restaurant/bar."
+template request(num_reviews): "How many reviews should it have?"
+template request(parking_lot): "Should it have a parking lot?"
+
+template request(start_location): "What is your starting location?"
+template ask_start_point() : "Ok, sure! Please tell me your starting location"
+
 
 # --------- Helper Functions -------- #
 
@@ -20,16 +28,22 @@ function genitive(name)
 	"{genitive_s(name)}"
 
 #----------System Recommendation/Inform---------------#
-# name, rating, category, opening_hours, phone_number, website, address, price
+# name, rating, category, opening_hours, phone_number, website, address, price, num_reviews, manner, description, reviews, parking_lot
 
 function info(slot, value, name)
-    if slot = "rating": "{name} has a rating of {value}"
-    if slot = "category": "{name} is a {value}"
+    if slot = "rating": "has a rating of {value}"
+    if slot = "category": "is a {value}"
     if slot = "opening_hours": "{genitive(name)} opening hours are {value}"
     if slot = "phone_number": "{genitive(name)} phone number is {value}"
     if slot = "website": "{genitive(name)} website is {value}"
     if slot = "address": "{genitive(name)} address is {value}"
-    if slot = "price": "{name} has a {value} price"
+    if slot = "price": "has a {value} price"
+    if slot = "start_location": "the distance from your place {value} to {name} is...(incomplete) "
+	if slot = "num_reviews": "has {value} reviews"
+	if slot = "manner": "{genitive(name)} possible options are {value}"
+	if slot = "description": "{genitive(name)} short description is {value}"
+	if slot = "reviews": "here are some examples {value}"
+	if slot = "parking_lot": "has {value} parking lot"
 
 template inform(name)
     "There is a restaurant/bar named {name}. What do you want to know about it?"
@@ -37,7 +51,7 @@ template inform(name)
     if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
 
 template inform(name, *slots)
-	"{for_entry(slots, "info", ", ", " and ", name)}."
+	"{name} {for_entry(slots, "info", ", ", " and ", name)}."
 
     special_case name = "none"
 		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
@@ -48,10 +62,25 @@ template inform_byname(name)
 	if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
 
 template inform_byname(name, *slots)
-	"{for_entry(slots, "info", ", ", " and ", name)}."
+	"{name} {for_entry(slots, "info", ", ", " and ", name)}."
 	
 	special_case name = "none"
 		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
+		
+template compute_distance(start_location)
+    "The distance between your place {start_location} and the restaurant is ..."
+
+template inform_alternatives(name)
+	"There is another restaurant/bar {name}. What do you want to know about it?"
+
+	special_case name = "none"
+		"I'm sorry, I couldn't find another restaurant/bar."
+
+template inform_alternatives(name, *slots)
+	"The restaurant/bar {name} also {for_entry(slots, "info", ", it ", " and ", name)}."
+	
+	special_case name = "none"
+		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
 
 #------------System Confirm--------------#
 
@@ -60,6 +89,9 @@ template confirm(): "Please tell me more about the restaurant/bar you are lookin
 template confirm(name, *slots)
 	if name = "none"
 		"Let me confirm, you are looking for a restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}, right?"
+
+template confirm_giverating(name, ratings_givable)
+	"Let me confirm: you have given the restaurant/bar {name} a rating of {ratings_givable}."
 
 # ------------System RequestMore--------#
 
