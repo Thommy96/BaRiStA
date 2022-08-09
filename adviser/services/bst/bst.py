@@ -24,6 +24,16 @@ from services.service import Service
 from utils.beliefstate import BeliefState
 from utils.useract import UserActionType, UserAct
 
+import json
+import os
+
+from tools.scrape_maps.extract_duration import get_coordinates, get_route, get_distance_duration
+#from resources.databases.match_address import name_address_pair
+
+address_data_dir = '/Users/yangching18/uni_stuttgart/4_semester/DialogueSystem/adviser-TBC/adviser/resources/databases/'
+with open(os.path.join(address_data_dir, "name_address_pair.json")) as f:
+    address_data = json.load(f)
+#print(address_data)
 
 class HandcraftedBST(Service):
     """
@@ -124,6 +134,12 @@ class HandcraftedBST(Service):
         for act in user_acts:
             action_type_set.add(act.type)
         return action_type_set
+    
+    #def _match_address(self):
+    #    address_data_dir = '/Users/yangching18/uni_stuttgart/4_semester/DialogueSystem/adviser-TBC/adviser/resources/databases/'
+    #    with open(os.path.join(address_data_dir, "name_address_pair.json")) as f:
+    #        address_data = json.load(f)
+    #    return address_data
 
     def _handle_user_acts(self, user_acts: List[UserAct]):
 
@@ -141,12 +157,12 @@ class HandcraftedBST(Service):
             del self.bs['informs'][self.domain.get_primary_key()]
 
         ## added
-        if self.domain.get_primary_key() in self.bs['informs_start'] \
-                and UserActionType.InformStartLocation in self.bs["user_acts"]:
-            del self.bs['informs_start'][self.domain.get_primary_key()]
-        if self.domain.get_primary_key() in self.bs['informs_destination'] \
-                and UserActionType.InformDestination in self.bs["user_acts"]:
-            del self.bs['informs_destination'][self.domain.get_primary_key()]
+        #if self.domain.get_primary_key() in self.bs['informs_start'] \
+        #        and UserActionType.InformStartLocation in self.bs["user_acts"]:
+        #    del self.bs['informs_start'][self.domain.get_primary_key()]
+        #if self.domain.get_primary_key() in self.bs['informs_destination'] \
+        #        and UserActionType.InformDestination in self.bs["user_acts"]:
+        #    del self.bs['informs_destination'][self.domain.get_primary_key()]
 
         # We choose to interpret switching as wanting to start a new dialog and do not support
         # resuming an old dialog
@@ -155,6 +171,8 @@ class HandcraftedBST(Service):
             self.bs["requests"] = {}
             self.bs["informs_start"] = {}
             self.bs["informs_destination"] = {}
+            #self.bs["informs_start_address"] = ""
+            #self.bs["informs_destination_address"] = ""
 
         # Handle user acts
         for act in user_acts:
@@ -178,13 +196,26 @@ class HandcraftedBST(Service):
 
             ## added
             elif act.type == UserActionType.InformStartLocation:
-                if act.slot in self.bs["informs_start"]:
-                    self.bs['informs_start'][act.slot][act.value] = act.score
-                else:
-                    self.bs['informs_start'][act.slot] = {act.value: act.score}
+                #if act.slot in self.bs["informs_start"]:
+                #    self.bs['informs_start'][act.slot][act.value] = act.score
+                if act.value == "Uni":
+                    start_address = "Pfaffenwaldring, 70569 Stuttgart"
+                elif act.value == "Schwabstrasse":
+                    start_address = "Rotebühlstrasse, 70197 Stuttgart"
+                elif act.value == "Hauptbahnhof":
+                    start_address = "Arnulf-Klett-Platz 2, 70173 Stuttgart"
+                self.bs['informs_start'] = start_address
+                #self.bs['informs_start_address'] = start_address
+
             elif act.type == UserActionType.InformDestination:
-                if act.slot in self.bs["informs_destination"]:
-                    self.bs['informs_destination'][act.slot][act.value] = act.score
-                else:
-                    self.bs['informs_destination'][act.slot] = {act.value: act.score}
+                #if act.slot in self.bs["informs_destination"]:
+                    #self.bs['informs_destination'][act.slot][act.value] = act.score
+                destination_address = address_data[act.value]
+                self.bs['informs_destination'] = destination_address
+                #self.bs['informs_destination_address'] = destination_address
+
+            elif act.type == UserActionType.Continue:
+                self.bs['distance_and_duration'] = "calculate!"
+                #print(self.bs)
+
 
