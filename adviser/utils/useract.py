@@ -45,6 +45,7 @@ class UserActionType(Enum):
     AskDuration = 'ask_duration'
     InformStartLocation = 'inform_start_location'
     InformDestination = 'inform_destination'
+    Continue = 'continue'
 
 
 class UserAct(object):
