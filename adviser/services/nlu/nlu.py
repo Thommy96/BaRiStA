@@ -147,8 +147,17 @@ class HandcraftedNLU(Service):
         self.slots_requested, self.slots_informed = set(), set()
         if user_utterance is not None:
             user_utterance = user_utterance.strip()
-            self._match_general_act(user_utterance)
-            self._match_domain_specific_act(user_utterance)
+            if self.sys_act_info['last_act']:
+                # if the user asked to write a review the next user utterance should not
+                # be matched against user acts
+                if self.sys_act_info['last_act'].type == SysActionType.AskWriteReview:
+                    self._match_writtenreview(user_utterance)
+                else:
+                    self._match_general_act(user_utterance)
+                    self._match_domain_specific_act(user_utterance)
+            else:
+                self._match_general_act(user_utterance)
+                self._match_domain_specific_act(user_utterance)
 
         self._solve_informable_values()
 
@@ -271,6 +280,7 @@ class HandcraftedNLU(Service):
         # Find Informs
         self._match_inform(user_utterance)
         self._match_giverating(user_utterance)
+        self._match_writereview(user_utterance)
         
         # Added user act without slots
         ask_distance_regex = "((C|c)an you help me with the distance)|((T|t)ell me (the )?distance)"
@@ -359,6 +369,22 @@ class HandcraftedNLU(Service):
 
     def _add_giverating(self, user_utterance: str, value: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.GiveRating, value=value)
+        self.user_acts.append(user_act)
+
+    def _match_writereview(self, user_utterance: str):
+        if self._check(re.search(self.writereview_regex['writereview_act'], user_utterance, re.I)):
+            self._add_writereview(user_utterance)
+
+    def _add_writereview(self, user_utterance: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.WriteReview)
+        self.user_acts.append(user_act)
+    
+    def _match_writtenreview(self, user_utterance: str):
+        # in this case there is no need to match the user utterance to a regex
+        self._add_writtenreview(user_utterance)
+    
+    def _add_writtenreview(self, user_utterance: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.WrittenReview, value=user_utterance)
         self.user_acts.append(user_act)
 
     @staticmethod
@@ -479,6 +505,8 @@ class HandcraftedNLU(Service):
                                                + 'InformRules.json'))
             self.giverating_regex = json.load(open(self.base_folder + '/' + self.domain_name
                                                + 'GiveratingRules.json'))
+            self.writereview_regex = json.load(open(self.base_folder + '/' + self.domain_name
+                                               + 'WritereviewRules.json'))
         elif self.language == Language.GERMAN:
             # TODO: Change this once
             # Loading regular expression from JSON files
