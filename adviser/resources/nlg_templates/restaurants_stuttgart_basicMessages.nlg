@@ -6,7 +6,7 @@ template bad() : "Sorry I am a bit confused; please tell me again what you are l
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
 template guide_user() : "Hi! Are you looking for a restaurant? or do you use our distance and review service? :-)"
-template tell_distance_duration(): "The distance is ..., and it will take ...(incomplete)"
+template confirm_location(start_location, destination): "Ok! I am going to tell you more information on distance and duration between {start_location} and {destination}. Please enter: continue"
 
 #--------------System Requests---------------#
 # system requestables are: category, price, rating, start_location
@@ -70,12 +70,12 @@ template inform_alternatives(name)
 
 template inform_alternatives(name, *slots)
 	"The restaurant/bar {name} also {for_entry(slots, "info", ", it ", " and ", name)}."
-	
+
 	special_case name = "none"
 		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
 
-#template inform_distance_duration(name, start_locationv)
-#    "The distance between {start_location} and {name} is ..."
+#template inform_distance_duration(name, start_location, distance, duration)
+#    "The distance between {start_location} and {name} is {distance}, and it will take {duration}."
 
 
 #------------System Confirm--------------#
