@@ -101,7 +101,7 @@ class TemplateFile:
         #print("templatefile.py sys_act:", sys_act.type.value)
         #print("templatefile self._templates:", self._templates[sys_act.type.value])
         for template in self._templates[sys_act.type.value]:
-            print("applicable:", template.is_applicable(slots), " // template:", template, " // slots:", slots)
+            #print("applicable:", template.is_applicable(slots), " // template:", template, " // slots:", slots)
             if template.is_applicable(slots):
                 return template.apply(slots)
         raise BaseException('No template was found for the given system act.')

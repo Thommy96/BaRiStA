@@ -36,9 +36,9 @@ import os
 from tools.scrape_maps.extract_duration import get_coordinates, get_route
 #from resources.databases.match_address import name_address_pair
 
-address_data_dir = '/Users/yangching18/uni_stuttgart/4_semester/DialogueSystem/adviser-TBC/adviser/resources/databases/'
-with open(os.path.join(address_data_dir, "name_address_pair.json")) as f:
-    address_data = json.load(f)
+#address_data_dir = '/Users/yangching18/uni_stuttgart/4_semester/DialogueSystem/adviser-TBC/adviser/resources/databases/'
+#with open(os.path.join(address_data_dir, "name_address_pair.json")) as f:
+#    address_data = json.load(f)
 
 
 def get_root_dir():
@@ -298,6 +298,10 @@ class HandcraftedNLU(Service):
         ask_duration_regex = "((C|c)an you help me with the duration)|((T|t)ell me (the )?duration)|(H|h)ow long does it take.*|.*(duration).*"
         if self._check(re.search(ask_duration_regex, user_utterance, re.I)):
             self.user_acts.append(UserAct(act_type=UserActionType.AskDuration))
+        continue_regex = "((C|c)ontinue)"
+        if self._check(re.search(continue_regex, user_utterance, re.I)):
+            self.user_acts.append(UserAct(act_type=UserActionType.Continue))
+        
 
 
     def _match_request(self, user_utterance: str):
@@ -341,7 +345,6 @@ class HandcraftedNLU(Service):
         Returns:
 
         """
-
         # Iteration over all user informable slots and their slots
         for slot in self.USER_INFORMABLE:
             for value in self.inform_regex[slot]:
@@ -364,38 +367,38 @@ class HandcraftedNLU(Service):
                 #print("(nlu.py) value:", value)
                 if self._check(re.search(self.inform_start_regex[slot][value], user_utterance, re.I)):
                     #print(self._check(re.search(self.inform_start_regex[slot][value], user_utterance, re.I)), value)
-                    if value == "Uni":
-                        start_address = "Pfaffenwaldring, 70569 Stuttgart"
-                    elif value == "Schwabstrasse":
-                        start_address = "Rotebühlstrasse, 70197 Stuttgart"
-                    elif value == "Hauptbahnhof":
-                        start_address = "Arnulf-Klett-Platz 2, 70173 Stuttgart"
-                    self._add_inform_start(user_utterance, slot, value, start_address)
-                    print("(nlu.py) address:", start_address)
+                    #if value == "Uni":
+                    #    start_address = "Pfaffenwaldring, 70569 Stuttgart"
+                    #elif value == "Schwabstrasse":
+                    #    start_address = "Rotebühlstrasse, 70197 Stuttgart"
+                    #elif value == "Hauptbahnhof":
+                    #    start_address = "Arnulf-Klett-Platz 2, 70173 Stuttgart"
+                    self._add_inform_start(user_utterance, slot, value) #, start_address)
+                    #print("(nlu.py) address:", start_address)
 
     def _match_inform_destination(self, user_utterance: str):
         for slot in self.USER_INFORMABLE_DESTINATION:
             for value in self.inform_destination_regex[slot]:
                 if self._check(re.search(self.inform_destination_regex[slot][value], user_utterance, re.I)):
-                    destination_address = address_data[value]
-                    self._add_inform_destination(user_utterance, slot, value, destination_address)
-                    print("(nlu.py) destination:", destination_address)
+                    #destination_address = address_data[value]
+                    self._add_inform_destination(user_utterance, slot, value)#, destination_address)
+                    #print("(nlu.py) destination:", destination_address)
     
-    def _add_inform_start(self, user_utterance: str, slot: str, value: str, start_address: str):
+    def _add_inform_start(self, user_utterance: str, slot: str, value: str): #, start_address: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.InformStartLocation,
                            slot=slot, value=value)
         self.user_acts.append(user_act)
-        #print("start, self.user_acts:", self.user_acts)
+        #print("BeliefState", BeliefState)
         self.slots_informed_start.add(slot)
-        print("start self.slots_informed_start:", self.slots_informed_start)
+        #print("start self.slots_informed_start:", self.slots_informed_start)
 
-    def _add_inform_destination(self, user_utterance: str, slot: str, value: str, destination_address: str):
+    def _add_inform_destination(self, user_utterance: str, slot: str, value: str): #, destination_address: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.InformDestination,
                            slot=slot, value=value)
         self.user_acts.append(user_act)
         #print("destination self.user_acts:", self.user_acts)
         self.slots_informed_destination.add(slot)
-        print("destination self.slots_informed_destination:", self.slots_informed_destination)
+        #print("destination self.slots_informed_destination:", self.slots_informed_destination)
     ## added --- ##
         
 
