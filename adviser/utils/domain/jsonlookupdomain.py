@@ -202,15 +202,16 @@ class JSONLookupDomain(Domain):
         cursor.execute(modify_str)
 
     def enter_rating(self, given_rating: float, name: str):
-        """Compute the nwe rating given the current rating and the given rating and update the db
+        """Compute the nwe rating given the current rating, number of reviews and the given rating and update the db
 
         Args:
             given_rating (float): rating given by the user
             name (str): name of the restaurant/bar
         """
-        current_rating = float(self.query_db(f'SELECT rating FROM {self.get_domain_name()} WHERE name="{name}"')[0]['rating'])
-        # TODO include number of ratings
-        new_rating = (current_rating + given_rating) / 2
+        rating_num = self.query_db(f'SELECT rating, num_reviews FROM {self.get_domain_name()} WHERE name="{name}"')[0]
+        current_rating = float(rating_num['rating'])
+        num_reviews = int(rating_num['num_reviews'])
+        new_rating = ((current_rating * num_reviews) + given_rating) / (num_reviews + 1)
         new_rating = str(round(new_rating, 1))
         modify_str = f'UPDATE {self.get_domain_name()} SET rating="{new_rating}" WHERE name="{name}"'
         self.modify_db(modify_str)
