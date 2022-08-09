@@ -43,6 +43,7 @@ class SysActionType(Enum):
     AskDestination = 'ask_destination'
     TellDistanceDuration = 'tell_distance_duration'
     InformDistanceDuration = 'inform_distance_duration'
+    ConfirmLocation = 'confirm_location'
 
 
 class SysAct(object):
@@ -78,6 +79,7 @@ class SysAct(object):
 
     def add_value(self, slot: str, value=None):
         """ Add a value (or just a slot, if value=None) to the system act """
+        print("(sysact.py) add_value:", value)
         if slot not in self.slot_values:
             self.slot_values[slot] = []
         if value is not None:
