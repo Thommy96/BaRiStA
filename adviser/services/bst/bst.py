@@ -152,3 +152,9 @@ class HandcraftedBST(Service):
             elif act.type == UserActionType.GiveRating:
                 # add given rating to the beliefstate
                 self.bs['given_rating'] = act.value
+            elif act.type == UserActionType.WriteReview:
+                # set state to True
+                self.bs['write_review'] = True
+            elif act.type == UserActionType.WrittenReview:
+                # add give review to the beliefstate
+                self.bs['review'] = act.value

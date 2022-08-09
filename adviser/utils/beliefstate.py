@@ -107,7 +107,9 @@ class BeliefState:
         belief_state = {"user_acts": set(),
                         "informs": {},
                         "requests": {},
-                        "given_rating": str,
+                        "given_rating": '',
+                        "write_review:": False,
+                        "review": '',
                         "num_matches": 0,
                         "discriminable": True}
 
