@@ -156,6 +156,28 @@ class HandcraftedPolicy(Service):
                 # ask for which restaurant/bar the user wants to give a rating
                 sys_act.type = SysActionType.Request
                 sys_act.add_value(slot='name')
+        
+        elif UserActionType.WriteReview in beliefstate["user_acts"]:
+            # if the user wants to write a review
+            sys_act = SysAct()
+            # check if a restaurant/bar is in the beliefstate or has been suggested to the user
+            if self._get_name(beliefstate):
+                sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
+                sys_act.type = SysActionType.AskWriteReview
+                sys_state['last_act'] = sys_act
+            else:
+                # ask for which restaurant/bar the user wants to give a rating
+                sys_act.type = SysActionType.Request
+                sys_act.add_value(slot='name')
+        
+        elif UserActionType.WrittenReview in beliefstate["user_acts"]:
+            # if the user has entered a review
+            sys_act = SysAct()
+            sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
+            sys_act.add_value(slot='review', value=beliefstate['review'])
+            sys_act.type = SysActionType.ConfirmWriteReview
+            # modify the reviews in the database
+            self._modfiy_db(beliefstate)
 
         ### Testing new acts ####
         
@@ -218,10 +240,13 @@ class HandcraftedPolicy(Service):
         Args:
             beliefstate (BeliefState): BeliefState object; contains all given user constraints to date
         """
-        # modify the rating
+        # modify the rating or the reviews
         if beliefstate['given_rating']:
             given_rating = float(beliefstate['given_rating'])
             self.domain.enter_rating(given_rating, self._get_name(beliefstate))
+        if beliefstate['review']:
+            review = beliefstate['review']
+            self.domain.enter_review(review, self._get_name(beliefstate))
 
 
     def _query_db(self, beliefstate: BeliefState):
