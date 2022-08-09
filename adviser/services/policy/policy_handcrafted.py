@@ -544,6 +544,20 @@ class HandcraftedPolicy(Service):
                     opening_hours = json.loads(res)
                     res = '\n'
                     res += "\n".join("{}: {}".format(k, v) for k, v in opening_hours.items())
+                if k == 'reviews' and res != 'not available':
+                    reviews = json.loads(res)
+                    res = '\n'
+                    res += "\n".join("{}".format(rev) for rev in reviews)
+                if k == 'parking_lot' and res != 'not available':
+                    if res == '0':
+                        res = 'no'
+                    if res == '1':
+                        res = 'a'
+                if k == 'manner' and res != 'not available':
+                    manner = json.loads(res)
+                    res = ", ".join("{}".format(man) for man in manner)
+                if k == 'description' and res != 'not available':
+                    res = '\n' + res
                 sys_act.add_value(k, res)
             # Name might not be a constraint in request queries, so add it
             if self.domain_key not in keys:
