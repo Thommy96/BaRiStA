@@ -222,8 +222,11 @@ class JSONLookupDomain(Domain):
             review (str): the given review
             name (str): name of the restaurant/bar
         """
-        reviews = json.loads(self.query_db(f'SELECT reviews FROM {self.get_domain_name()} WHERE name="{name}"')[0]['reviews'])
+        reviews = self.query_db(f'SELECT reviews FROM {self.get_domain_name()} WHERE name="{name}"')[0]['reviews']
+        reviews = reviews.replace("'", "\"")
+        reviews = json.loads(reviews)
         reviews.append(review)
+        reviews = str(reviews)
         modify_str = f'UPDATE {self.get_domain_name()} SET reviews="{reviews}" WHERE name="{name}"'
         self.modify_db(modify_str)
 
