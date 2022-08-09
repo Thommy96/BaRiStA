@@ -40,6 +40,8 @@ class SysActionType(Enum):
     GuideUser = 'guide_user'
     AskStartPoint = 'ask_start_point'
     ConfirmGiveRating = 'confirm_giverating'
+    AskWriteReview = 'ask_writereview'
+    ConfirmWriteReview = 'confirm_writereview'
 
 
 class SysAct(object):

@@ -42,6 +42,8 @@ class UserActionType(Enum):
     #added
     AskDistance = 'ask_distance'
     GiveRating = 'giverating'
+    WriteReview = 'writereview'
+    WrittenReview = 'writtenreview'
 
 
 class UserAct(object):
