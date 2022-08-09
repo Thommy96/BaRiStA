@@ -134,21 +134,25 @@ class HandcraftedPolicy(Service):
         elif UserActionType.AskDistance in beliefstate["user_acts"] or UserActionType.AskDuration in beliefstate["user_acts"]:
             sys_act = SysAct()
             sys_act.type = SysActionType.AskStartPoint
-            #slot = self._get_distance_slot(beliefstate)
-            #sys_act.add_value(slot)
-            #print('(policy.py): self._get_distance_slot', self._get_distance_slot(beliefstate))
+
         elif beliefstate["informs_destination"] != {} and beliefstate["informs_start"] == {}:
             sys_act = SysAct()
             sys_act.type = SysActionType.AskStartPoint
-            #slot = self._get_distance_slot(beliefstate)
-            #sys_act.add_value(slot)
-            #print('(policy.py): self._get_distance_slot', self._get_distance_slot(beliefstate))
+
         elif beliefstate["informs_destination"] == {} and beliefstate["informs_start"] != {}:
             sys_act = SysAct()
             sys_act.type = SysActionType.AskDestination
+
         elif beliefstate["informs_destination"] != {} and beliefstate["informs_start"] != {}:
             sys_act = SysAct()
-            sys_act.type = SysActionType.TellDistanceDuration
+            sys_act.add_value(slot='start_location', value=beliefstate['informs_start'])
+            sys_act.add_value(slot='destination', value=beliefstate['informs_destination'])
+            #sys_act.add_value(slot='distance', value=beliefstate['informs_distance'])
+            #sys_act.add_value(slot='duration', value=beliefstate['informs_duration'])
+            sys_act.type = SysActionType.ConfirmLocation
+
+            #slot = self._get_distance_slot(beliefstate)
+            #sys_act.add_value(slot)
             #print('(policy.py): self._get_distance_slot', self._get_distance_slot(beliefstate))
 
         # If user only says hello, guide user for more information
