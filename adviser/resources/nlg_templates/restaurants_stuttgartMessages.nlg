@@ -20,6 +20,7 @@ template request(parking_lot): "Should it have a parking lot?"
 
 template request(start_location): "What is your starting location?"
 template ask_start_point() : "Ok, sure! Please tell me your starting location"
+template ask_writereview(name): "Alright, please enter your review for {name} now."
 
 
 # --------- Helper Functions -------- #
@@ -92,6 +93,9 @@ template confirm(name, *slots)
 
 template confirm_giverating(name, ratings_givable)
 	"Let me confirm: you have given the restaurant/bar {name} a rating of {ratings_givable}."
+
+template confirm_writereview(name, review)
+	"Let me confirm: you have written the following review for {name}: {review}"
 
 # ------------System RequestMore--------#
 

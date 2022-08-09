@@ -156,6 +156,9 @@ rule ask_distance(start_location)
 rule giverating(ratings_givable)
     "(.* |^)(give|rate|assign) (rating|score) of {ratings_givable}"
 
+rule writereview()
+    "(.* |^)(write |give |add |enter )(a )?(review|comment)"
+
 # synonyms
 function synonyms(slot, value)
     "{value}"
