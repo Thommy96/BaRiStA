@@ -61,6 +61,12 @@ def _create_giverating_json(domain: JSONLookupDomain, template: RegexFile):
         giverating_regex_json['ratings_givable'][value] = template.create_regex(giverating_act)
     return giverating_regex_json
 
+def _create_writereview_json(domain: JSONLookupDomain, template: RegexFile):
+    writereview_regex_json = {}
+    writereview_act = UserAct(act_type=UserActionType.WriteReview)
+    writereview_regex_json['writereview_act'] = template.create_regex(writereview_act)
+    return writereview_regex_json
+
 
 def create_json_from_template(domain: JSONLookupDomain, template_filename: str):
     template = RegexFile(template_filename, domain)
@@ -68,6 +74,7 @@ def create_json_from_template(domain: JSONLookupDomain, template_filename: str):
     _write_dict_to_file(_create_request_json(domain, template), f'{domain_name}RequestRules.json')
     _write_dict_to_file(_create_inform_json(domain, template), f'{domain_name}InformRules.json')
     _write_dict_to_file(_create_giverating_json(domain, template), f'{domain_name}GiveratingRules.json')
+    _write_dict_to_file(_create_writereview_json(domain, template), f'{domain_name}WritereviewRules.json')
 
 
 if __name__ == '__main__':
