@@ -158,3 +158,6 @@ class HandcraftedBST(Service):
             elif act.type == UserActionType.WrittenReview:
                 # add give review to the beliefstate
                 self.bs['review'] = act.value
+            elif act.type == UserActionType.InformStartPoint:
+                # add given start point to the beliefstate
+                self.bs['start_point'] = act.value

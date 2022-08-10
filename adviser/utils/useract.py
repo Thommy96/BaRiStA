@@ -40,7 +40,8 @@ class UserActionType(Enum):
     SelectDomain = 'selectdomain'
     Repeat = 'repeat'
     #added
-    AskDistance = 'ask_distance'
+    AskDistance = 'askdistance'
+    InformStartPoint = 'inform_startpoint'
     GiveRating = 'giverating'
     WriteReview = 'writereview'
     WrittenReview = 'writtenreview'

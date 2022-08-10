@@ -41,10 +41,6 @@ rule inform(price)
 rule negativeinform(price)
     "{INFORM_DONTWANT()} {synonyms("price", price)}"
     "{INFORM_DONTCARE()} {synonyms("price", price)}"
-    
-rule inform(start_location)
-    "^{synonyms("start_location", start_location)}"
-    "I am (at|going from) {synonyms("start_location", start_location)}"
 
 rule inform(num_reviews)
     "^{synonyms("num_reviews", num_reviews)}"
@@ -149,9 +145,8 @@ rule request(parking_lot)
     "{WANT()}.*{slot_synonyms("parking_lot")}"
 
 # new acts
-rule ask_distance(start_location)
-    "The distance between {synonyms("start_location", start_location)} and the restaurant"
-    "How far between {synonyms("start_location", start_location)} and the restaurant"
+rule askdistance()
+    "how far"
 
 rule giverating(ratings_givable)
     "(.* |^)(give|rate|assign) (rating|score) of {ratings_givable}"

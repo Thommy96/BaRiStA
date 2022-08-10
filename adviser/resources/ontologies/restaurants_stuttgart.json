@@ -495,11 +495,6 @@
             "4.8",
             "4.9",
             "5.0"
-        ],
-        "start_location": [
-            "Hauptbahnhof",
-            "Schwabstrasse",
-            "Uni"
         ]
     },
     "key": "name",
@@ -530,7 +525,6 @@
         "rating",
         "price",
         "category",
-        "start_location",
         "num_reviews",
         "parking_lot"
     ],

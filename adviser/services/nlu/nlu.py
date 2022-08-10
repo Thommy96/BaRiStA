@@ -152,6 +152,9 @@ class HandcraftedNLU(Service):
                 # be matched against user acts
                 if self.sys_act_info['last_act'].type == SysActionType.AskWriteReview:
                     self._match_writtenreview(user_utterance)
+                # if the user asked about the distance
+                elif self.sys_act_info['last_act'].type == SysActionType.AskStartPoint:
+                    self._match_inform_startpoint(user_utterance)
                 else:
                     self._match_general_act(user_utterance)
                     self._match_domain_specific_act(user_utterance)
@@ -281,12 +284,7 @@ class HandcraftedNLU(Service):
         self._match_inform(user_utterance)
         self._match_giverating(user_utterance)
         self._match_writereview(user_utterance)
-        
-        # Added user act without slots
-        ask_distance_regex = "((C|c)an you help me with the distance)|((T|t)ell me (the )?distance)"
-        if self._check(re.search(ask_distance_regex, user_utterance, re.I)):
-            self.user_acts.append(UserAct(act_type=UserActionType.AskDistance))
-
+        self._match_askdistance(user_utterance)
 
     def _match_request(self, user_utterance: str):
         """
@@ -385,6 +383,22 @@ class HandcraftedNLU(Service):
     
     def _add_writtenreview(self, user_utterance: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.WrittenReview, value=user_utterance)
+        self.user_acts.append(user_act)
+    
+    def _match_askdistance(self, user_utterance: str):
+        if self._check(re.search(self.askdistance_regex['askdistance_act'], user_utterance, re.I)):
+            self._add_askdistance(user_utterance)
+
+    def _add_askdistance(self, user_utterance: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.AskDistance)
+        self.user_acts.append(user_act)
+    
+    def _match_inform_startpoint(self, user_utterance: str):
+        # in this case there is no need to match the user utterance to a regex
+        self._add_inform_startpoint(user_utterance)
+    
+    def _add_inform_startpoint(self, user_utterance: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.InformStartPoint, value=user_utterance)
         self.user_acts.append(user_act)
 
     @staticmethod
@@ -507,6 +521,8 @@ class HandcraftedNLU(Service):
                                                + 'GiveratingRules.json'))
             self.writereview_regex = json.load(open(self.base_folder + '/' + self.domain_name
                                                + 'WritereviewRules.json'))
+            self.askdistance_regex = json.load(open(self.base_folder + '/' + self.domain_name
+                                               + 'AskdistanceRules.json'))
         elif self.language == Language.GERMAN:
             # TODO: Change this once
             # Loading regular expression from JSON files

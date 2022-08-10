@@ -110,6 +110,7 @@ class BeliefState:
                         "given_rating": '',
                         "write_review:": False,
                         "review": '',
+                        "start_point": '',
                         "num_matches": 0,
                         "discriminable": True}
 
