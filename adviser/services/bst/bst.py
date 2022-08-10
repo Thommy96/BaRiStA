@@ -60,9 +60,13 @@ class HandcraftedBST(Service):
 
             self._handle_user_acts(user_acts)
 
-            num_entries, discriminable = self.bs.get_num_dbmatches()
-            self.bs["num_matches"] = num_entries
-            self.bs["discriminable"] = discriminable
+            try:
+                num_entries, discriminable = self.bs.get_num_dbmatches()
+                self.bs["num_matches"] = num_entries
+                self.bs["discriminable"] = discriminable
+            except AttributeError:
+                # if beliefstate was reset
+                pass
 
         return {'beliefstate': self.bs}
 
@@ -158,3 +162,9 @@ class HandcraftedBST(Service):
             elif act.type == UserActionType.WrittenReview:
                 # add give review to the beliefstate
                 self.bs['review'] = act.value
+            elif act.type == UserActionType.NewDialogue:
+                # option to start a new dialogue
+                # reset beliefstate
+                self.dialog_start()
+                self.bs.start_new_turn()
+                self.bs["user_acts"].add(UserActionType.NewDialogue)
