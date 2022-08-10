@@ -25,11 +25,11 @@ def get_route(start_lon, start_lat, destination_lon, destination_lat):
     out = {
         'start_point': start_point,
         'end_point': end_point,
-        'distance': distance,
+        'distance': str(distance),
         'duration': "%d:%02d"%(duration//3600, duration//60)
          }
 
-    return out['distance'], out['duration']
+    return str(out['distance']), str(out['duration'])
 
 
 def get_distance_duration(start_address, end_address):
@@ -57,5 +57,11 @@ def get_distance_duration(start_address, end_address):
         'distance': distance,
         'duration': "%d:%02d"%(duration//3600, duration//60)
          }
+    if out['distance'] > 1000:
+        distance_km = str(out['distance']/1000)
+    if duration//3600 != 0:
+        time = str(int(duration//3600))+' hour and '+str(int(duration//60))+' minutes'
+    else:
+        time = str(int(duration//60))+' minutes'
 
-    return out['distance'], out['duration']
+    return distance_km, time
