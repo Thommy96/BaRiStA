@@ -5,8 +5,10 @@ template welcomemsg(more) : "Can I help you with anything else?"
 template bad() : "Sorry I am a bit confused; please tell me again what you are looking for."
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
+
 template guide_user() : "Hi! Are you looking for a restaurant? or do you use our distance and review service? :-)"
 template confirm_location(start_location, destination): "Ok! I am going to tell you more information on distance and duration between {start_location} and {destination}. Please enter: continue"
+template inform_distance_duration(distance, duration): "It is {distance} km away, and it will take {duration} minutes by bike."
 
 #--------------System Requests---------------#
 # system requestables are: category, price, rating, start_location
@@ -15,10 +17,10 @@ template request(category): "What kind of restaurant or bar are you looking for?
 template request(price): "What should their price range be?"
 template request(rating): "What should their rating be?"
 
-#template ask_start_point(start_location): "Ok, sure! Please tell me your starting location"
+#template ask_start_point(start_location): "Please tell me your starting location"
 #template ask_destination(name): "Can I have the name of the restaurant you are heading to?"
 
-template ask_start_point() : "Ok, sure! Please tell me your current location."
+template ask_start_point() : "Please tell me your current location."
 template ask_destination(): "Can I have the name of the restaurant you are heading to?"
 
 # --------- Helper Functions -------- #
@@ -74,8 +76,8 @@ template inform_alternatives(name, *slots)
 	special_case name = "none"
 		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
 
-#template inform_distance_duration(name, start_location, distance, duration)
-#    "The distance between {start_location} and {name} is {distance}, and it will take {duration}."
+#template inform_distance_duration(distance, duration)
+#    "The distance is {distance}, and it will take {duration} minutes."
 
 
 #------------System Confirm--------------#
