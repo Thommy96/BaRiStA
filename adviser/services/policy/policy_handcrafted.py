@@ -574,6 +574,7 @@ class HandcraftedPolicy(Service):
                     res = '\n'
                     res += "\n".join("{}: {}".format(k, v) for k, v in opening_hours.items())
                 if k == 'reviews' and res != 'not available':
+                    res = res.replace("'", "\"")
                     reviews = json.loads(res)
                     res = '\n'
                     res += "\n".join("{}".format(rev) for rev in reviews)
