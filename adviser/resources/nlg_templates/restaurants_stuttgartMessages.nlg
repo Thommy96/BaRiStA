@@ -6,6 +6,7 @@ template bad() : "Sorry I am a bit confused; please tell me again what you are l
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
 template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the reservation? :-)"
+template badaddress() : "Sorry, there seems to be some issue with the address you entered or the address of the restaurant."
 
 
 #--------------System Requests---------------#

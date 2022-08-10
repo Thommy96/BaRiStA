@@ -187,11 +187,15 @@ class HandcraftedPolicy(Service):
             sys_act = SysAct()
             # calculate distance and duration
             distance, duration = self._calculate_distance_duration(beliefstate)
-            sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
-            sys_act.add_value(slot='start_point', value=beliefstate['start_point'])
-            sys_act.add_value(slot='distance', value=distance)
-            sys_act.add_value(slot='duration', value=duration)
-            sys_act.type = SysActionType.InformDistance
+            # if the given address or the address of the restaurant is incorrect or not given
+            if distance is None and duration is None:
+                sys_act.type = SysActionType.BadAddress
+            else:
+                sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
+                sys_act.add_value(slot='start_point', value=beliefstate['start_point'])
+                sys_act.add_value(slot='distance', value=distance)
+                sys_act.add_value(slot='duration', value=duration)
+                sys_act.type = SysActionType.InformDistance
         
         # If user only says hello, request a random slot to move dialog along
         elif UserActionType.Hello in beliefstate["user_acts"] or UserActionType.SelectDomain in beliefstate["user_acts"]:
@@ -258,6 +262,7 @@ class HandcraftedPolicy(Service):
             self.domain.enter_rating(given_rating, self._get_name(beliefstate))
         if beliefstate['review']:
             review = beliefstate['review']
+            review = review.replace("'", ' ').replace("\"", ' ')
             self.domain.enter_review(review, self._get_name(beliefstate))
     
     def _calculate_distance_duration(self, beliefstate: BeliefState):

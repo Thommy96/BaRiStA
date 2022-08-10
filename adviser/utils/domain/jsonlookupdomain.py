@@ -254,9 +254,17 @@ class JSONLookupDomain(Domain):
             start_point = 'Schwabstraße 43, 70197 Stuttgart'
         locator = Nominatim(user_agent="myGeocoder")
         address_loc = locator.geocode(address)
-        address_coordinates = (address_loc.latitude, address_loc.longitude)
+        try:
+            address_coordinates = (address_loc.latitude, address_loc.longitude)
+        except AttributeError:
+            address_coordinates = None
         start_point_loc = locator.geocode(start_point)
-        start_point_coordinates = (start_point_loc.latitude, start_point_loc.longitude)
+        try:
+            start_point_coordinates = (start_point_loc.latitude, start_point_loc.longitude)
+        except AttributeError:
+            start_point_coordinates = None
+        if address_coordinates is None or start_point_coordinates is None:
+            return None, None
         distance = geopy.distance.geodesic(start_point_coordinates, address_coordinates).km
         # assumed by bike with average speed 15km/h
         duration = math.ceil(4*distance)
