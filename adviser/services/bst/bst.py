@@ -23,7 +23,7 @@ from services.service import PublishSubscribe
 from services.service import Service
 from utils.beliefstate import BeliefState
 from utils.useract import UserActionType, UserAct
-
+#from resources.databases import restaurants_stuttgart_basic
 import json
 import os
 
@@ -44,6 +44,8 @@ class HandcraftedBST(Service):
         Service.__init__(self, domain=domain)
         self.logger = logger
         self.bs = BeliefState(domain)
+        #self.db = restaurants_stuttgart_basic
+        #print("self.db:", self.db)
 
     @PublishSubscribe(sub_topics=["user_acts"], pub_topics=["beliefstate"])
     def update_bst(self, user_acts: List[UserAct] = None) \
@@ -196,8 +198,7 @@ class HandcraftedBST(Service):
 
             ## added
             elif act.type == UserActionType.InformStartLocation:
-                #if act.slot in self.bs["informs_start"]:
-                #    self.bs['informs_start'][act.slot][act.value] = act.score
+                #self.bs['informs_start'][act.slot][act.value] = act.score
                 if act.value == "Uni":
                     start_address = "Pfaffenwaldring, 70569 Stuttgart"
                 elif act.value == "Schwabstrasse":
@@ -205,17 +206,22 @@ class HandcraftedBST(Service):
                 elif act.value == "Hauptbahnhof":
                     start_address = "Arnulf-Klett-Platz 2, 70173 Stuttgart"
                 self.bs['informs_start'] = start_address
-                #self.bs['informs_start_address'] = start_address
 
             elif act.type == UserActionType.InformDestination:
-                #if act.slot in self.bs["informs_destination"]:
-                    #self.bs['informs_destination'][act.slot][act.value] = act.score
+                #self.bs['informs_destination'][act.slot][act.value] = act.score
                 destination_address = address_data[act.value]
                 self.bs['informs_destination'] = destination_address
-                #self.bs['informs_destination_address'] = destination_address
+                destination_address = self.bs['informs_destination']
+                start_address = self.bs['informs_start']
+                distance, duration = get_distance_duration(destination_address, start_address)
+                self.bs['distance_and_duration'] = [distance, duration]
 
-            elif act.type == UserActionType.Continue:
-                self.bs['distance_and_duration'] = "calculate!"
-                #print(self.bs)
+
+            #elif act.type == UserActionType.Continue:
+            #    destination_address = self.bs['informs_destination']
+            #    start_address = self.bs['informs_start']
+            #    distance, duration = get_distance_duration(destination_address, start_address)
+            #    print("-distance:", distance, "-duration:", duration)
+            #    self.bs['distance_and_duration'] = [distance, duration]
 
 
