@@ -79,7 +79,7 @@ class SysAct(object):
 
     def add_value(self, slot: str, value=None):
         """ Add a value (or just a slot, if value=None) to the system act """
-        print("(sysact.py) add_value:", value)
+        #print("(sysact.py) add_value:", value, type(value), "slot:", slot)
         if slot not in self.slot_values:
             self.slot_values[slot] = []
         if value is not None:
