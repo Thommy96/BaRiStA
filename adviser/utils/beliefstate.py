@@ -110,7 +110,8 @@ class BeliefState:
                         "informs_start": {},
                         "informs_destination": {},
                         "num_matches": 0,
-                        "discriminable": True}
+                        "discriminable": True,
+                        "distance_and_duration": []}
 
         return belief_state
 
