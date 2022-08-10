@@ -284,6 +284,7 @@ class HandcraftedNLU(Service):
         self._match_inform(user_utterance)
         self._match_giverating(user_utterance)
         self._match_writereview(user_utterance)
+        self._match_newdialogue(user_utterance)
         self._match_askdistance(user_utterance)
 
     def _match_request(self, user_utterance: str):
@@ -399,6 +400,14 @@ class HandcraftedNLU(Service):
     
     def _add_inform_startpoint(self, user_utterance: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.InformStartPoint, value=user_utterance)
+        self.user_acts.append(user_act)
+
+    def _match_newdialogue(self, user_utterance: str):
+        if user_utterance == 'new':
+            self._add_newdialogue(user_utterance)
+    
+    def _add_newdialogue(self, user_utterance: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.NewDialogue)
         self.user_acts.append(user_act)
 
     @staticmethod
