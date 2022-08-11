@@ -44,7 +44,7 @@ class UserActionType(Enum):
     GiveRating = 'giverating'
     WriteReview = 'writereview'
     WrittenReview = 'writtenreview'
-    AskOpeningDay = 'ask_opening_day'
+    NewDialogue = 'newdialogue'
 
 class UserAct(object):
     def __init__(self, text: str = "", act_type: UserActionType = None, slot: str = None,
