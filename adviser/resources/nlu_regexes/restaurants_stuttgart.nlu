@@ -16,6 +16,8 @@ rule selectdomain(): "{IMPOSSIBLEREGEX()}"
 rule ask_opening_day(opening_day)
     "(is|does) it open(ed|ing)? on {opening_day}?"
     ".* open(ed|ing)? on {opening_day}.*"
+    "what time does it open on {opening_day}?"
+    "what is the opening (time|hours) on {opening_day}?"
 
 # user informable slots (name, rating, category, price, num_reviews, parking_lot, start_location)
 
