@@ -182,5 +182,5 @@ class HandcraftedBST(Service):
                 if opening_time[(act.value).capitalize()] != "Closed":
                     self.bs['answer_opening_day'] = 'is opened :-) The opening hours on ' + str(act.value) + ' is ' + opening_time[(act.value).capitalize()]
                 else:
-                    self.bs['answer_opening_day'] = 'is closed! the opening hours is:' + return_open_day
+                    self.bs['answer_opening_day'] = 'is closed! the opening days are:' + return_open_day
 
