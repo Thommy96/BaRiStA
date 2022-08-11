@@ -104,6 +104,12 @@ class HandcraftedPolicy(Service):
             sys_state["last_act"] = sys_act
             return {'sys_act': sys_act, "sys_state": sys_state}
 
+        elif self.first_turn and UserActionType.NewDialogue in beliefstate["user_acts"]:
+            self.first_turn = False
+            sys_act = SysAct()
+            sys_act.type = SysActionType.Welcome
+            sys_state["last_act"] = sys_act
+            return {'sys_act': sys_act, "sys_state": sys_state}
 
         # Handles case where it was the first turn, but there are user acts
         elif self.first_turn:
@@ -132,6 +138,11 @@ class HandcraftedPolicy(Service):
             
         ### Testing new acts ####
 
+        elif UserActionType.NewDialogue in beliefstate["user_acts"]:
+            # if the user wants to start a new dialogue
+            sys_act = SysAct()
+            sys_act.type = SysActionType.Welcome
+            self.dialog_start()
 
         elif UserActionType.AskDistance in beliefstate["user_acts"]:
             sys_act = SysAct()
@@ -182,11 +193,6 @@ class HandcraftedPolicy(Service):
             self._modfiy_db(beliefstate)
 
         ### Testing new acts ####
-        elif UserActionType.AskOpeningDay in beliefstate["user_acts"]:
-            sys_act = SysAct()
-            sys_act.add_value(slot='opening_day', value=beliefstate['asked_opening_day'])
-            sys_act.add_value(slot='opening_day_response', value=beliefstate['answer_opening_day'])
-            sys_act.type = SysActionType.TellOpeningDay
         
         # If user only says hello, request a random slot to move dialog along
         elif UserActionType.Hello in beliefstate["user_acts"] or UserActionType.SelectDomain in beliefstate["user_acts"]:
