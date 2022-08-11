@@ -266,6 +266,13 @@ class JSONLookupDomain(Domain):
         """
         return self.ontology_json['ratings_givable']
 
+    def get_openingday_informable_slots(self) -> List[str]:
+        return ["opening_day"]
+        #print("keys:", self.ontology_json['opening_day_informable'].keys())
+    def get_possible_openingday_values(self, slot: str) -> List[str]:
+        #print(slot)
+        return self.ontology_json['opening_day_informable'][slot]
+
     def get_primary_key(self):
         """ Returns the name of a column in the associated database which can be used to uniquely
             distinguish between database entities.
