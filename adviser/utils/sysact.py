@@ -42,7 +42,6 @@ class SysActionType(Enum):
     ConfirmGiveRating = 'confirm_giverating'
     AskWriteReview = 'ask_writereview'
     ConfirmWriteReview = 'confirm_writereview'
-    TellOpeningDay = 'tell_openingday'
 
 
 class SysAct(object):
