@@ -75,6 +75,14 @@ def _create_askopeningday_json(domain: JSONLookupDomain, template: RegexFile):
         askopeningday_regex_json['opening_day'][value] = template.create_regex(askopeningday_act)
     return askopeningday_regex_json
 
+def _create_askmanner_json(domain: JSONLookupDomain, template: RegexFile):
+    askmanner_regex_json = {}
+    askmanner_regex_json['manner'] = {}
+    for value in domain.get_manner():
+        askmanner_act = UserAct(act_type=UserActionType.AskManner, slot='manner', value=value)
+        askmanner_regex_json['manner'][value] = template.create_regex(askmanner_act)
+    return askmanner_regex_json
+
 def _create_writereview_json(domain: JSONLookupDomain, template: RegexFile):
     writereview_regex_json = {}
     writereview_act = UserAct(act_type=UserActionType.WriteReview)
@@ -97,6 +105,7 @@ def create_json_from_template(domain: JSONLookupDomain, template_filename: str):
     _write_dict_to_file(_create_writereview_json(domain, template), f'{domain_name}WritereviewRules.json')
     _write_dict_to_file(_create_askdistance_json(domain, template), f'{domain_name}AskdistanceRules.json')
     _write_dict_to_file(_create_askopeningday_json(domain, template), f'{domain_name}AskopeningdayRules.json')
+    _write_dict_to_file(_create_askmanner_json(domain, template), f'{domain_name}AskmannerRules.json')
 
 if __name__ == '__main__':
     # command line arguments

@@ -210,6 +210,29 @@ class JSONLookupDomain(Domain):
             opening_info = 'has opened from ' + opening_info
         return opening_info
     
+    def query_manner_info(self, req_manner: str, name: str):
+        """Query the database for manners and extract information for the requested manner
+
+        Args:
+            req_manner (str): requested manner by the user
+            name (str): name of the restaurant
+
+        Returns:
+            str: manner information
+        """
+        manner = self.query_db(f'SELECT manner FROM {self.get_domain_name()} WHERE name="{name}"')[0]['manner']
+        manner = json.loads(manner)
+        manner_info = 'Sorry, this information is not available for'
+        for m in manner:
+            if req_manner in m:
+                if 'No' in m:
+                    manner_info = f'Sorry, {req_manner} is not offered by'
+                else:
+                    manner_info = f'Yes, {req_manner} is offered by'
+            if ('pickup' in m or 'drive-through' in m) and req_manner == 'takeaway':
+                manner_info = f'Yes, {req_manner} is offered by'
+        return manner_info
+    
     def modify_db(self, modify_str: str):
         """Function for mofiying a sqlite3 db
 
@@ -331,6 +354,9 @@ class JSONLookupDomain(Domain):
 
     def get_opening_days(self) -> List[str]:
         return self.ontology_json['opening_day']
+    
+    def get_manner(self) -> List[str]:
+        return self.ontology_json['manner']
 
     def get_primary_key(self):
         """ Returns the name of a column in the associated database which can be used to uniquely

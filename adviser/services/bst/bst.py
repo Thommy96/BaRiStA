@@ -174,3 +174,6 @@ class HandcraftedBST(Service):
             elif act.type == UserActionType.AskOpeningDay:
                 # add requested day to the beliefstate
                 self.bs['req_openingday'] = act.value
+            elif act.type == UserActionType.AskManner:
+                # add requested manner to the beliefstate
+                self.bs['req_manner'] = act.value

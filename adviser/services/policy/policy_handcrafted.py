@@ -216,12 +216,26 @@ class HandcraftedPolicy(Service):
             sys_act = SysAct()
             # check if a restaurant/bar is in the beliefstate or has been suggested to the user
             if self._get_name(beliefstate):
-                # query opening days and get iformation for requested day
+                # query opening days and get information for requested day
                 opening_info = self._query_opening_info(beliefstate)
                 sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
                 sys_act.add_value(slot='opening_day', value=beliefstate['req_openingday'])
                 sys_act.add_value(slot='opening_info', value=opening_info)
                 sys_act.type = SysActionType.InformOpeningDay
+            else:
+                # ask for the restaurant/bar
+                sys_act.type = SysActionType.Request
+                sys_act.add_value(slot='name')
+            
+        elif UserActionType.AskManner in beliefstate["user_acts"]:
+            sys_act = SysAct()
+            # check if a restaurant/bar is in the beliefstate or has been suggested to the user
+            if self._get_name(beliefstate):
+                # query manner and get information for requested manner
+                manner_info = self._query_manner_info(beliefstate)
+                sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
+                sys_act.add_value(slot='manner_info', value=manner_info)
+                sys_act.type = SysActionType.InformManner
             else:
                 # ask for the restaurant/bar
                 sys_act.type = SysActionType.Request
@@ -320,6 +334,19 @@ class HandcraftedPolicy(Service):
         req_openingday = beliefstate['req_openingday']
         opening_info = self.domain.query_opening_info(req_openingday, self._get_name(beliefstate))
         return opening_info
+
+    def _query_manner_info(self, beliefstate: BeliefState):
+        """Extract information about the requested manner from the manners in the database
+
+        Args:
+            beliefstate (BeliefState): BeliefState object; contains all given user constraints to date
+
+        Returns:
+            str: manner information
+        """
+        req_manner = beliefstate['req_manner']
+        manner_info = self.domain.query_manner_info(req_manner, self._get_name(beliefstate))
+        return manner_info
 
     def _query_db(self, beliefstate: BeliefState):
         """Based on the constraints specified, uses the domain to generate the appropriate type

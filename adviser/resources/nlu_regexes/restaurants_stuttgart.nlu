@@ -12,13 +12,6 @@ rule bad(): "{IMPOSSIBLEREGEX()}"
 rule confirm(): "{IMPOSSIBLEREGEX()}"
 rule selectdomain(): "{IMPOSSIBLEREGEX()}"
 
-# user inform the day he/she wants to ask about the opening hours
-rule askopeningday(opening_day)
-    "(is|does) it open(ed|ing)? on {opening_day}?"
-    ".* open(ed|ing)? on {opening_day}.*"
-    "what time does it open on {opening_day}?"
-    "what is the opening (time|hours) on {opening_day}?"
-
 # user informable slots (name, rating, category, price, num_reviews, parking_lot, start_location)
 
 rule inform(name)
@@ -160,6 +153,16 @@ rule giverating(ratings_givable)
 
 rule writereview()
     "(.* |^)(write |give |add |enter )(a )?(review|comment)"
+
+# user inform the day he/she wants to ask about the opening hours
+rule askopeningday(opening_day)
+    "(is|does) it open(ed|ing)? on {opening_day}?"
+    ".* open(ed|ing)? on {opening_day}.*"
+    "what time does it open on {opening_day}?"
+    "what is the opening (time|hours) on {opening_day}?"
+
+rule askmanner(manner)
+    "does it offer {manner}"
 
 # synonyms
 function synonyms(slot, value)

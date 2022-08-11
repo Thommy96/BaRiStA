@@ -112,6 +112,7 @@ class BeliefState:
                         "review": '',
                         "start_point": '',
                         "req_openingday": '',
+                        "req_manner": '',
                         "num_matches": 0,
                         "discriminable": True}
 

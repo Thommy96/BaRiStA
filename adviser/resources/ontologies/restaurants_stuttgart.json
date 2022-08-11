@@ -550,5 +550,10 @@
         "Saturday",
         "Sunday"
     ],
+    "manner":[
+        "dine-in",
+        "takeaway",
+        "delivery"
+    ],
     "keyword": "restaurants_stuttgart"
 }

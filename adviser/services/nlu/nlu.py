@@ -288,6 +288,7 @@ class HandcraftedNLU(Service):
         self._match_newdialogue(user_utterance)
         self._match_askopeningday(user_utterance)
         self._match_askdistance(user_utterance)
+        self._match_askmanner(user_utterance)
 
     def _match_request(self, user_utterance: str):
         """
@@ -421,6 +422,15 @@ class HandcraftedNLU(Service):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.AskOpeningDay, value=value)
         self.user_acts.append(user_act)
 
+    def _match_askmanner(self, user_utterance: str):
+        for value in self.askmanner_regex['manner']:
+            if self._check(re.search(self.askmanner_regex['manner'][value], user_utterance, re.I)):
+                self._add_askmanner(user_utterance, value)
+    
+    def _add_askmanner(self, user_utterance: str, value: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.AskManner, value=value)
+        self.user_acts.append(user_act)
+
     @staticmethod
     def _exact_match(phrases: List[str], user_utterance: str) -> bool:
         """
@@ -545,6 +555,8 @@ class HandcraftedNLU(Service):
                                                + 'AskopeningdayRules.json'))
             self.askdistance_regex = json.load(open(self.base_folder + '/' + self.domain_name
                                                + 'AskdistanceRules.json'))
+            self.askmanner_regex = json.load(open(self.base_folder + '/' + self.domain_name
+                                               + 'AskmannerRules.json'))
         elif self.language == Language.GERMAN:
             # TODO: Change this once
             # Loading regular expression from JSON files

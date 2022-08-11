@@ -22,6 +22,7 @@ template request(parking_lot): "Should it have a parking lot?"
 template ask_startpoint() : "Please enter your start location now. You can choose one of the pre-defined option 'Uni' 'Hauptbahnhof' or 'Schwabstraße'. Alternatively you can enter an address in the format <street name> <house number>, <post code> <city>."
 template ask_writereview(name): "Alright, please enter your review for {name} now."
 template inform_openingday(name, opening_day, opening_info): "{name} {opening_info} on {opening_day}"
+template inform_manner(name, manner_info): "{manner_info} {name}"
 
 
 # --------- Helper Functions -------- #
