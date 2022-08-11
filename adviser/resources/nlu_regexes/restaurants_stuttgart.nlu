@@ -12,6 +12,11 @@ rule bad(): "{IMPOSSIBLEREGEX()}"
 rule confirm(): "{IMPOSSIBLEREGEX()}"
 rule selectdomain(): "{IMPOSSIBLEREGEX()}"
 
+# user inform the day he/she wants to ask about the opening hours
+rule ask_opening_day(opening_day)
+    "(is|does) it open(ed|ing)? on {opening_day}?"
+    ".* open(ed|ing)? on {opening_day}.*"
+
 # user informable slots (name, rating, category, price, num_reviews, parking_lot, start_location)
 
 rule inform(name)
