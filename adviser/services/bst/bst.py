@@ -167,7 +167,12 @@ class HandcraftedBST(Service):
             elif act.type == UserActionType.WrittenReview:
                 # add give review to the beliefstate
                 self.bs['review'] = act.value
- 
+            elif act.type == UserActionType.NewDialogue:
+                # option to start a new dialogue
+                # reset beliefstate
+                self.dialog_start()
+                self.bs.start_new_turn()
+                self.bs["user_acts"].add(UserActionType.NewDialogue)
             elif act.type == UserActionType.AskOpeningDay:
                 return_open_day = ''
                 name = []

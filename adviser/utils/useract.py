@@ -44,6 +44,7 @@ class UserActionType(Enum):
     GiveRating = 'giverating'
     WriteReview = 'writereview'
     WrittenReview = 'writtenreview'
+    NewDialogue = 'newdialogue'
     AskOpeningDay = 'ask_opening_day'
 
 class UserAct(object):

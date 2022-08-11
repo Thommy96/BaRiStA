@@ -284,6 +284,7 @@ class HandcraftedNLU(Service):
         self._match_inform(user_utterance)
         self._match_giverating(user_utterance)
         self._match_writereview(user_utterance)
+        self._match_newdialogue(user_utterance)
         self._match_ask_openingday(user_utterance)
 
         
