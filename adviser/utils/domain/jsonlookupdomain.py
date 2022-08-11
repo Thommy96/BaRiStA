@@ -19,12 +19,16 @@
 
 
 import json
+import math
 import os
 import sqlite3
 from io import StringIO
 from typing import List, Iterable
 
 from utils.domain import Domain
+
+from geopy.geocoders import Nominatim
+import geopy.distance
 
 
 class JSONLookupDomain(Domain):
@@ -230,6 +234,46 @@ class JSONLookupDomain(Domain):
         reviews = str(reviews)
         modify_str = f'UPDATE {self.get_domain_name()} SET reviews="{reviews}" WHERE name="{name}"'
         self.modify_db(modify_str)
+    
+    def distance_duration(self, start_point: str, name: str):
+        """Calcualtes the distance and approximates the duration by bike between the start point and the address of the restaurant
+
+        Args:
+            start_point (str): given start point
+            name (str): name of the restaurant
+
+        Returns:
+            str, str: distance, duration
+        """
+        address = self.query_db(f'SELECT address FROM {self.get_domain_name()} WHERE name="{name}"')[0]['address']
+        if start_point == 'uni':
+            start_point = 'Pfaffenwaldring 5, 70569 Stuttgart'
+        if start_point == 'hauptbahnhof':
+            start_point = 'Arnulf-Klett-Platz 2, 70173 Stuttgart'
+        if start_point == 'schwabstraße':
+            start_point = 'Schwabstraße 43, 70197 Stuttgart'
+        locator = Nominatim(user_agent="myGeocoder")
+        address_loc = locator.geocode(address)
+        try:
+            address_coordinates = (address_loc.latitude, address_loc.longitude)
+        except AttributeError:
+            address_coordinates = None
+        start_point_loc = locator.geocode(start_point)
+        try:
+            start_point_coordinates = (start_point_loc.latitude, start_point_loc.longitude)
+        except AttributeError:
+            start_point_coordinates = None
+        if address_coordinates is None or start_point_coordinates is None:
+            return None, None
+        distance = geopy.distance.geodesic(start_point_coordinates, address_coordinates).km
+        # assumed by bike with average speed 15km/h
+        duration = math.ceil(4*distance)
+        if int(duration) < 60:
+            duration_out = str(duration) + 'min'
+        if int(duration) >= 60:
+            duration_out = "%d:%02d"%(duration//60, duration%60) +'h'
+        distance = str(round(distance, 2)) + 'km'
+        return distance, duration_out
 
     def get_display_name(self):
         return self.display_name

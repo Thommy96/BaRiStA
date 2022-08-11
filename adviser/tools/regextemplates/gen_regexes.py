@@ -84,6 +84,12 @@ def _create_writereview_json(domain: JSONLookupDomain, template: RegexFile):
     writereview_regex_json['writereview_act'] = template.create_regex(writereview_act)
     return writereview_regex_json
 
+def _create_askdistance_json(domain: JSONLookupDomain, template: RegexFile):
+    askdistance_regex_json = {}
+    askdistance_act = UserAct(act_type=UserActionType.AskDistance)
+    askdistance_regex_json['askdistance_act'] = template.create_regex(askdistance_act)
+    return askdistance_regex_json
+
 
 def create_json_from_template(domain: JSONLookupDomain, template_filename: str):
     template = RegexFile(template_filename, domain)
@@ -92,6 +98,7 @@ def create_json_from_template(domain: JSONLookupDomain, template_filename: str):
     _write_dict_to_file(_create_inform_json(domain, template), f'{domain_name}InformRules.json')
     _write_dict_to_file(_create_giverating_json(domain, template), f'{domain_name}GiveratingRules.json')
     _write_dict_to_file(_create_writereview_json(domain, template), f'{domain_name}WritereviewRules.json')
+    _write_dict_to_file(_create_askdistance_json(domain, template), f'{domain_name}AskdistanceRules.json')
     _write_dict_to_file(_create_opening_day_json(domain, template), f'{domain_name}AskOpeningRules.json')
 
 if __name__ == '__main__':

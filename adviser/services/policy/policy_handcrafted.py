@@ -144,12 +144,6 @@ class HandcraftedPolicy(Service):
             sys_act.type = SysActionType.Welcome
             self.dialog_start()
 
-        elif UserActionType.AskDistance in beliefstate["user_acts"]:
-            sys_act = SysAct()
-            sys_act.type = SysActionType.AskStartPoint
-            #slot = self._get_open_slot(beliefstate)
-            #sys_act.add_value(slot)
-
         # If user only says hello, guide user for more information
         elif UserActionType.Hello in beliefstate["user_acts"] or UserActionType.SelectDomain in beliefstate["user_acts"]:
             sys_act = SysAct()
@@ -191,8 +185,33 @@ class HandcraftedPolicy(Service):
             sys_act.type = SysActionType.ConfirmWriteReview
             # modify the reviews in the database
             self._modfiy_db(beliefstate)
-
-        ### Testing new acts ####
+        
+        elif UserActionType.AskDistance in beliefstate["user_acts"]:
+            sys_act = SysAct()
+            # check if a restaurant/bar is in the beliefstate or has been suggested to the user
+            if self._get_name(beliefstate):
+                sys_act.type = SysActionType.AskStartPoint
+                sys_state['last_act'] = sys_act
+            else:
+                # ask for which restaurant/bar the user wants to give a rating
+                sys_act.type = SysActionType.Request
+                sys_act.add_value(slot='name')
+        
+        elif UserActionType.InformStartPoint in beliefstate["user_acts"]:
+            # if the user has given a start point
+            sys_act = SysAct()
+            # calculate distance and duration
+            distance, duration = self._calculate_distance_duration(beliefstate)
+            # if the given address or the address of the restaurant is incorrect or not given
+            if distance is None and duration is None:
+                sys_act.type = SysActionType.BadAddress
+            else:
+                sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
+                sys_act.add_value(slot='start_point', value=beliefstate['start_point'])
+                sys_act.add_value(slot='distance', value=distance)
+                sys_act.add_value(slot='duration', value=duration)
+                sys_act.type = SysActionType.InformDistance
+                
         elif UserActionType.AskOpeningDay in beliefstate["user_acts"]:
             sys_act = SysAct()
             sys_act.add_value(slot='opening_day', value=beliefstate['asked_opening_day'])
@@ -264,8 +283,21 @@ class HandcraftedPolicy(Service):
             self.domain.enter_rating(given_rating, self._get_name(beliefstate))
         if beliefstate['review']:
             review = beliefstate['review']
+            review = review.replace("'", ' ').replace("\"", ' ')
             self.domain.enter_review(review, self._get_name(beliefstate))
+    
+    def _calculate_distance_duration(self, beliefstate: BeliefState):
+        """Use domain to get the address of the restaurant and calculate the distance and duration
 
+        Args:
+            beliefstate (BeliefState): BeliefState object; contains all given user constraints to date
+
+        Returns:
+            str, str: distance, duration 
+        """
+        start_point = beliefstate['start_point']
+        distance, duration = self.domain.distance_duration(start_point, self._get_name(beliefstate))
+        return distance, duration
 
     def _query_db(self, beliefstate: BeliefState):
         """Based on the constraints specified, uses the domain to generate the appropriate type

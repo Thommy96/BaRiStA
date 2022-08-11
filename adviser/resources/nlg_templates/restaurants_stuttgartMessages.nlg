@@ -6,10 +6,11 @@ template bad() : "Sorry I am a bit confused; please tell me again what you are l
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
 template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the reservation? :-)"
+template badaddress() : "Sorry, there seems to be some issue with the address you entered or the address of the restaurant."
 
 
 #--------------System Requests---------------#
-# system requestables are: category, price, rating, start_location, num_reviews, parking_lot
+# system requestables are: category, price, rating, num_reviews, parking_lot
 
 template request(category): "What kind of restaurant or bar are you looking for?"
 template request(price): "What should their price range be?"
@@ -18,8 +19,7 @@ template request(name): "Please first tell me the name of the restaurant/bar."
 template request(num_reviews): "How many reviews should it have?"
 template request(parking_lot): "Should it have a parking lot?"
 
-template request(start_location): "What is your starting location?"
-template ask_start_point() : "Ok, sure! Please tell me your starting location"
+template ask_startpoint() : "Please enter your start location now. You can choose one of the pre-defined option 'Uni' 'Hauptbahnhof' or 'Schwabstraße'. Alternatively you can enter an address in the format <street name> <house number>, <post code> <city>."
 template ask_writereview(name): "Alright, please enter your review for {name} now."
 template tell_openingday(opening_day, opening_day_response): "{opening_day} {opening_day_response}"
 
@@ -40,7 +40,6 @@ function info(slot, value, name)
     if slot = "website": "{genitive(name)} website is {value}"
     if slot = "address": "{genitive(name)} address is {value}"
     if slot = "price": "has a {value} price"
-    if slot = "start_location": "the distance from your place {value} to {name} is...(incomplete) "
 	if slot = "num_reviews": "has {value} reviews"
 	if slot = "manner": "{genitive(name)} possible options are {value}"
 	if slot = "description": "{genitive(name)} short description is {value}"
@@ -68,9 +67,6 @@ template inform_byname(name, *slots)
 	
 	special_case name = "none"
 		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
-		
-template compute_distance(start_location)
-    "The distance between your place {start_location} and the restaurant is ..."
 
 template inform_alternatives(name)
 	"There is another restaurant/bar {name}. What do you want to know about it?"
@@ -83,6 +79,9 @@ template inform_alternatives(name, *slots)
 	
 	special_case name = "none"
 		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
+
+template inform_distance(name, start_point, distance, duration)
+	"The distance between your start point {start_point} and {name} is {distance} and by bike you would need approximately {duration} to get there."
 
 #------------System Confirm--------------#
 
