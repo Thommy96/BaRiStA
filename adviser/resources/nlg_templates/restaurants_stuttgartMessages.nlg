@@ -21,6 +21,7 @@ template request(parking_lot): "Should it have a parking lot?"
 template request(start_location): "What is your starting location?"
 template ask_start_point() : "Ok, sure! Please tell me your starting location"
 template ask_writereview(name): "Alright, please enter your review for {name} now."
+<<<<<<< HEAD
 template tell_openingday(opening_day, opening_day_response): "{opening_day} {opening_day_response}"
 
 
