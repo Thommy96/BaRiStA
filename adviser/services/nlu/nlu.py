@@ -92,6 +92,8 @@ class HandcraftedNLU(Service):
         # Getting lists of informable and requestable slots
         self.USER_INFORMABLE = domain.get_informable_slots()
         self.USER_REQUESTABLE = domain.get_requestable_slots()
+        self.USER_OPENING_INFORMABLE = domain.get_openingday_informable_slots()
+
 
         # Getting the relative path where regexes are stored
         self.base_folder = os.path.join(get_root_dir(), 'resources', 'nlu_regexes')
@@ -118,6 +120,7 @@ class HandcraftedNLU(Service):
         self.user_acts = []
         self.slots_informed = set()
         self.slots_requested = set()
+        self.slots_informed_opening = set()
         self.req_everything = False
 
     @PublishSubscribe(sub_topics=["user_utterance"], pub_topics=["user_acts"])
@@ -144,7 +147,7 @@ class HandcraftedNLU(Service):
 
         # slots_requested & slots_informed store slots requested and informed in this turn
         # they are used later for later disambiguation
-        self.slots_requested, self.slots_informed = set(), set()
+        self.slots_requested, self.slots_informed, self.slots_informed_opening = set(), set(), set()
         if user_utterance is not None:
             user_utterance = user_utterance.strip()
             if self.sys_act_info['last_act']:
@@ -281,7 +284,8 @@ class HandcraftedNLU(Service):
         self._match_inform(user_utterance)
         self._match_giverating(user_utterance)
         self._match_writereview(user_utterance)
-        self._match_newdialogue(user_utterance)
+        self._match_ask_openingday(user_utterance)
+
         
         # Added user act without slots
         ask_distance_regex = "((C|c)an you help me with the distance)|((T|t)ell me (the )?distance)"
@@ -395,6 +399,21 @@ class HandcraftedNLU(Service):
     def _add_newdialogue(self, user_utterance: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.NewDialogue)
         self.user_acts.append(user_act)
+
+    ##
+    def _add_inform_opening(self, user_utterance: str, slot: str, value: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.AskOpeningDay,
+                           slot=slot, value=value)
+        self.user_acts.append(user_act)
+        self.slots_informed_opening.add(slot)
+
+    def _match_ask_openingday(self, user_utterance: str):
+        for slot in self.USER_OPENING_INFORMABLE:
+            #("(nlu.py) slot:", slot)
+            for value in self.ask_openingday_regex[slot]:
+                #print("(nlu.py) value:", value)
+                if self._check(re.search(self.ask_openingday_regex[slot][value], user_utterance, re.I)):
+                    self._add_inform_opening(user_utterance, slot, value) 
 
     @staticmethod
     def _exact_match(phrases: List[str], user_utterance: str) -> bool:
@@ -516,6 +535,8 @@ class HandcraftedNLU(Service):
                                                + 'GiveratingRules.json'))
             self.writereview_regex = json.load(open(self.base_folder + '/' + self.domain_name
                                                + 'WritereviewRules.json'))
+            self.ask_openingday_regex = json.load(open(self.base_folder + '/' + self.domain_name
+                                               + 'AskOpeningRules.json'))
         elif self.language == Language.GERMAN:
             # TODO: Change this once
             # Loading regular expression from JSON files
