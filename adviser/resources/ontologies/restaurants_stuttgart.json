@@ -511,6 +511,17 @@
         "byalternatives",
         "restart"
     ],
+    "opening_day_informable":{
+        "opening_day":[
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+        ]
+    },
     "requestable": [
         "name",
         "rating",
