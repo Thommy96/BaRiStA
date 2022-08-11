@@ -136,7 +136,7 @@ class HandcraftedPolicy(Service):
             sys_act = SysAct()
             sys_act.type = SysActionType.RequestMore
             
-        ### Testing new acts ####
+        ### new acts ####
 
         elif UserActionType.NewDialogue in beliefstate["user_acts"]:
             # if the user wants to start a new dialogue
@@ -214,9 +214,18 @@ class HandcraftedPolicy(Service):
                 
         elif UserActionType.AskOpeningDay in beliefstate["user_acts"]:
             sys_act = SysAct()
-            sys_act.add_value(slot='opening_day', value=beliefstate['asked_opening_day'])
-            sys_act.add_value(slot='opening_day_response', value=beliefstate['answer_opening_day'])
-            sys_act.type = SysActionType.TellOpeningDay
+            # check if a restaurant/bar is in the beliefstate or has been suggested to the user
+            if self._get_name(beliefstate):
+                # query opening days and get iformation for requested day
+                opening_info = self._query_opening_info(beliefstate)
+                sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
+                sys_act.add_value(slot='opening_day', value=beliefstate['req_openingday'])
+                sys_act.add_value(slot='opening_info', value=opening_info)
+                sys_act.type = SysActionType.InformOpeningDay
+            else:
+                # ask for the restaurant/bar
+                sys_act.type = SysActionType.Request
+                sys_act.add_value(slot='name')
         
         # If user only says hello, request a random slot to move dialog along
         elif UserActionType.Hello in beliefstate["user_acts"] or UserActionType.SelectDomain in beliefstate["user_acts"]:
@@ -298,6 +307,19 @@ class HandcraftedPolicy(Service):
         start_point = beliefstate['start_point']
         distance, duration = self.domain.distance_duration(start_point, self._get_name(beliefstate))
         return distance, duration
+    
+    def _query_opening_info(self, beliefstate: BeliefState):
+        """Extract information about the requested day from the opening hours in the database
+
+        Args:
+            beliefstate (BeliefState): BeliefState object; contains all given user constraints to date
+
+        Returns:
+            str: opening information
+        """
+        req_openingday = beliefstate['req_openingday']
+        opening_info = self.domain.query_opening_info(req_openingday, self._get_name(beliefstate))
+        return opening_info
 
     def _query_db(self, beliefstate: BeliefState):
         """Based on the constraints specified, uses the domain to generate the appropriate type

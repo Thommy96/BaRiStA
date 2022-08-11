@@ -111,6 +111,7 @@ class BeliefState:
                         "write_review:": False,
                         "review": '',
                         "start_point": '',
+                        "req_openingday": '',
                         "num_matches": 0,
                         "discriminable": True}
 

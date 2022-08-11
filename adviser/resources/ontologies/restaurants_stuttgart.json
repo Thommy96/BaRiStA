@@ -506,17 +506,6 @@
         "byalternatives",
         "restart"
     ],
-    "opening_day_informable":{
-        "opening_day":[
-            "monday",
-            "tuesday",
-            "wednesday",
-            "thursday",
-            "friday",
-            "saturday",
-            "sunday"
-        ]
-    },
     "requestable": [
         "name",
         "rating",
@@ -551,6 +540,15 @@
         "4.0",
         "4.5",
         "5.0"
+    ],
+    "opening_day":[
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
     ],
     "keyword": "restaurants_stuttgart"
 }

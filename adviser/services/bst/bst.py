@@ -25,11 +25,6 @@ from services.service import Service
 from utils.beliefstate import BeliefState
 from utils.useract import UserActionType, UserAct
 
-openingday_data_dir = '/Users/yangching18/uni_stuttgart/4_semester/DialogueSystem/adviser-TBC/adviser/resources/databases/'
-with open(os.path.join(openingday_data_dir, "name_openingtime_pair.json")) as f:
-    openingday_data = json.load(f)
-
-
 class HandcraftedBST(Service):
     """
     A rule-based approach to belief state tracking.
@@ -177,18 +172,5 @@ class HandcraftedBST(Service):
                 self.bs.start_new_turn()
                 self.bs["user_acts"].add(UserActionType.NewDialogue)
             elif act.type == UserActionType.AskOpeningDay:
-                return_open_day = ''
-                name = []
-                restaurant_name = self.bs['informs'][self.domain.get_primary_key()]
-                self.bs['asked_opening_day'] = act.value
-                for n in restaurant_name:
-                    name.append(n)
-                opening_time = json.loads(openingday_data[name[0]])
-                for i in opening_time:
-                    if opening_time[i] != "Closed":
-                        return_open_day += ' ' + i
-                if opening_time[(act.value).capitalize()] != "Closed":
-                    self.bs['answer_opening_day'] = 'is opened :-) The opening hours on ' + str(act.value) + ' is ' + opening_time[(act.value).capitalize()]
-                else:
-                    self.bs['answer_opening_day'] = 'is closed! the opening days are:' + return_open_day
-
+                # add requested day to the beliefstate
+                self.bs['req_openingday'] = act.value

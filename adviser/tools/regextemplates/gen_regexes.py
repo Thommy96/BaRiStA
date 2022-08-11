@@ -67,16 +67,13 @@ def _create_writereview_json(domain: JSONLookupDomain, template: RegexFile):
     writereview_regex_json['writereview_act'] = template.create_regex(writereview_act)
     return writereview_regex_json
 
-def _create_opening_day_json(domain: JSONLookupDomain, template: RegexFile):
-    ask_openingday_json = {}
-    for slot in domain.get_openingday_informable_slots():
-        #print("slot:", slot)
-        ask_openingday_json[slot] = {}
-        for value in domain.get_possible_openingday_values(slot):
-            #print("value:", value)
-            opening_day_act = UserAct(act_type=UserActionType.AskOpeningDay, slot=slot, value=value)
-            ask_openingday_json[slot][value] = template.create_regex(opening_day_act)
-    return ask_openingday_json
+def _create_askopeningday_json(domain: JSONLookupDomain, template: RegexFile):
+    askopeningday_regex_json = {}
+    askopeningday_regex_json['opening_day'] = {}
+    for value in domain.get_opening_days():
+        askopeningday_act = UserAct(act_type=UserActionType.AskOpeningDay, slot='opening_day', value=value)
+        askopeningday_regex_json['opening_day'][value] = template.create_regex(askopeningday_act)
+    return askopeningday_regex_json
 
 def _create_writereview_json(domain: JSONLookupDomain, template: RegexFile):
     writereview_regex_json = {}
@@ -99,7 +96,7 @@ def create_json_from_template(domain: JSONLookupDomain, template_filename: str):
     _write_dict_to_file(_create_giverating_json(domain, template), f'{domain_name}GiveratingRules.json')
     _write_dict_to_file(_create_writereview_json(domain, template), f'{domain_name}WritereviewRules.json')
     _write_dict_to_file(_create_askdistance_json(domain, template), f'{domain_name}AskdistanceRules.json')
-    _write_dict_to_file(_create_opening_day_json(domain, template), f'{domain_name}AskOpeningRules.json')
+    _write_dict_to_file(_create_askopeningday_json(domain, template), f'{domain_name}AskopeningdayRules.json')
 
 if __name__ == '__main__':
     # command line arguments

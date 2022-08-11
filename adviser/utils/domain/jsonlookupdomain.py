@@ -191,6 +191,25 @@ class JSONLookupDomain(Domain):
         res = cursor.fetchall()
         return res
     
+    def query_opening_info(self, req_openingday: str, name: str):
+        """Query the database for opening hours and extract information for the requested day
+
+        Args:
+            req_openingday (str): requested day by the user
+            name (str): name of the restaurant
+
+        Returns:
+            str: opening information
+        """
+        opening_hours = self.query_db(f'SELECT opening_hours FROM {self.get_domain_name()} WHERE name="{name}"')[0]['opening_hours']
+        opening_hours = json.loads(opening_hours)
+        opening_info = opening_hours[req_openingday]
+        if opening_info == 'Closed':
+            opening_info = 'is closed'
+        else:
+            opening_info = 'has opened from ' + opening_info
+        return opening_info
+    
     def modify_db(self, modify_str: str):
         """Function for mofiying a sqlite3 db
 
@@ -310,12 +329,8 @@ class JSONLookupDomain(Domain):
         """
         return self.ontology_json['ratings_givable']
 
-    def get_openingday_informable_slots(self) -> List[str]:
-        return ["opening_day"]
-        #print("keys:", self.ontology_json['opening_day_informable'].keys())
-    def get_possible_openingday_values(self, slot: str) -> List[str]:
-        #print(slot)
-        return self.ontology_json['opening_day_informable'][slot]
+    def get_opening_days(self) -> List[str]:
+        return self.ontology_json['opening_day']
 
     def get_primary_key(self):
         """ Returns the name of a column in the associated database which can be used to uniquely
