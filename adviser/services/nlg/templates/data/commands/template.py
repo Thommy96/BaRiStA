@@ -128,12 +128,17 @@ class Template(Command):
                         slot_value_pairs.append((slot, val))
                     else:
                         # if there is no instance print all possible requested values
-                        val = value[0]
-                        for i, v in enumerate(value[1:]):
-                            if i < len(value)-2:
-                                val += f', {v}'
-                            else:
-                                val += f' or {v}'
+                        if slot == 'num_reviews':
+                            value = sorted([int(v) for v in value])
+                            smallest_value = value[0]
+                            val = f'more than {smallest_value}'
+                        else:
+                            val = value[0]
+                            for i, v in enumerate(value[1:]):
+                                if i < len(value)-2:
+                                    val += f', {v}'
+                                else:
+                                    val += f' or {v}'
                         slot_value_pairs.append((slot, val))
             else:
                 slot_value_pairs.append((slot, value))
