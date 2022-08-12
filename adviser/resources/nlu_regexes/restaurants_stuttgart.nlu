@@ -57,23 +57,23 @@ rule negativeinform(name)
 
 rule negativeinform(rating)
     "I don't want {synonyms("rating", rating)}"
-    "not {synonyms("name", name)}"
+    "not {synonyms("rating", rating)}"
 
 rule negativeinform(category)
     "I don't want {synonyms("category", category)}"
-    "not {synonyms("name", name)}"
+    "not {synonyms("category", category)}"
 
 rule negativeinform(price)
     "I don't want {synonyms("price", price)}"
-    "not {synonyms("name", name)}"
+    "not {synonyms("price", price)}"
 
 rule negativeinform(num_reviews)
     "I don't want {synonyms("num_reviews", num_reviews)}"
-    "not {synonyms("name", name)}"
+    "not {synonyms("num_reviews", num_reviews)}"
 
 rule negativeinform(parking_lot)
     "I don't want {synonyms("parking_lot", parking_lot)}"
-    "not {synonyms("name", name)}"
+    "not {synonyms("parking_lot", parking_lot)}"
 
 #rule negativeinform(start_location)
 #    "{INFORM_DONTWANT()} {synonyms("start_location", start_location)}"
