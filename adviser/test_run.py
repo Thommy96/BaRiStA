@@ -7,7 +7,7 @@ from utils.logger import DiasysLogger, LogLevel
 from services.hci import ConsoleInput, ConsoleOutput
 from services.domain_tracker import DomainTracker
 
-domain = JSONLookupDomain(name='restaurants_stuttgart_basic')
+domain = JSONLookupDomain(name='restaurants_stuttgart')
 nlu = HandcraftedNLU(domain=domain)
 bst = HandcraftedBST(domain=domain)
 
