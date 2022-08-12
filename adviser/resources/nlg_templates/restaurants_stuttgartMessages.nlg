@@ -1,5 +1,5 @@
 # ---------------GENERAL TEMPLATES-------------------------
-template welcomemsg(): "Welcome to the Restaurants in Stuttgart chat bot. How may I help you?"
+template welcomemsg(): "Welcome to the Restaurants in Stuttgart chat bot. Are you looking for a restaurant? Or do you want to add reviews & rating? We can also provide the information on distance and duration."
 template welcomemsg(help): "Sorry, I cannot understand you. Please tell me again what you are looking for."
 template welcomemsg(more) : "Can I help you with anything else?"
 template bad() : "Sorry I am a bit confused; please tell me again what you are looking for."
@@ -13,10 +13,10 @@ template badaddress() : "Sorry, there seems to be some issue with the address yo
 # system requestables are: category, price, rating, num_reviews, parking_lot
 
 template request(category): "What kind of restaurant or bar are you looking for?"
-template request(price): "What should their price range be?"
-template request(rating): "What should their rating be?"
+template request(price): "What do you want their price range to be?"
+template request(rating): "What do you want their rating to be?"
 template request(name): "Please first tell me the name of the restaurant/bar."
-template request(num_reviews): "How many reviews should it have?"
+template request(num_reviews): "How many reviews do you want it to have?"
 template request(parking_lot): "Should it have a parking lot?"
 
 template ask_startpoint() : "Please enter your start location now. You can choose one of the pre-defined option 'Uni' 'Hauptbahnhof' or 'Schwabstraße'. Alternatively you can enter an address in the format <street name> <house number>, <post code> <city>."
