@@ -19,6 +19,7 @@
 
 from collections import defaultdict
 import json
+import os
 from typing import List, Dict
 
 from services.service import PublishSubscribe
@@ -142,6 +143,7 @@ class HandcraftedPolicy(Service):
             # if the user wants to start a new dialogue
             sys_act = SysAct()
             sys_act.type = SysActionType.Welcome
+            os.system('cls' if os.name == 'nt' else 'clear') # clear terminal output
             self.dialog_start()
 
         # If user only says hello, guide user for more information
