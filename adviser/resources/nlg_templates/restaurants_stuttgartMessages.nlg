@@ -5,7 +5,7 @@ template welcomemsg(more) : "Can I help you with anything else?"
 template bad() : "Sorry I am a bit confused; please tell me again what you are looking for."
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
-template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the reservation? :-)"
+template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the distance? :-)"
 template badaddress() : "Sorry, there seems to be some issue with the address you entered or the address of the restaurant."
 
 
