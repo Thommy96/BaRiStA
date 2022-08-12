@@ -1,1 +1,1 @@
-{"manner": {"delivery": "(does it offer delivery)", "dine-in": "(does it offer dine-in)", "takeaway": "(does it offer takeaway)"}}
+{"manner": {"delivery": "(does (it|the restaurant) offer delivery|can i delivery)", "dine-in": "(does (it|the restaurant) offer dine-in|can i dine-in)", "takeaway": "(does (it|the restaurant) offer takeaway|can i takeaway)"}}
