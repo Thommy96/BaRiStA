@@ -11,7 +11,7 @@ rule ack(): "{IMPOSSIBLEREGEX()}"
 rule bad(): "{IMPOSSIBLEREGEX()}"
 rule confirm(): "{IMPOSSIBLEREGEX()}"
 rule selectdomain(): "{IMPOSSIBLEREGEX()}"
-rule ok(): "(\b|^| )(ok)"
+#rule ok(): "(\b|^| )(ok)"
 
 # user informable slots (name, rating, category, price, num_reviews, parking_lot, start_location)
 
@@ -42,6 +42,7 @@ rule inform(price)
 rule negativeinform(price)
     "{INFORM_DONTWANT()} {synonyms("price", price)}"
     "{INFORM_DONTCARE()} {synonyms("price", price)}"
+    "I don't want {synonyms("price", price)}"
 
 rule inform(num_reviews)
     "^{synonyms("num_reviews", num_reviews)}"
@@ -159,14 +160,14 @@ rule writereview()
 
 # user inform the day he/she wants to ask about the opening hours
 rule askopeningday(opening_day)
-    "(is|does) it open(ed|ing)? on {opening_day}?"
+    "(is|does) it open(ed|ing)? on {opening_day}"
     ".* open(ed|ing)? on {opening_day}.*"
-    "what time does it open on {opening_day}?"
-    "what is the opening (time|hours) on {opening_day}?"
+    "what time does it open on {opening_day}"
+    "what is the opening (time|hours) on {opening_day}"
 
 rule askmanner(manner)
-    "does (it|the restaurant) offer {manner}"
-    "can i {manner}"
+    "does (it|the restaurant) offer {synonyms("manner", manner)}"
+    "can i {synonyms("manner", manner)}"
 
 # synonyms
 function synonyms(slot, value)
@@ -175,22 +176,20 @@ function synonyms(slot, value)
         if value = "dine-in"
             "dine(-| )?in"
             "eat(-| )?in"
+            "eat there"
         if value = "takeaway"
             "take(-| )?away"
             "take(-| )?out"
         if value = "delivery"
             "deliver"
-            "food(-| )?delivery"
-            "order(-| )?delivery"
-            "food(-| )?deliver"
-            "order(-| )?deliver"
+            "food(-| )?deliver(y)?"
+            "order(-| )?deliver(y)?"
             "order"
     add_if slot = "name"
         if value = "1.Stock"
-            "1.( )?Stock"
-            "1( )?Stock"
+            "(1|one)(.)?( )?Stock"
         if value = "7grad club"
-            "(7|seven)(-| )?grad(-| )?club"
+            "(7|seven)(-| )?grad(-| )?(club)?"
         if value = "ABACCO'S STEAKHOUSE Stuttgart"
             "ABACCO(')?S? STEAKHOUSE Stuttgart"
             "ABACCO(')?S? STEAKHOUSE"
@@ -204,8 +203,8 @@ function synonyms(slot, value)
             "Amber (Club|Lounge)"
         if value = "Ambiente Africa"
             "Ambiente"
-        if value = "Arslanß Kebap Stuttgart Mitte"
-            "Arslanß( Kebap)?"
+        if value = "Arslan's Kebap Stuttgart Mitte"
+            "Arslan(')?(s)?( Kebap)?"
         if value = "BARBADOS Stuttgart"
             "BARBADOS"
         if value = "Don Via Restaurant Stuttgart"
@@ -317,7 +316,8 @@ function synonyms(slot, value)
             "university"
             "uni"
             "school"
-        if value = "Schwabstrasse"
+            "campus"
+        if value = "Schwabstraße"
             "schwabstrasse"
             "schwabstr"
         if value = "Hauptbahnhof"
@@ -3277,7 +3277,7 @@ function slot_synonyms(slot)
     if slot = "description"
         "description"
         "summary"
-        "more about (it|the restaurant)"
+        "more about ((the|this) restaurant|it)"
     if slot = "reviews"
         "reviews"
         "ratings"
