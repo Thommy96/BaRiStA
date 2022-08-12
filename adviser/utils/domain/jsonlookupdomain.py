@@ -373,3 +373,10 @@ class JSONLookupDomain(Domain):
     def get_keyword(self):
         if "keyword" in self.ontology_json:
             return self.ontology_json['keyword']
+
+    # negative inform
+    def get_negativeinformable_slots(self) -> List[str]:
+        return self.ontology_json['negative_informable'].keys()
+
+    def get_negativeinform_possible_values(self, slot: str) -> List[str]:
+        return self.ontology_json['negative_informable'][slot]

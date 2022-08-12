@@ -92,6 +92,7 @@ class HandcraftedNLU(Service):
         # Getting lists of informable and requestable slots
         self.USER_INFORMABLE = domain.get_informable_slots()
         self.USER_REQUESTABLE = domain.get_requestable_slots()
+        self.USER_NEGATIVE_INFORMABLE = domain.get_negativeinformable_slots()
 
 
         # Getting the relative path where regexes are stored
@@ -119,6 +120,7 @@ class HandcraftedNLU(Service):
         self.user_acts = []
         self.slots_informed = set()
         self.slots_requested = set()
+        self.slots_negative_informed = set()
         self.req_everything = False
 
     @PublishSubscribe(sub_topics=["user_utterance"], pub_topics=["user_acts"])
@@ -145,7 +147,7 @@ class HandcraftedNLU(Service):
 
         # slots_requested & slots_informed store slots requested and informed in this turn
         # they are used later for later disambiguation
-        self.slots_requested, self.slots_informed = set(), set()
+        self.slots_requested, self.slots_informed, self.slots_negative_informed = set(), set(), set()
         if user_utterance is not None:
             user_utterance = user_utterance.strip()
             if self.sys_act_info['last_act']:
@@ -289,6 +291,7 @@ class HandcraftedNLU(Service):
         self._match_askopeningday(user_utterance)
         self._match_askdistance(user_utterance)
         self._match_askmanner(user_utterance)
+        self._match_negativeinform(user_utterance)
 
     def _match_request(self, user_utterance: str):
         """
@@ -431,6 +434,29 @@ class HandcraftedNLU(Service):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.AskManner, value=value)
         self.user_acts.append(user_act)
 
+    # negative inform
+    def _match_negativeinform(self, user_utterance: str):
+        # Iteration over all user informable slots and their slots
+        for slot in self.USER_NEGATIVE_INFORMABLE:
+            for value in self.negativeinform_regex[slot]:
+                if self._check(re.search(self.negativeinform_regex[slot][value], user_utterance, re.I)):
+                    #if slot == self.domain_key and self.req_everything:
+                        # Adding all requestable slots because of the req_everything
+                        #for req_slot in self.USER_REQUESTABLE:
+                            # skipping the domain key slot
+                            #if req_slot != self.domain_key:
+                                # Adding user request act
+                                #self._add_request(user_utterance, req_slot)
+                    # Adding user inform act
+                    self._add_negativeinform(user_utterance, slot, value)
+        
+    def _add_negativeinform(self, user_utterance: str, slot: str, value: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.NegativeInform,
+                           slot=slot, value=value)
+        self.user_acts.append(user_act)
+        self.slots_negative_informed.add(slot)
+
+
     @staticmethod
     def _exact_match(phrases: List[str], user_utterance: str) -> bool:
         """
@@ -557,6 +583,8 @@ class HandcraftedNLU(Service):
                                                + 'AskdistanceRules.json'))
             self.askmanner_regex = json.load(open(self.base_folder + '/' + self.domain_name
                                                + 'AskmannerRules.json'))
+            self.negativeinform_regex = json.load(open(self.base_folder + '/' + self.domain_name
+                                               + 'NegativeInform.json'))
         elif self.language == Language.GERMAN:
             # TODO: Change this once
             # Loading regular expression from JSON files

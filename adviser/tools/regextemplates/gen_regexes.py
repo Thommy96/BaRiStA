@@ -53,6 +53,16 @@ def _create_inform_json(domain: JSONLookupDomain, template: RegexFile):
             inform_regex_json[slot][value] = template.create_regex(inform_act)
     return inform_regex_json
 
+# negative inform
+def _create_negativeinform_json(domain: JSONLookupDomain, template: RegexFile):
+    negativeinform_regex_json = {}
+    for slot in domain.get_negativeinformable_slots():
+        negativeinform_regex_json[slot] = {}
+        for value in domain.get_negativeinform_possible_values(slot):
+            inform_act = UserAct(act_type=UserActionType.NegativeInform, slot=slot, value=value)
+            negativeinform_regex_json[slot][value] = template.create_regex(inform_act)
+    return negativeinform_regex_json
+
 def _create_giverating_json(domain: JSONLookupDomain, template: RegexFile):
     giverating_regex_json = {}
     giverating_regex_json['ratings_givable'] = {}
@@ -106,6 +116,7 @@ def create_json_from_template(domain: JSONLookupDomain, template_filename: str):
     _write_dict_to_file(_create_askdistance_json(domain, template), f'{domain_name}AskdistanceRules.json')
     _write_dict_to_file(_create_askopeningday_json(domain, template), f'{domain_name}AskopeningdayRules.json')
     _write_dict_to_file(_create_askmanner_json(domain, template), f'{domain_name}AskmannerRules.json')
+    _write_dict_to_file(_create_negativeinform_json(domain, template), f'{domain_name}NegativeInform.json')
 
 if __name__ == '__main__':
     # command line arguments

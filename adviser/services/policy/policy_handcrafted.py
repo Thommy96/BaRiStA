@@ -243,6 +243,10 @@ class HandcraftedPolicy(Service):
                 sys_act.type = SysActionType.Request
                 sys_act.add_value(slot='name')
         
+        elif UserActionType.NegativeInform in beliefstate["user_acts"]:
+            sys_act = SysAct()
+            sys_act.type = SysActionType.WhatDoYouWant
+        
         # If user only says hello, request a random slot to move dialog along
         elif UserActionType.Hello in beliefstate["user_acts"] or UserActionType.SelectDomain in beliefstate["user_acts"]:
             # as long as there are open slots, choose one randomly
@@ -392,7 +396,10 @@ class HandcraftedPolicy(Service):
         prim_key = self.domain.get_primary_key()
         if prim_key in beliefstate['informs']:
             possible_names = beliefstate['informs'][prim_key]
-            name = sorted(possible_names.items(), key=lambda kv: kv[1], reverse=True)[0][0]
+            if possible_names == {}:
+                name = None
+            else:
+                name = sorted(possible_names.items(), key=lambda kv: kv[1], reverse=True)[0][0]
         # if the user is tyring to query by name
         else:
             if self.s_index < len(self.current_suggestions):
