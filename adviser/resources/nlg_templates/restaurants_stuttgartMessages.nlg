@@ -82,7 +82,7 @@ template inform_alternatives(name, *slots)
 		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
 
 template inform_distance(name, start_point, distance, duration)
-	"The distance between your start point {start_point} and {name} is {distance} and by bike you would need approximately {duration} to get there."
+	"The distance between your start point {start_point} and {name} is {distance} and by foot you would need approximately {duration} to get there."
 
 #------------System Confirm--------------#
 

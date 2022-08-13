@@ -308,8 +308,8 @@ class JSONLookupDomain(Domain):
         if address_coordinates is None or start_point_coordinates is None:
             return None, None
         distance = geopy.distance.geodesic(start_point_coordinates, address_coordinates).km
-        # assumed by bike with average speed 15km/h
-        duration = math.ceil(4*distance)
+        # assumed by foot with average speed 6km/h
+        duration = math.ceil(10*distance)
         if int(duration) < 60:
             duration_out = str(duration) + 'min'
         if int(duration) >= 60:
