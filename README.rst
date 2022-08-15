@@ -6,8 +6,18 @@
    :target: #license
 .. |nbsp| unicode:: 0xA0
    :trim:
+   
+BaRiStA
+========
+BaRiStA is a task-oriented dialogue system that provides information and assistance on finding restaurants and bars in Stuttgart. It is based on the ADVISER toolkit. You can see instructions how to install and setup the toolkit below. In order to use the text-based version of BaRiStA execute the script ``run_chat.py`` by running:
 
-Documentation
+.. code-block:: bash
+   
+   python run_chat.py restaurants_stuttgart
+   
+For more options such as ASR, TTS or interface refer to the ADVISER documentation below.
+
+ADVISER Documentation
 =============
 
     Please see the `documentation <https://digitalphonetics.github.io/adviser/>`_ for more details.
