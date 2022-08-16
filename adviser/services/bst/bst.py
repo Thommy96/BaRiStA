@@ -141,6 +141,8 @@ class HandcraftedBST(Service):
             elif act.type == UserActionType.Inform:
                 # add informs and their scores to the beliefstate
                 if act.slot in self.bs["informs"]:
+                    print("(bst.py):", self.bs, "value:", act.value)
+
                     self.bs['informs'][act.slot][act.value] = act.score
                 else:
                     self.bs['informs'][act.slot] = {act.value: act.score}
@@ -163,8 +165,12 @@ class HandcraftedBST(Service):
                 # add give review to the beliefstate
                 self.bs['review'] = act.value
             elif act.type == UserActionType.InformStartPoint:
+                print("(bst.py):", self.bs, "value:", act.value, "pair:", self.bs['start_point'])
                 # add given start point to the beliefstate
                 self.bs['start_point'] = act.value
+            elif act.type == UserActionType.InformDistanceManner:
+                print("(bst.py):", self.bs)
+                self.bs['distance_manner'] = act.value
             elif act.type == UserActionType.NewDialogue:
                 # option to start a new dialogue
                 # reset beliefstate
