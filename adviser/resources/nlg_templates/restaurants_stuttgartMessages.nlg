@@ -26,8 +26,6 @@ template inform_manner(name, manner_info): "{manner_info} {name}"
 template ask_startpoint() : "Please enter your start location. You can choose one of the pre-defined option 'Uni' 'Hauptbahnhof' or 'Schwabstraße'. Alternatively you can enter an address in the format <street name> <house number>, <post code> <city>."
 template ask_distancemanner() : "Please tell me how are you going to get there? by foot, by bike, or by car?"
 
-
-
 # --------- Helper Functions -------- #
 
 function genitive(name)
@@ -84,8 +82,8 @@ template inform_alternatives(name, *slots)
 	special_case name = "none"
 		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
 
-template inform_distance(name, start_point, distance, duration, distance_manner)
-	"The distance between {start_point} and {name} is {distance}. And {distance_manner} you would need approximately {duration} to get there."
+template inform_distance(name, distance, duration, distance_manner)
+	"The distance between your location and {name} is {distance}. And {distance_manner} you would need approximately {duration} to get there."
 
 #------------System Confirm--------------#
 
