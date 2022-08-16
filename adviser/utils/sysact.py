@@ -47,6 +47,7 @@ class SysActionType(Enum):
     InformOpeningDay = 'inform_openingday'
     InformManner = 'inform_manner'
     WhatDoYouWant = 'whatdoyouwant'
+    AskDistanceManner = 'ask_distancemanner'
 
 
 class SysAct(object):
