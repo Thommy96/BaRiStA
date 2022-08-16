@@ -18,6 +18,7 @@
 ###############################################################################
 
 
+import re
 import json
 import math
 import os
@@ -277,7 +278,7 @@ class JSONLookupDomain(Domain):
         modify_str = f'UPDATE {self.get_domain_name()} SET reviews="{reviews}" WHERE name="{name}"'
         self.modify_db(modify_str)
     
-    def distance_duration(self, start_point: str, name: str):
+    def distance_duration(self, start_point: str, name: str, distance_manner: str):
         """Calcualtes the distance and approximates the duration by bike between the start point and the address of the restaurant
 
         Args:
@@ -287,12 +288,16 @@ class JSONLookupDomain(Domain):
         Returns:
             str, str: distance, duration
         """
+        uni_pattern = re.compile("((i am )?at (the )?)?(uni|school|university|uni stuttgart|university of stuttgart)$")
+        schwabstr_pattern = re.compile("((i am )?at (the )?)?(schwabstr|schwabstraße|schwabstrasse)$")
+        hbf_pattern = re.compile("((i am )?at (the )?)?(stuttgart )?(hauptbahnhof|main station|central station|hbf|haupt( )?bf)$")
+
         address = self.query_db(f'SELECT address FROM {self.get_domain_name()} WHERE name="{name}"')[0]['address']
-        if start_point == 'uni':
+        if (uni_pattern.match(start_point)==None)==False:
             start_point = 'Pfaffenwaldring 5, 70569 Stuttgart'
-        if start_point == 'hauptbahnhof':
+        if (hbf_pattern.match(start_point)==None)==False:
             start_point = 'Arnulf-Klett-Platz 2, 70173 Stuttgart'
-        if start_point == 'schwabstraße':
+        if (schwabstr_pattern.match(start_point)==None)==False:
             start_point = 'Schwabstraße 43, 70197 Stuttgart'
         locator = Nominatim(user_agent="myGeocoder")
         address_loc = locator.geocode(address)
@@ -308,12 +313,19 @@ class JSONLookupDomain(Domain):
         if address_coordinates is None or start_point_coordinates is None:
             return None, None
         distance = geopy.distance.geodesic(start_point_coordinates, address_coordinates).km
-        # assumed by foot with average speed 6km/h
-        duration = math.ceil(10*distance)
-        if int(duration) < 60:
-            duration_out = str(duration) + 'min'
-        if int(duration) >= 60:
-            duration_out = "%d:%02d"%(duration//60, duration%60) +'h'
+        if distance_manner == 'by foot':
+            # assumed by foot with average speed 6km/h
+            duration = math.ceil(10*distance)
+            if int(duration) < 60:
+                duration_out = str(duration) + 'min'
+            if int(duration) >= 60:
+                duration_out = "%d:%02d"%(duration//60, duration%60) +'h'
+        elif distance_manner == 'by bike':
+            duration_out = 'duration of bike'
+            pass
+        elif distance_manner == 'by car':
+            duration_out = 'duration of car'
+            pass
         distance = str(round(distance, 2)) + 'km'
         return distance, duration_out
 
@@ -363,6 +375,7 @@ class JSONLookupDomain(Domain):
             distinguish between database entities.
             Could be e.g. the name of a restaurant, an ID, ... """
         return self.ontology_json['key']
+
 
     def get_pronouns(self, slot):
         if slot in self.ontology_json['pronoun_map']:
