@@ -314,19 +314,25 @@ class JSONLookupDomain(Domain):
             return None, None
         distance = geopy.distance.geodesic(start_point_coordinates, address_coordinates).km
         if distance_manner == 'by foot':
-            # assumed by foot with average speed 6km/h
+            # assumed by foot with average speed 6 km/h
             duration = math.ceil(10*distance)
-            if int(duration) < 60:
-                duration_out = str(duration) + 'min'
-            if int(duration) >= 60:
-                duration_out = "%d:%02d"%(duration//60, duration%60) +'h'
         elif distance_manner == 'by bike':
-            duration_out = 'duration of bike'
-            pass
+            # assumed by bike with average speed 21 km/h = 0.35 km/min
+            if distance/21 > 1:
+                duration = math.ceil(distance/21)
+            else:
+                duration = math.ceil(distance/0.35)
         elif distance_manner == 'by car':
-            duration_out = 'duration of car'
-            pass
-        distance = str(round(distance, 2)) + 'km'
+            # assumed by car with average speed 30 km/h = 0.5 km/min
+            if (distance/30) > 1:
+                duration = math.ceil(distance/30)
+            else:
+                duration = math.ceil(distance/0.5)
+        if int(duration) < 60:
+            duration_out = str(duration) + ' minutes'
+        if int(duration) >= 60:
+            duration_out = "%d:%02d"%(duration//60, duration%60) +'h'
+        distance = str(round(distance, 2)) + ' km'
         return distance, duration_out
 
     def get_display_name(self):
