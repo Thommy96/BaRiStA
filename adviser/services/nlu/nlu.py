@@ -409,12 +409,10 @@ class HandcraftedNLU(Service):
     
     def _add_inform_startpoint(self, user_utterance: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.InformStartPoint, value=user_utterance)
-        print("---user_act:", user_act)
         self.user_acts.append(user_act)
     ##
     def _add_inform_distancemanner(self, user_utterance: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.InformDistanceManner, value=user_utterance)
-        print("---user_act:", user_act)
         self.user_acts.append(user_act)
 
     def _match_inform_distancemanner(self, user_utterance: str):
