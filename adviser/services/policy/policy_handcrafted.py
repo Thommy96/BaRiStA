@@ -200,8 +200,15 @@ class HandcraftedPolicy(Service):
                 sys_act.add_value(slot='name')
         
         elif UserActionType.InformStartPoint in beliefstate["user_acts"]:
-            # if the user has given a start point
             sys_act = SysAct()
+            start_point = self._save_start_point(beliefstate)
+            sys_act.type = SysActionType.AskDistanceManner
+            sys_state['last_act'] = sys_act
+
+        elif UserActionType.InformDistanceManner in beliefstate["user_acts"]:
+            # if the user has given how to get there (by foot, by bike, by car)
+            sys_act = SysAct()
+            #sys_act.add_value(slot='distance_manner', value=beliefstate['distance_manner'])
             # calculate distance and duration
             distance, duration = self._calculate_distance_duration(beliefstate)
             # if the given address or the address of the restaurant is incorrect or not given
@@ -210,6 +217,7 @@ class HandcraftedPolicy(Service):
             else:
                 sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
                 sys_act.add_value(slot='start_point', value=beliefstate['start_point'])
+                sys_act.add_value(slot='distance_manner', value=beliefstate['distance_manner'])
                 sys_act.add_value(slot='distance', value=distance)
                 sys_act.add_value(slot='duration', value=duration)
                 sys_act.type = SysActionType.InformDistance
@@ -315,6 +323,13 @@ class HandcraftedPolicy(Service):
             review = review.replace("'", ' ').replace("\"", ' ')
             self.domain.enter_review(review, self._get_name(beliefstate))
     
+    def _save_start_point(self, beliefstate: BeliefState):
+        """
+        save start point which will be used in the next
+        """
+        start_point = beliefstate['start_point']
+        return start_point
+    
     def _calculate_distance_duration(self, beliefstate: BeliefState):
         """Use domain to get the address of the restaurant and calculate the distance and duration
 
@@ -324,8 +339,9 @@ class HandcraftedPolicy(Service):
         Returns:
             str, str: distance, duration 
         """
-        start_point = beliefstate['start_point']
-        distance, duration = self.domain.distance_duration(start_point, self._get_name(beliefstate))
+        start_point = self._save_start_point(beliefstate)
+        distance_manner = beliefstate['distance_manner']
+        distance, duration = self.domain.distance_duration(start_point, self._get_name(beliefstate), distance_manner)
         return distance, duration
     
     def _query_opening_info(self, beliefstate: BeliefState):
@@ -378,7 +394,7 @@ class HandcraftedPolicy(Service):
         else:
             constraints, _ = self._get_constraints(beliefstate)
             return self.domain.find_entities(constraints)
-
+    
     def _get_name(self, beliefstate: BeliefState):
         """Finds if an entity has been suggested by the system (in the form of an offer candidate)
            or by the user (in the form of an InformByName act). If so returns the identifier for
