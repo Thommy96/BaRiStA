@@ -201,6 +201,7 @@ class HandcraftedPolicy(Service):
         
         elif UserActionType.InformStartPoint in beliefstate["user_acts"]:
             sys_act = SysAct()
+            # save the informed staring point to the beliefstate to be used later
             start_point = self._save_start_point(beliefstate)
             sys_act.type = SysActionType.AskDistanceManner
             sys_state['last_act'] = sys_act
@@ -208,7 +209,6 @@ class HandcraftedPolicy(Service):
         elif UserActionType.InformDistanceManner in beliefstate["user_acts"]:
             # if the user has given how to get there (by foot, by bike, by car)
             sys_act = SysAct()
-            #sys_act.add_value(slot='distance_manner', value=beliefstate['distance_manner'])
             # calculate distance and duration
             distance, duration = self._calculate_distance_duration(beliefstate)
             # if the given address or the address of the restaurant is incorrect or not given
@@ -216,7 +216,7 @@ class HandcraftedPolicy(Service):
                 sys_act.type = SysActionType.BadAddress
             else:
                 sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
-                sys_act.add_value(slot='start_point', value=beliefstate['start_point'])
+                #sys_act.add_value(slot='start_point', value=beliefstate['start_point'])
                 sys_act.add_value(slot='distance_manner', value=beliefstate['distance_manner'])
                 sys_act.add_value(slot='distance', value=distance)
                 sys_act.add_value(slot='duration', value=duration)
