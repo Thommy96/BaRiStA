@@ -158,6 +158,9 @@ class HandcraftedNLU(Service):
                 # if the user asked about the distance
                 elif self.sys_act_info['last_act'].type == SysActionType.AskStartPoint:
                     self._match_inform_startpoint(user_utterance)
+
+                elif self.sys_act_info['last_act'].type == SysActionType.AskDistanceManner:
+                    self._match_inform_distancemanner(user_utterance)
                 else:
                     self._match_general_act(user_utterance)
                     self._match_domain_specific_act(user_utterance)
@@ -406,7 +409,16 @@ class HandcraftedNLU(Service):
     
     def _add_inform_startpoint(self, user_utterance: str):
         user_act = UserAct(text=user_utterance, act_type=UserActionType.InformStartPoint, value=user_utterance)
+        print("---user_act:", user_act)
         self.user_acts.append(user_act)
+    ##
+    def _add_inform_distancemanner(self, user_utterance: str):
+        user_act = UserAct(text=user_utterance, act_type=UserActionType.InformDistanceManner, value=user_utterance)
+        print("---user_act:", user_act)
+        self.user_acts.append(user_act)
+
+    def _match_inform_distancemanner(self, user_utterance: str):
+        self._add_inform_distancemanner(user_utterance)
 
     def _match_newdialogue(self, user_utterance: str):
         if user_utterance == 'new':
