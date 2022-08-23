@@ -6,13 +6,13 @@ template bad() : "Sorry I am a bit confused; please tell me again what you are l
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
 
-template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the distance? :-)"
-template badaddress() : "Sorry, there seems to be some typos in the start location you entered. please enter again."
-template badtravelmanner(): "Sorry, there seems to be some typos in the traveling manner you entered. please type 'by foot', 'by bike', or 'by car'."
-template whatdoyouwant() : "Ok, please tell me again what do you want."
+template guide_user() : "Hi! Are you looking for a restaurant or bar? :-)"
+template badaddress() : "Sorry, there seem to be some typos in the start location you entered. Please enter it again."
+template badtravelmanner(): "Sorry, there seem to be some typos in the traveling manner you entered. Please type 'by foot', 'by bike', or 'by car'."
+template whatdoyouwant() : "Ok, please tell me again what you want."
 
 template guide_user() : "Hi! Are you looking for a restaurant or bar?"
-template badaddress() : "Sorry, there seems to be some typos in the address or traveling manner you entered."
+template badaddress() : "Sorry, there seem to be some typos in the address or traveling manner you entered."
 template whatdoyouwant() : "Ok, please tell me again what you want."
 
 #--------------System Requests---------------#
@@ -23,14 +23,14 @@ template request(price): "What do you want their price range to be?"
 template request(rating): "What do you want their rating to be?"
 template request(name): "Please first tell me the name of the restaurant/bar."
 template request(num_reviews): "How many reviews do you want it to have?"
-template request(parking_lot): "Should it have a parking lot?"
+#template request(parking_lot): "Should it have a parking lot?"
 
 template ask_writereview(name): "Alright, please enter your review for {name} now."
 template inform_openingday(name, opening_day, opening_info): "{name} {opening_info} on {opening_day}."
 template inform_manner(name, manner_info): "{manner_info} {name}."
 
-template ask_startpoint() : "Please enter your start location. You can choose one of the pre-defined option 'Uni' 'Hauptbahnhof' or 'Schwabstraße'. Alternatively you can enter an address in the format <street name> <house number>, <post code> <city>."
-template ask_distancemanner() : "Please tell me how are you going to get there? by foot, by bike, or by car?"
+template ask_startpoint() : "Please enter your start location. You can choose one of the pre-defined options 'Uni' 'Hauptbahnhof' or 'Schwabstraße'. Alternatively you can enter an address in the format <street name> <house number>, <post code> <city>."
+template ask_distancemanner() : "Please tell me how you are going to get there? By foot, by bike, or by car?"
 
 # --------- Helper Functions -------- #
 
@@ -51,8 +51,8 @@ function info(slot, value, name)
 	if slot = "num_reviews": "has {value} reviews"
 	if slot = "manner": "the possible options are {value}"
 	if slot = "description": "the short description is {value}"
-	if slot = "reviews": "has some examples reviews : {value}"
-	if slot = "parking_lot": "has {value} parking lot"
+	if slot = "reviews": "has some example reviews : {value}"
+	#if slot = "parking_lot": "has {value} parking lot"
 
 function info_alternative(slot, value, name)
     if slot = "rating": "has a rating of {value}"
@@ -65,8 +65,8 @@ function info_alternative(slot, value, name)
 	if slot = "num_reviews": "has {value} reviews"
 	if slot = "manner": "has these possible options: {value}"
 	if slot = "description": "has the following short description: {value}"
-	if slot = "reviews": "has some examples reviews : {value}"
-	if slot = "parking_lot": "has {value} parking lot"
+	if slot = "reviews": "has some example reviews : {value}"
+	#if slot = "parking_lot": "has {value} parking lot"
 
 template inform_byname(name, rating)
 	"{genitive(name)} rating is {rating}."
@@ -99,10 +99,10 @@ template inform_byname(name, description)
 	"{genitive(name)} short description is: {description}"
 
 template inform_byname(name, reviews)
-	"Here are some reviews for {name}: {reviews}."
+	"Here are some reviews for {name}: {reviews}"
 
-template inform_byname(name, parking_lot)
-	"{name} has {parking_lot} parking lot."
+#template inform_byname(name, parking_lot)
+#	"{name} has {parking_lot} parking lot."
 
 template inform_byname(name)
 	"There is a restaurant/bar named {name}. What do you want to know about it?"
@@ -113,16 +113,16 @@ template inform_byname(name, *slots)
 	"{name} {for_entry(slots, "info", ", ", " and ", name)}."
 	
 	special_case name = "none"
-		"There is no such restaurant/bar which {for_entry(slots, "info", ", that", " and ", "which")}."
+		"There is no such restaurant/bar which {for_entry(slots, "info", ",that ", " and ", "which")}."
 
 template inform_alternatives(name)
-	"There is another restaurant/bar {name}. What do you want to know about it?"
+	"There is another restaurant/bar named {name}. What do you want to know about it?"
 
 	special_case name = "none"
 		"I'm sorry, I couldn't find another restaurant/bar."
 
 template inform_alternatives(name, *slots)
-	"The restaurant/bar {name} also {for_entry(slots, "info_alternative", ", it ", " and ", name)}."
+	"{name} also {for_entry(slots, "info_alternative", ", it ", " and ", name)}."
 	
 	special_case name = "none"
 		"There is no other restaurant/bar which {for_entry(slots, "info_alternative", ", ", " and which ", "which")}."
