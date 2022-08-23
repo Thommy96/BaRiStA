@@ -5,16 +5,15 @@ template welcomemsg(more) : "Can I help you with anything else?"
 template bad() : "Sorry I am a bit confused; please tell me again what you are looking for."
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
-<<<<<<< HEAD
+
 template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the distance? :-)"
 template badaddress() : "Sorry, there seems to be some typos in the start location you entered. please enter again."
 template badtravelmanner(): "Sorry, there seems to be some typos in the traveling manner you entered. please type 'by foot', 'by bike', or 'by car'."
 template whatdoyouwant() : "Ok, please tell me again what do you want."
-=======
+
 template guide_user() : "Hi! Are you looking for a restaurant or bar?"
 template badaddress() : "Sorry, there seems to be some typos in the address or traveling manner you entered."
 template whatdoyouwant() : "Ok, please tell me again what you want."
->>>>>>> 4952ba46ad1827f4e2e50e72efe81229644a4f90
 
 #--------------System Requests---------------#
 # system requestables are: category, price, rating, num_reviews, parking_lot
