@@ -1,1 +1,1 @@
-{"askdistance_act": "((.* |^)how far|(can you help me with the distance)|(tell me (the )?distance)|how far.*|.*(distance).*|(can you help me with the duration)|(tell me (the )?duration)|how long does it take.*|.*(duration).*)"}
+{"askdistance_act": "((.* |^)how far|(can you help me with the distance)|(tell me (the )?distance)|how far.*|.*(distance).*|(can you help me with the duration)|(tell me (the )?duration)|how long does it take.*|.*(duration).*|how long do i need)"}

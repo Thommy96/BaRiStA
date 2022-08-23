@@ -25,6 +25,7 @@ rule inform(rating)
     "^{synonyms("rating", rating)}"
     #"{INFORM()} (?<!give )(?<!assign )(?<!rate )(?<!write ){synonyms("rating", rating)}"
     "{LOOKING()} {synonyms("rating", rating)}"
+    "it should be (rated)? {synonyms("rating", rating)}"
 
 rule inform(category)
     "^{synonyms("category", category)}"
@@ -38,16 +39,18 @@ rule inform(price)
     "{LOOKING()} {synonyms("price", price)}"
     "{synonyms("price", price)}{WBG()}"
     "( |^){synonyms("price", price)}( (please|and))*"
+    "it should have a {synonyms("price", price)} price"
 
 rule inform(num_reviews)
     "^{synonyms("num_reviews", num_reviews)}$"
     "{INFORM()} {synonyms("num_reviews", num_reviews)}$"
     "{LOOKING()} {synonyms("num_reviews", num_reviews)}$"
+    "it should have {synonyms("num_reviews", num_reviews)}$"
 
-rule inform(parking_lot)
-    "^{synonyms("parking_lot", parking_lot)}"
-    "{INFORM()} {synonyms("parking_lot", parking_lot)}"
-    "{LOOKING()} {synonyms("parking_lot", parking_lot)}"
+#rule inform(parking_lot)
+ #   "^{synonyms("parking_lot", parking_lot)}"
+  #  "{INFORM()} {synonyms("parking_lot", parking_lot)}"
+   # "{LOOKING()} {synonyms("parking_lot", parking_lot)}"
 
 # negative informable (name, rating, category, price, num_reviews, parking_lot)
 
@@ -71,9 +74,9 @@ rule negativeinform(num_reviews)
     "I don't want {synonyms("num_reviews", num_reviews)}"
     "not {synonyms("num_reviews", num_reviews)}"
 
-rule negativeinform(parking_lot)
-    "I don't want {synonyms("parking_lot", parking_lot)}"
-    "not {synonyms("parking_lot", parking_lot)}"
+#rule negativeinform(parking_lot)
+ #   "I don't want {synonyms("parking_lot", parking_lot)}"
+  #  "not {synonyms("parking_lot", parking_lot)}"
 
 #rule negativeinform(start_location)
 #    "{INFORM_DONTWANT()} {synonyms("start_location", start_location)}"
@@ -96,6 +99,7 @@ rule request(rating)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("rating")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("rating")}"
     "{WANT()}.*{slot_synonyms("rating")}"
+    "how (high) is it rated"
     
 rule request(category)
     "{REQUEST()} {slot_synonyms("category")}"
@@ -121,6 +125,8 @@ rule request(phone_number)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("phone_number")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("phone_number")}"
     "{WANT()}.*{slot_synonyms("phone_number")}"
+    "how can i (contact|call)"
+    "i (want|would like) to call"
 
 rule request(website)
     "{TELL()} {slot_synonyms("website")}"
@@ -145,7 +151,7 @@ rule request(num_reviews)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("num_reviews")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("num_reviews")}"
     "{WANT()}.*{slot_synonyms("num_reviews")}"
-    "how many (reviews|ratings|comments) (does it have|has it)"
+    "how many (reviews|ratings|comments) (does it have|has it)?"
 
 rule request(manner)
     "{TELL()} {slot_synonyms("manner")}"
@@ -158,24 +164,27 @@ rule request(description)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("description")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("description")}"
     "{WANT()}.*{slot_synonyms("description")}"
+    "describe it"
 
 rule request(reviews)
     "{TELL()} {slot_synonyms("reviews")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("reviews")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("reviews")}"
     "{WANT()}.*{slot_synonyms("reviews")}"
+    "what are people (writing|saying)"
 
-rule request(parking_lot)
-    "{TELL()} {slot_synonyms("parking_lot")}"
-    "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("parking_lot")}"
-    "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("parking_lot")}"
-    "{WANT()}.*{slot_synonyms("parking_lot")}"
+#rule request(parking_lot)
+ #   "{TELL()} {slot_synonyms("parking_lot")}"
+  #  "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("parking_lot")}"
+   # "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("parking_lot")}"
+    #"{WANT()}.*{slot_synonyms("parking_lot")}"
 
 # new acts
 rule askdistance()
     "(.* |^)how far"
     "(can you help me with the distance)|(tell me (the )?distance)|how far.*|.*(distance).*"
     "(can you help me with the duration)|(tell me (the )?duration)|how long does it take.*|.*(duration).*"
+    "how long do i need"
 
 rule giverating(ratings_givable)
     "(.* |^)(give|rate|assign|write) (a |the )?(rating|score) of {ratings_givable}(.*)?"
@@ -183,7 +192,7 @@ rule giverating(ratings_givable)
     "(.* |^)(give|rate|assign|write)(.*)?{ratings_givable}(.*)?"
 
 rule writereview()
-    "(.* |^)(write |give |add |enter |leave )(a |the )?(review|comment)(.*)?"
+    "(.* |^)(write |give |add |enter |leave )(a |the |another |one more )?(review|comment)(.*)?"
 
 # user inform the day he/she wants to ask about the opening hours
 rule askopeningday(opening_day)
@@ -353,11 +362,11 @@ function synonyms(slot, value)
             "hbf"
             "main station"
     
-    add_if slot = "parking_lot"
-        if value = "0"
-            "((?<!no )(?<!not )(?<!shouldnt )(?<!shouldn't )(?<!without )){slot_synonyms("parking_lot")}"
-        if value = "1"
-            "{slot_synonyms("parking_lot")}"
+    #add_if slot = "parking_lot"
+     #   if value = "0"
+      #      "((?<!no )(?<!not )(?<!shouldnt )(?<!shouldn't )(?<!without )){slot_synonyms("parking_lot")}"
+       # if value = "1"
+        #    "{slot_synonyms("parking_lot")}"
             
     add_if slot = "rating"
         if value = "3.0"
@@ -3288,9 +3297,9 @@ function slot_synonyms(slot)
         "price( range)?"
     if slot = "start_location"
         "start(ing)? (point|location|place|spot|location)"
-    if slot = "parking_lot"
-        "parking (lot|space|place|garage)"
-        "car park"
+    #if slot = "parking_lot"
+     #   "parking (lot|space|place|garage)"
+      #  "car park"
     if slot = "num_reviews"
         "(number|amount) of (reviews|(given)? ratings)"
         "how many reviews"
