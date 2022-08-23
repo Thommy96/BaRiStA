@@ -156,7 +156,7 @@ class HandcraftedPolicy(Service):
             sys_act = SysAct()
             # check if a restaurant/bar is in the beliefstate or has been suggested to the user
             if self._get_name(beliefstate):
-                #print("primary key:", self.domain.get_primary_key(), "name:", self._get_name(beliefstate))
+                print("primary key:", self.domain.get_primary_key(), "name:", self._get_name(beliefstate))
                 sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
                 sys_act.add_value(slot='ratings_givable', value=beliefstate['given_rating'])
                 sys_act.type = SysActionType.ConfirmGiveRating
@@ -209,12 +209,17 @@ class HandcraftedPolicy(Service):
 
         elif UserActionType.InformDistanceManner in beliefstate["user_acts"]:
             # if the user has given how to get there (by foot, by bike, by car)
+            #traveling_manner = self._save_travel_manner(beliefstate)
             sys_act = SysAct()
             # calculate distance and duration
             distance, duration = self._calculate_distance_duration(beliefstate)
             # if the given address or the address of the restaurant is incorrect or not given
-            if distance is None and duration is None:
+            if distance == 'BadTravelManner' and duration == 'BadTravelManner':
+                sys_act.type = SysActionType.BadTravelManner
+                sys_state['last_act'] = sys_act
+            elif distance is None and duration is None:
                 sys_act.type = SysActionType.BadAddress
+                sys_state['last_act'] = sys_act
             else:
                 sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
                 #sys_act.add_value(slot='start_point', value=beliefstate['start_point'])
@@ -318,6 +323,7 @@ class HandcraftedPolicy(Service):
         # modify the rating or the reviews
         if beliefstate['given_rating']:
             given_rating = float(beliefstate['given_rating'])
+            print("(policy.py) given_rating:", given_rating)
             self.domain.enter_rating(given_rating, self._get_name(beliefstate))
         if beliefstate['review']:
             review = beliefstate['review']
@@ -330,6 +336,10 @@ class HandcraftedPolicy(Service):
         """
         start_point = beliefstate['start_point']
         return start_point
+
+    def _delete_error_travel_manner(self, beliefstate: BeliefState):
+        beliefstate['distance_manner'] = ''
+        #return traveling_manner
     
     def _calculate_distance_duration(self, beliefstate: BeliefState):
         """Use domain to get the address of the restaurant and calculate the distance and duration
