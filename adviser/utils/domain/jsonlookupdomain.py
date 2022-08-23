@@ -257,11 +257,12 @@ class JSONLookupDomain(Domain):
         """
         rating_num = self.query_db(f'SELECT rating, num_reviews FROM {self.get_domain_name()} WHERE name="{name}"')[0]
         current_rating = float(rating_num['rating'])
-        #print("(jslookup) rating_num:", rating_num, "current_rating:", current_rating)
-
         num_reviews = int((rating_num['num_reviews']).replace(',', ''))
+        #print("(jslookup) rating_num:", rating_num, "current_rating:", current_rating, "num_reviews:", num_reviews)
+
         new_rating = ((current_rating * num_reviews) + given_rating) / (num_reviews + 1)
         new_rating = str(round(new_rating, 1))
+        #print("(jslookup) new_rating:", new_rating)
         modify_str = f'UPDATE {self.get_domain_name()} SET rating="{new_rating}" WHERE name="{name}"'
         self.modify_db(modify_str)
 
@@ -352,8 +353,8 @@ class JSONLookupDomain(Domain):
         #     duration_out = "%d:%02d"%(duration//60, duration%60) +' hour'
         # distance = str(round(distance, 2)) + ' km'
         else:
-            distance = None
-            duration_out = None
+            distance = 'BadTravelManner'
+            duration_out = 'BadTravelManner'
         return distance, duration_out
 
     def get_display_name(self):
