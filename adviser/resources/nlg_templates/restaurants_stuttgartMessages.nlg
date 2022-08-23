@@ -1,13 +1,13 @@
 # ---------------GENERAL TEMPLATES-------------------------
-template welcomemsg(): "Welcome to the Restaurants in Stuttgart chat bot. Are you looking for a restaurant? Or do you want to add reviews & rating? We can also provide the information on distance and duration."
+template welcomemsg(): "Welcome to BaRiStA!:-) Are you looking for a restaurant or bar? Or do you want to write reviews or give ratings? I can also provide information about distance and duration."
 template welcomemsg(help): "Sorry, I cannot understand you. Please tell me again what you are looking for."
 template welcomemsg(more) : "Can I help you with anything else?"
 template bad() : "Sorry I am a bit confused; please tell me again what you are looking for."
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
-template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the distance? :-)"
+template guide_user() : "Hi! Are you looking for a restaurant or bar?"
 template badaddress() : "Sorry, there seems to be some typos in the address or traveling manner you entered."
-template whatdoyouwant() : "Ok, please tell me again what do you want."
+template whatdoyouwant() : "Ok, please tell me again what you want."
 
 #--------------System Requests---------------#
 # system requestables are: category, price, rating, num_reviews, parking_lot
@@ -20,8 +20,8 @@ template request(num_reviews): "How many reviews do you want it to have?"
 template request(parking_lot): "Should it have a parking lot?"
 
 template ask_writereview(name): "Alright, please enter your review for {name} now."
-template inform_openingday(name, opening_day, opening_info): "{name} {opening_info} on {opening_day}"
-template inform_manner(name, manner_info): "{manner_info} {name}"
+template inform_openingday(name, opening_day, opening_info): "{name} {opening_info} on {opening_day}."
+template inform_manner(name, manner_info): "{manner_info} {name}."
 
 template ask_startpoint() : "Please enter your start location. You can choose one of the pre-defined option 'Uni' 'Hauptbahnhof' or 'Schwabstraße'. Alternatively you can enter an address in the format <street name> <house number>, <post code> <city>."
 template ask_distancemanner() : "Please tell me how are you going to get there? by foot, by bike, or by car?"
@@ -31,36 +31,72 @@ template ask_distancemanner() : "Please tell me how are you going to get there? 
 function genitive(name)
 	"{genitive_s(name)}"
 
-function givename(name)
-	"{name}"
-
 #----------System Recommendation/Inform---------------#
 # name, rating, category, opening_hours, phone_number, website, address, price, num_reviews, manner, description, reviews, parking_lot
 
 function info(slot, value, name)
-    if slot = "rating": "{givename(name)} has a rating of {value}"
-    if slot = "category": "{givename(name)} is a {value}"
-    if slot = "opening_hours": "{genitive(name)} opening hours are {value}"
-    if slot = "phone_number": "{genitive(name)} phone number is {value}"
+    if slot = "rating": "has a rating of {value}"
+    if slot = "category": "is a {value}"
+    if slot = "opening_hours": "the opening hours are {value}"
+    if slot = "phone_number": "the phone number is {value}"
+    if slot = "website": "the website is {value}"
+    if slot = "address": "the address is {value}"
+    if slot = "price": "has a {value} price"
+	if slot = "num_reviews": "has {value} reviews"
+	if slot = "manner": "the possible options are {value}"
+	if slot = "description": "the short description is {value}"
+	if slot = "reviews": "has some examples reviews : {value}"
+	if slot = "parking_lot": "has {value} parking lot"
+
+function info_alternative(slot, value, name)
+    if slot = "rating": "has a rating of {value}"
+    if slot = "category": "is a {value}"
+    if slot = "opening_hours": "has the following opening hours: {value}"
+    if slot = "phone_number": "has the phone number: {value}"
     if slot = "website": "{genitive(name)} website is {value}"
     if slot = "address": "{genitive(name)} address is {value}"
-    if slot = "price": "{givename(name)} has a {value} price"
-	if slot = "num_reviews": "{givename(name)} has {value} reviews"
-	if slot = "manner": "{genitive(name)} possible options are {value}"
-	if slot = "description": "{genitive(name)} short description is {value}"
-	if slot = "reviews": "{givename(name)} has some examples reviews : {value}"
-	if slot = "parking_lot": "{givename(name)} has {value} parking lot"
+    if slot = "price": "has a {value} price"
+	if slot = "num_reviews": "has {value} reviews"
+	if slot = "manner": "has these possible options: {value}"
+	if slot = "description": "has the following short description: {value}"
+	if slot = "reviews": "has some examples reviews : {value}"
+	if slot = "parking_lot": "has {value} parking lot"
 
-template inform(name)
-    "There is a restaurant/bar named {name}. What do you want to know about it?"
+template inform_byname(name, rating)
+	"{genitive(name)} rating is {rating}."
 
-    if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
+template inform_byname(name, category)
+	"{name} is a {category}."
 
-template inform(name, *slots)
-	"{for_entry(slots, "info", ", ", " and ", name)}."
+template inform_byname(name, opening_hours)
+	"{genitive(name)} opening hours are {opening_hours}."
 
-    special_case name = "none"
-		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
+template inform_byname(name, phone_number)
+	"{genitive(name)} phone number is {phone_number}."
+
+template inform_byname(name, website)
+	"{genitive(name)} website is {website}."
+
+template inform_byname(name, address)
+	"{genitive(name)} address is {address}."
+
+template inform_byname(name, price)
+	"{name} has a {price} price."
+
+template inform_byname(name, num_reviews)
+	"{name} has {num_reviews} reviews."
+
+template inform_byname(name, manner)
+	"{genitive(name)} possible options are: {manner}."
+
+template inform_byname(name, description)
+	"{genitive(name)} short description is: {description}"
+
+template inform_byname(name, reviews)
+	"Here are some reviews for {name}: {reviews}."
+
+template inform_byname(name, parking_lot)
+	"{name} has {parking_lot} parking lot."
 
 template inform_byname(name)
 	"There is a restaurant/bar named {name}. What do you want to know about it?"
@@ -68,10 +104,10 @@ template inform_byname(name)
 	if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
 
 template inform_byname(name, *slots)
-	"{for_entry(slots, "info", ", ", " and ", name)}."
+	"{name} {for_entry(slots, "info", ", ", " and ", name)}."
 	
 	special_case name = "none"
-		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
+		"There is no such restaurant/bar which {for_entry(slots, "info", ", that", " and ", "which")}."
 
 template inform_alternatives(name)
 	"There is another restaurant/bar {name}. What do you want to know about it?"
@@ -80,10 +116,10 @@ template inform_alternatives(name)
 		"I'm sorry, I couldn't find another restaurant/bar."
 
 template inform_alternatives(name, *slots)
-	"The restaurant/bar {name} also {for_entry(slots, "info", ", it ", " and ", name)}."
+	"The restaurant/bar {name} also {for_entry(slots, "info_alternative", ", it ", " and ", name)}."
 	
 	special_case name = "none"
-		"There is no other restaurant/bar which {for_entry(slots, "info", ", ", " and which ", "which")}."
+		"There is no other restaurant/bar which {for_entry(slots, "info_alternative", ", ", " and which ", "which")}."
 
 template inform_distance(name, distance, duration, distance_manner)
 	"The distance between your location and {name} is {distance}. And {distance_manner} you would need approximately {duration} to get there."
