@@ -167,6 +167,7 @@ class HandcraftedBST(Service):
                 self.bs['start_point'] = act.value
             elif act.type == UserActionType.InformDistanceManner:
                 self.bs['distance_manner'] = act.value
+
             elif act.type == UserActionType.NewDialogue:
                 # option to start a new dialogue
                 # reset beliefstate

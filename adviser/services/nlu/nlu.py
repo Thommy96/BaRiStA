@@ -158,8 +158,13 @@ class HandcraftedNLU(Service):
                 # if the user asked about the distance
                 elif self.sys_act_info['last_act'].type == SysActionType.AskStartPoint:
                     self._match_inform_startpoint(user_utterance)
-
+                # if user gave an error input start point
+                elif self.sys_act_info['last_act'].type == SysActionType.BadAddress:
+                    self._match_inform_startpoint(user_utterance)
                 elif self.sys_act_info['last_act'].type == SysActionType.AskDistanceManner:
+                    self._match_inform_distancemanner(user_utterance)
+                # if user gave an error input traveling manner
+                elif self.sys_act_info['last_act'].type == SysActionType.BadTravelManner:
                     self._match_inform_distancemanner(user_utterance)
                 else:
                     self._match_general_act(user_utterance)
