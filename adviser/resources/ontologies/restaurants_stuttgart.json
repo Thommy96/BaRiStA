@@ -1,6 +1,6 @@
 {
     "binary": [
-        "parking_lot"
+        
     ],
     "discourseAct": [
         "ack",
@@ -432,10 +432,6 @@
             "966",
             "981",
             "99"
-        ],
-        "parking_lot": [
-            "0",
-            "1"
         ],
         "price": [
             "Expensive",
@@ -920,10 +916,6 @@
             "981",
             "99"
         ],
-        "parking_lot": [
-            "0",
-            "1"
-        ],
         "price": [
             "Expensive",
             "Inexpensive",
@@ -1005,15 +997,13 @@
         "phone_number",
         "reviews",
         "price",
-        "category",
-        "parking_lot"
+        "category"
     ],
     "system_requestable": [
         "rating",
         "price",
         "category",
-        "num_reviews",
-        "parking_lot"
+        "num_reviews"
     ],
     "ratings_givable": [
         "0.0",
