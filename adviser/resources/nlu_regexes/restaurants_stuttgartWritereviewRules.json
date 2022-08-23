@@ -1,1 +1,1 @@
-{"writereview_act": "((.* |^)(write |give |add |enter )(a )?(review|comment))"}
+{"writereview_act": "((.* |^)(write |give |add |enter |leave )(a |the )?(review|comment)(.*)?)"}
