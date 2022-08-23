@@ -258,6 +258,7 @@ class JSONLookupDomain(Domain):
         rating_num = self.query_db(f'SELECT rating, num_reviews FROM {self.get_domain_name()} WHERE name="{name}"')[0]
         current_rating = float(rating_num['rating'])
         num_reviews = int((rating_num['num_reviews']).replace(',', ''))
+        #num_reviews = int((rating_num['num_reviews']))
         #print("(jslookup) rating_num:", rating_num, "current_rating:", current_rating, "num_reviews:", num_reviews)
 
         new_rating = ((current_rating * num_reviews) + given_rating) / (num_reviews + 1)
@@ -274,7 +275,8 @@ class JSONLookupDomain(Domain):
             name (str): name of the restaurant/bar
         """
         reviews = self.query_db(f'SELECT reviews FROM {self.get_domain_name()} WHERE name="{name}"')[0]['reviews']
-        reviews = reviews.replace("'", "\"")
+        #reviews = reviews.replace("'", "\"")
+        reviews = reviews.replace("'", "’")
         reviews = json.loads(reviews)
         reviews.append(review)
         reviews = str(reviews)
