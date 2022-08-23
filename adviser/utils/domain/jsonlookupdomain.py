@@ -275,8 +275,9 @@ class JSONLookupDomain(Domain):
             name (str): name of the restaurant/bar
         """
         reviews = self.query_db(f'SELECT reviews FROM {self.get_domain_name()} WHERE name="{name}"')[0]['reviews']
+        reviews = reviews.replace("'s", "’s")
         reviews = reviews.replace("'", "\"")
-        #reviews = reviews.replace("'", "’") #why? gives an error
+        #reviews = reviews.replace("'", "’")
         reviews = json.loads(reviews)
         reviews.append(review)
         reviews = str(reviews)
