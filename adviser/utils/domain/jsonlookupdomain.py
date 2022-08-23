@@ -318,23 +318,42 @@ class JSONLookupDomain(Domain):
         if distance_manner == 'by foot':
             # assumed by foot with average speed 6 km/h
             duration = math.ceil(10*distance)
+            if int(duration) < 60:
+                duration_out = str(duration) + ' minutes'
+            if int(duration) >= 60:
+                duration_out = "%d:%02d"%(duration//60, duration%60) +' hour'
+            distance = str(round(distance, 2)) + ' km'
         elif distance_manner == 'by bike':
             # assumed by bike with average speed 21 km/h = 0.35 km/min
             if distance/21 > 1:
                 duration = math.ceil(distance/21)
             else:
                 duration = math.ceil(distance/0.35)
+            if int(duration) < 60:
+                duration_out = str(duration) + ' minutes'
+            if int(duration) >= 60:
+                duration_out = "%d:%02d"%(duration//60, duration%60) +' hour'
+            distance = str(round(distance, 2)) + ' km'
+
         elif distance_manner == 'by car':
             # assumed by car with average speed 30 km/h = 0.5 km/min
             if (distance/30) > 1:
                 duration = math.ceil(distance/30)
             else:
                 duration = math.ceil(distance/0.5)
-        if int(duration) < 60:
-            duration_out = str(duration) + ' minutes'
-        if int(duration) >= 60:
-            duration_out = "%d:%02d"%(duration//60, duration%60) +' hour'
-        distance = str(round(distance, 2)) + ' km'
+            if int(duration) < 60:
+                duration_out = str(duration) + ' minutes'
+            if int(duration) >= 60:
+                duration_out = "%d:%02d"%(duration//60, duration%60) +' hour'
+            distance = str(round(distance, 2)) + ' km'
+        # if int(duration) < 60:
+        #     duration_out = str(duration) + ' minutes'
+        # if int(duration) >= 60:
+        #     duration_out = "%d:%02d"%(duration//60, duration%60) +' hour'
+        # distance = str(round(distance, 2)) + ' km'
+        else:
+            distance = None
+            duration_out = None
         return distance, duration_out
 
     def get_display_name(self):
