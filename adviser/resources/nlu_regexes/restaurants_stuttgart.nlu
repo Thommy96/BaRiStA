@@ -23,7 +23,7 @@ rule inform(name)
 
 rule inform(rating)
     "^{synonyms("rating", rating)}"
-    "{INFORM()} {synonyms("rating", rating)}"
+    #"{INFORM()} (?<!give )(?<!assign )(?<!rate )(?<!write ){synonyms("rating", rating)}"
     "{LOOKING()} {synonyms("rating", rating)}"
 
 rule inform(category)
@@ -112,6 +112,9 @@ rule request(opening_hours)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("opening_hours")}"
     "{WANT()}.*{slot_synonyms("opening_hours")}"
+    "what are (their|the) {slot_synonyms("opening_hours")}"
+    "when does it have open(ed)?"
+    "when (is|has) it open(ed)?"
 
 rule request(phone_number)
     "{TELL()} {slot_synonyms("phone_number")}"
@@ -142,6 +145,7 @@ rule request(num_reviews)
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("num_reviews")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("num_reviews")}"
     "{WANT()}.*{slot_synonyms("num_reviews")}"
+    "how many (reviews|ratings|comments) (does it have|has it)"
 
 rule request(manner)
     "{TELL()} {slot_synonyms("manner")}"
@@ -357,7 +361,7 @@ function synonyms(slot, value)
             
     add_if slot = "rating"
         if value = "3.0"
-            "3"
+            "3(?!\.)"
             "3(.|,|')?0?"
             "{ROUGH()}(?<![0-9].)3(.|,|')?0?"
         if value = "3.1"
@@ -402,7 +406,7 @@ function synonyms(slot, value)
             "{HIGHER()}(?<![0-9].)3(.|,|')?0?"
             "{HIGHER()}(?<![0-9].)3(.|,|')?5"
         if value = "4.0"
-            "4"
+            "4(?!\.)"
             "4(.|,|')?0"
             "{ROUGH()}(?<![0-9].)4(.|,|')?0?"
             "{HIGHER()}(?<![0-9].)3(.|,|')?0?"
@@ -467,7 +471,7 @@ function synonyms(slot, value)
             "{HIGHER()}(?<![0-9].)4(.|,|')?5"
             "{HIGHER()}(?<![0-9].)3(.|,|')?5"
         if value = "5.0"
-            "5"
+            "5(?!\.)"
             "5(.|,|')?0"
             "{ROUGH()}(?<![0-9].)5(.|,|')?0?"
             "{HIGHER()}(?<![0-9].)4(.|,|')?0?"
@@ -3298,6 +3302,7 @@ function slot_synonyms(slot)
         "pickup"
         "take(away|out)"
         "drive(-)?(in|through)"
+        "options"
     if slot = "description"
         "description"
         "summary"
