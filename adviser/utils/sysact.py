@@ -41,6 +41,7 @@ class SysActionType(Enum):
     AskStartPoint = 'ask_startpoint'
     InformDistance = 'inform_distance'
     BadAddress = 'badaddress'
+    BadTravelManner = 'badtravelmanner'
     ConfirmGiveRating = 'confirm_giverating'
     AskWriteReview = 'ask_writereview'
     ConfirmWriteReview = 'confirm_writereview'
