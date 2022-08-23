@@ -176,7 +176,7 @@ rule askdistance()
 rule giverating(ratings_givable)
     "(.* |^)(give|rate|assign|write) (a |the )?(rating|score) of {ratings_givable}(.*)?"
     "(.* |^)(give|rate|assign|write) {ratings_givable}(.*)?"
-    "(.* |^)(give|rate|assign|write)(.*)?{ratings_givable}"
+    "(.* |^)(give|rate|assign|write)(.*)?{ratings_givable}(.*)?"
 
 rule writereview()
     "(.* |^)(write |give |add |enter |leave )(a |the )?(review|comment)(.*)?"
