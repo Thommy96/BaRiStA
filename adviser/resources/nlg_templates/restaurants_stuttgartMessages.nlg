@@ -6,7 +6,7 @@ template bad() : "Sorry I am a bit confused; please tell me again what you are l
 template repeat() : "Could you please repeat that?"
 template closingmsg() : "Thank you, goodbye."
 template guide_user() : "Hi! Are you looking for a restaurant? or do you need help with the distance? :-)"
-template badaddress() : "Sorry, there seems to be some issue with the address you entered or the address of the restaurant."
+template badaddress() : "Sorry, there seems to be some typos in the address or traveling manner you entered."
 template whatdoyouwant() : "Ok, please tell me again what do you want."
 
 #--------------System Requests---------------#
@@ -31,22 +31,25 @@ template ask_distancemanner() : "Please tell me how are you going to get there? 
 function genitive(name)
 	"{genitive_s(name)}"
 
+function givename(name)
+	"{name}"
+
 #----------System Recommendation/Inform---------------#
 # name, rating, category, opening_hours, phone_number, website, address, price, num_reviews, manner, description, reviews, parking_lot
 
 function info(slot, value, name)
-    if slot = "rating": "has a rating of {value}"
-    if slot = "category": "is a {value}"
+    if slot = "rating": "{givename(name)} has a rating of {value}"
+    if slot = "category": "{givename(name)} is a {value}"
     if slot = "opening_hours": "{genitive(name)} opening hours are {value}"
     if slot = "phone_number": "{genitive(name)} phone number is {value}"
     if slot = "website": "{genitive(name)} website is {value}"
     if slot = "address": "{genitive(name)} address is {value}"
-    if slot = "price": "has a {value} price"
-	if slot = "num_reviews": "has {value} reviews"
+    if slot = "price": "{givename(name)} has a {value} price"
+	if slot = "num_reviews": "{givename(name)} has {value} reviews"
 	if slot = "manner": "{genitive(name)} possible options are {value}"
 	if slot = "description": "{genitive(name)} short description is {value}"
-	if slot = "reviews": " has some examples reviews : {value}"
-	if slot = "parking_lot": "has {value} parking lot"
+	if slot = "reviews": "{givename(name)} has some examples reviews : {value}"
+	if slot = "parking_lot": "{givename(name)} has {value} parking lot"
 
 template inform(name)
     "There is a restaurant/bar named {name}. What do you want to know about it?"
@@ -54,7 +57,7 @@ template inform(name)
     if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
 
 template inform(name, *slots)
-	"{name} {for_entry(slots, "info", ", ", " and ", name)}."
+	"{for_entry(slots, "info", ", ", " and ", name)}."
 
     special_case name = "none"
 		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
@@ -65,7 +68,7 @@ template inform_byname(name)
 	if name = "none": "I’m sorry, I could not find the restaurant/bar you specified."
 
 template inform_byname(name, *slots)
-	"{name} {for_entry(slots, "info", ", ", " and ", name)}."
+	"{for_entry(slots, "info", ", ", " and ", name)}."
 	
 	special_case name = "none"
 		"There is no such restaurant/bar {for_entry(slots, "info", ", ", " and ", "which")}."
