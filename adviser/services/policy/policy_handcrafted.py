@@ -156,7 +156,7 @@ class HandcraftedPolicy(Service):
             sys_act = SysAct()
             # check if a restaurant/bar is in the beliefstate or has been suggested to the user
             if self._get_name(beliefstate):
-                print("primary key:", self.domain.get_primary_key(), "name:", self._get_name(beliefstate))
+                #print("primary key:", self.domain.get_primary_key(), "name:", self._get_name(beliefstate))
                 sys_act.add_value(self.domain.get_primary_key(), self._get_name(beliefstate))
                 sys_act.add_value(slot='ratings_givable', value=beliefstate['given_rating'])
                 sys_act.type = SysActionType.ConfirmGiveRating
@@ -323,7 +323,7 @@ class HandcraftedPolicy(Service):
         # modify the rating or the reviews
         if beliefstate['given_rating']:
             given_rating = float(beliefstate['given_rating'])
-            print("(policy.py) given_rating:", given_rating)
+            #print("(policy.py) given_rating:", given_rating)
             self.domain.enter_rating(given_rating, self._get_name(beliefstate))
         if beliefstate['review']:
             review = beliefstate['review']
