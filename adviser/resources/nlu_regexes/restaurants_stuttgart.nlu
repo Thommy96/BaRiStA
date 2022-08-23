@@ -85,7 +85,6 @@ rule request(name)
     "{REQUEST()} {slot_synonyms("name")}"
     "{TELL()} {slot_synonyms("name")}"
     "{LOOKING()} {slot_synonyms("name")}"
-    "{TELL()} {slot_synonyms("name")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("name")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("name")}"
     "{WANT()}.*{slot_synonyms("name")}"
@@ -94,7 +93,6 @@ rule request(rating)
     "{REQUEST()} {slot_synonyms("rating")}"
     "{TELL()} {slot_synonyms("rating")}"
     "{LOOKING()} {slot_synonyms("rating")}"
-    "{TELL()} {slot_synonyms("rating")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("rating")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("rating")}"
     "{WANT()}.*{slot_synonyms("rating")}"
@@ -103,7 +101,6 @@ rule request(category)
     "{REQUEST()} {slot_synonyms("category")}"
     "{TELL()} {slot_synonyms("category")}"
     "{LOOKING()} {slot_synonyms("category")}"
-    "{TELL()} {slot_synonyms("category")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("category")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("category")}"
     "{WANT()}.*{slot_synonyms("category")}"
@@ -112,7 +109,6 @@ rule request(opening_hours)
     "{REQUEST()} {slot_synonyms("opening_hours")}"
     "{TELL()} {slot_synonyms("opening_hours")}"
     "{LOOKING()} {slot_synonyms("opening_hours")}"
-    "{TELL()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCAREWHAT()})(?<!want ){IT()} {slot_synonyms("opening_hours")}"
     "(?<!{DONTCARE()}){WHAT()} {slot_synonyms("opening_hours")}"
     "{WANT()}.*{slot_synonyms("opening_hours")}"
@@ -178,10 +174,12 @@ rule askdistance()
     "(can you help me with the duration)|(tell me (the )?duration)|how long does it take.*|.*(duration).*"
 
 rule giverating(ratings_givable)
-    "(.* |^)(give|rate|assign) (rating|score) of {ratings_givable}"
+    "(.* |^)(give|rate|assign|write) (a |the )?(rating|score) of {ratings_givable}(.*)?"
+    "(.* |^)(give|rate|assign|write) {ratings_givable}(.*)?"
+    "(.* |^)(give|rate|assign|write)(.*)?{ratings_givable}"
 
 rule writereview()
-    "(.* |^)(write |give |add |enter )(a )?(review|comment)"
+    "(.* |^)(write |give |add |enter |leave )(a |the )?(review|comment)(.*)?"
 
 # user inform the day he/she wants to ask about the opening hours
 rule askopeningday(opening_day)
@@ -3315,7 +3313,7 @@ function INFORM_DONTCARE(): "{DONTCARE()} ((what|which|about)( (it'*s*|the))*)+"
 
 # request functions
 function REQUEST(): "(\b|^| )(?<!{DONTCARE()})({WHAT()} {IT()}|{CYTM()}|{CIG()})"
-function TELL(): "(.*)((can you)?(tell|provide|give) me)(.*)"
+function TELL(): "(.*)(((can|could|would) you )?(tell|provide|give) me)(.*)"
 function CYTM(): "(can you tell me (the|it'*s|their))"
 function CIG(): "(can I get (the|it'*s|their))"
 
@@ -3325,7 +3323,7 @@ function IT(): "(it'*s*|it have|is it'*s*|is (the|their))( for)*(.*)"
 function ROUGH(): "(.*|^| )(around |about |roughly |nearly |approximately )(.*)"
 function HIGHER(): "(.*|^| )(higher than |more than |larger than |no less than |above |better than )"
 function DONTCARE(): "((i )dont care)"
-function WHAT(): "(what(')?(s)?|which|does|where)( are)?( (its|the))*"
+function WHAT(): "(what(')?(s)?|which|does|where)( are| is)?( (its|the))*"
 function DONTCAREWHAT(): "((i )dont care what )"
 function NEGATE(): "((i )*(don'?t|do not|does not|does'?nt) (care|mind|matter)( (about|what))*( (the|it'?s*))*)"
 function IMPOSSIBLEREGEX(): "^\b$"
